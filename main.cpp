@@ -1,11 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <unistd.h>
 
+#include "
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing");
-    sf::CircleShape hex(100, 6);
-    hex.setFillColor(sf::Color::Green);
+
 
     while (window.isOpen())
     {
@@ -19,7 +20,7 @@ int main()
         window.clear();
         window.draw(hex);
         window.display();
-        sleep(1);
+        sleep(0.05);
     }
 
     return 0;

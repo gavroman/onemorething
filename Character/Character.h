@@ -6,7 +6,15 @@
 #define ONEMORETHING_CHARACTER_H
 
 class Character {
+ public:
+    virtual unsigned int apply_damage();
+    virtual void get_damage(unsigned int damage);
 
+ protected:
+    unsigned int hp;
+    unsigned int damage_min;
+    unsigned int damage_max;
+    unsigned int range;
 };
 
 class Scout : public Character {
