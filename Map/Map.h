@@ -14,7 +14,9 @@
 #include <string>
 #include <fstream>
 
-#include "./../Character/Character.h"
+#include "Character.h"
+#include "Player.h"
+
 
 struct Cell {
     std::unique_ptr <Character> character; // Указатель на объект типа "Персонаж"

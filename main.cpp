@@ -1,8 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <unistd.h>
 
-#include "
-
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing");

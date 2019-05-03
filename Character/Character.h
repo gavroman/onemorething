@@ -5,6 +5,9 @@
 #ifndef ONEMORETHING_CHARACTER_H
 #define ONEMORETHING_CHARACTER_H
 
+#include "Map.h"
+#include "Player.h"
+
 class Character {
  public:
     virtual unsigned int apply_damage();
@@ -15,6 +18,8 @@ class Character {
     unsigned int damage_min;
     unsigned int damage_max;
     unsigned int range;
+
+    sf::Sprite sprite;
 };
 
 class Scout : public Character {
