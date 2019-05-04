@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.3" orientation="hexagonal" renderorder="left-down" width="4" height="3" tilewidth="60" tileheight="52" hexsidelength="25" staggeraxis="y" staggerindex="even" nextobjectid="1">
+ <tileset firstgid="1" source="hex_tiles/test.tsx"/>
+ <layer name="Слой тайлов 1" width="4" height="3">
+  <data>
+   <tile gid="1"/>
+   <tile gid="2"/>
+   <tile gid="3"/>
+   <tile gid="4"/>
+   <tile gid="5"/>
+   <tile gid="6"/>
+   <tile gid="7"/>
+   <tile gid="8"/>
+   <tile gid="9"/>
+   <tile gid="10"/>
+   <tile gid="11"/>
+   <tile gid="12"/>
+  </data>
+ </layer>
+</map>

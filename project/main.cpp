@@ -4,9 +4,10 @@
 
 int main()
 {
-    Map battle_field("../source/game_map/megamap.tmx");
-    //sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing");
-    /*while (window.isOpen())
+    Map battle_field("../source/game_map/megamap_test.tmx");
+    sf::RenderWindow window(sf::VideoMode(1080, 720), "One More Thing");
+    battle_field.draw_map(window);
+    while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
@@ -15,11 +16,10 @@ int main()
                 window.close();
         }
 
-        window.clear();
-        //window.draw(hex);
-        window.display();
-        sleep(0.05);
-    }*/
+        //window.clear();
+        //window.display();
+        sleep(0.01);
+    }
 
     return 0;
 }

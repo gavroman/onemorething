@@ -6,6 +6,7 @@
 #define ONEMORETHING_MAP_H
 
 #include <sys/param.h>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -32,7 +33,7 @@ struct Cell {
 class Map {
  public:
     // Map(); Заготовка под пустой конструктор для процедурной генерации карты
-    explicit Map(const std::string& xml_file_path);
+    explicit Map(std::string xml_file);
     void parse(); // Заполняет поля класса и вектор смежности
     std::shared_ptr<Cell> create_hex(); // Возвращает указатель на заполненную текстурку
 
@@ -47,11 +48,11 @@ class Map {
     std::vector<std::shared_ptr<Cell>> map; // Вектор смежности карты
 
  private:
-    std::ifstream xml_file; //  Файловый дескриптор
-    unsigned int map_size_width; // Ширина карты
-    unsigned int map_size_height; // Высота карты
-    unsigned int tile_size_width; // Ширина гекса
-    unsigned int tile_size_height; // Высота гекса
+    std::string xml_file_path; // Путь к файлу
+    int map_size_width; // Ширина карты
+    int map_size_height; // Высота карты
+    int hex_size_width; // Ширина гекса
+    int hex_size_height; // Высота гекса
     sf::Texture map_texture; // Текстура карты, загружается из одной картинки и содержит в себе все тайлы (так же, как это организовано в tiled map editor)
 };
 
