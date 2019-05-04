@@ -1,19 +1,15 @@
 #include "Map.h"
 #include "tinyxml2.h"
 
-Map::Map(std::string xml_file) 
-    : xml_file_path(xml_file) {
-    parse();
-}
-
-void Map::parse() {
+Map::Map(std::string xml_file)
+    : xml_file_path(std::move(xml_file)) {
     using namespace tinyxml2;
     XMLDocument doc;
     if (doc.LoadFile(xml_file_path.c_str())) {
         return;
     }
     XMLElement * map_xml = doc.FirstChildElement("map");
-    if (map_xml == nullptr) {;
+    if (map_xml == nullptr) {
         return;
     }
     map_size_width = map_xml->IntAttribute("width", 0);
@@ -35,7 +31,7 @@ void Map::parse() {
 
     std::string img_src = tileset_xml->FirstChildElement("image")->Attribute("source");
     img_src = "../source/game_map/" + img_src.erase(0,3);
-    if(!map_texture.loadFromFile(img_src.c_str())) {
+    if(!map_texture.loadFromFile(img_src)) {
         return;
     }
     std::vector<sf::Sprite> hex_sprites;
@@ -51,6 +47,7 @@ void Map::parse() {
     }
 
     XMLElement * tile_xml = map_xml->FirstChildElement("layer")->FirstChildElement("data")->FirstChildElement("tile");
+
     int i = 0;
     do {
         std::shared_ptr cell = std::make_shared<Cell>();
@@ -58,17 +55,17 @@ void Map::parse() {
         cell->character = nullptr;
         cell->neighbors = search_neighbors(cell->id);
         int gid = tile_xml->IntAttribute("gid", 0);
-        
+
         cell->sprite = hex_sprites[gid - 1];
         cell->sprite.setPosition(calculate_position(cell->id));
         map.emplace_back(cell);
     } while ((tile_xml = tile_xml->NextSiblingElement("tile")));
 
     //===============вывод id и id соседей===============
-    /*for (auto& cell : map) {                                
-        std::cout << "id: " << cell->id << " neighbors: "; 
+    /*for (auto& cell : map) {
+        std::cout << "id: " << cell->id << " neighbors: ";
         for (auto& neighbor : cell->neighbors) {
-            std::cout << neighbor << ", ";                 
+            std::cout << neighbor << ", ";
         }
         std::cout << std::endl;
     }*/
@@ -81,7 +78,7 @@ sf::Vector2f Map::calculate_position(const int id) {
     float pos_x = col * hex_size_width;
     float pos_y = row * (hex_size_height - 13) ;
     if (row % 2 == 0) {
-        pos_x += hex_size_width / 2;
+        pos_x += (float)hex_size_width / 2;
     }
     sf::Vector2f position(pos_x, pos_y);
     return position;

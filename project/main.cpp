@@ -1,12 +1,13 @@
 #include <SFML/Graphics.hpp>
-#include <unistd.h>
+#include <chrono>
+#include <thread>
+
 #include "Map.h"
 
 int main()
 {
-    Map battle_field("../source/game_map/megamap_test.tmx");
-    sf::RenderWindow window(sf::VideoMode(1250, 850), "One More Thing");
-    battle_field.draw_map(window);
+    Map battle_field("../source/game_map/Grass_map.tmx");
+    sf::RenderWindow window(sf::VideoMode(1625, 643), "One More Thing");
     while (window.isOpen())
     {
         sf::Event event;
@@ -16,9 +17,8 @@ int main()
                 window.close();
         }
 
-        //window.clear();
-        //window.display();
-        sleep(0.01);
+        battle_field.draw_map(window);
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 
     return 0;
