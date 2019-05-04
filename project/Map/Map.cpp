@@ -30,14 +30,13 @@ void Map::parse() {
     XMLElement * tileset_xml = doc_tileset.FirstChildElement("tileset");
     int sprite_width = tileset_xml->IntAttribute("tilewidth", 0);
     int sprite_height = tileset_xml->IntAttribute("tileheight", 0);
-    int sprite_count = tileset_xml->IntAttribute("tilecount", 0); 
+    int sprite_count = tileset_xml->IntAttribute("tilecount", 0);
     int sprite_columns = tileset_xml->IntAttribute("columns", 0);
 
     std::string img_src = tileset_xml->FirstChildElement("image")->Attribute("source");
     img_src = "../source/game_map/" + img_src.erase(0,3);
     if(!map_texture.loadFromFile(img_src.c_str())) {
         return;
-        std::cout << "ZALUPA" << std::endl;
     }
     std::vector<sf::Sprite> hex_sprites;
     int current_x = 0;
@@ -48,7 +47,7 @@ void Map::parse() {
             current_x = 0;
         }
         hex_sprites.emplace_back(sf::Sprite(map_texture, sf::Rect(current_x, current_y, sprite_width, sprite_height)));
-        current_x += sprite_width;    
+        current_x += sprite_width;
     }
 
     XMLElement * tile_xml = map_xml->FirstChildElement("layer")->FirstChildElement("data")->FirstChildElement("tile");
@@ -86,10 +85,9 @@ sf::Vector2f Map::calculate_position(const int id) {
     }
     sf::Vector2f position(pos_x, pos_y);
     return position;
-    
 }
 
-std::vector<int> Map::search_neighbors(const int id) {
+std::vector<int> Map::search_neighbors(const int id) { // TODO(9rik): fixme
     std::vector<int> sosed{
             id - 2 * map_size_width,
             id - map_size_width,
