@@ -8,8 +8,8 @@ find_package(SFML REQUIRED network audio graphics window system)
 
 include_directories(${SFML_INCLUDE_DIR})
 
-include_directories(SYSTEM ./Map ./Character ./Player)
+include_directories(SYSTEM ./Map ./Character ./Player ./tinyxml2)
 
-add_executable(onemorething main.cpp Map/Map.h Character/Character.h Map/Map.cpp Player/Player.h)
+add_executable(onemorething main.cpp Map/Map.h tinyxml2/tinyxml2.h Player/Player.h Character/Character.h Map/Map.cpp tinyxml2/tinyxml2.cpp)
 
 target_link_libraries(onemorething ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})

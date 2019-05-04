@@ -1,12 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <unistd.h>
+#include "Map.h"
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing");
-
-
-    while (window.isOpen())
+    Map battle_field("../source/game_map/megamap.tmx");
+    //sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing");
+    /*while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
@@ -16,10 +16,10 @@ int main()
         }
 
         window.clear();
-        window.draw(hex);
+        //window.draw(hex);
         window.display();
         sleep(0.05);
-    }
+    }*/
 
     return 0;
 }

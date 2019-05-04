@@ -10,8 +10,8 @@
 
 class Character {
  public:
-    virtual unsigned int apply_damage();
-    virtual void get_damage(unsigned int damage);
+    virtual unsigned int apply_damage() = 0;
+    virtual void get_damage(unsigned int damage) = 0;
 
  protected:
     unsigned int hp;
