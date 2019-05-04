@@ -65,14 +65,14 @@ void Map::parse() {
     } while ((tile_xml = tile_xml->NextSiblingElement("tile")));
 
     //===============вывод id и id соседей===============
-    /*for (auto& cell : map) {                                
+    /*for (auto& cell : map) {
         std::cout << "id: " << cell->id << " neighbors: "; 
         for (auto& neighbor : cell->neighbors) {
             std::cout << neighbor << ", ";                 
         }
         std::cout << std::endl;
-    }*/
-    //===================================================
+    }
+    *///===================================================
 }
 
 sf::Vector2f Map::calculate_position(const int id) {
@@ -87,79 +87,41 @@ sf::Vector2f Map::calculate_position(const int id) {
     return position;
 }
 
-std::vector<int> Map::search_neighbors(const int id) { // TODO(9rik): fixme
-    std::vector<int> sosed{
-            id - 2 * map_size_width,
-            id - map_size_width,
-            id - map_size_width + 1,
-            id + map_size_width - 1,
-            id + map_size_width,
-            id + 2 * map_size_width
-    };
+std::vector<int>  Map::search_neighbors(const int id) {
+    std::vector<int> left_right{id - 1, id + 1};
+    std::vector<int> upp{id - map_size_width - 1, id - map_size_width};
+    std::vector<int> down{id + map_size_width - 1, id + map_size_width};
     std::vector<int> neighbors;
-
-    if (id == 0) {
-        neighbors.push_back(sosed[5]);
-        neighbors.push_back(sosed[4]);
-        return neighbors;
+    if (id - (id % map_size_width) <= left_right[0]) {
+        neighbors.push_back(left_right[0]);
     }
 
-    if (((map_size_height % 2 == 0) and (id == map_size_width * map_size_height - 1)) or ((map_size_height % 2 != 0) and (id == map_size_width * (map_size_height - 1)))) {
-        neighbors.push_back(sosed[0]);
-        neighbors.push_back(sosed[1]);
-        return neighbors;
+    if ((id + map_size_width - (id % map_size_width) - 1) >= left_right[1]) {
+        neighbors.push_back(left_right[1]);
     }
 
-    if (id < map_size_width) {
-        for (int j = 3; j < sosed.size(); j++) {
-            neighbors.push_back(sosed[j]);
+    for (int i = 0; i < 2; i++) {
+        if ((id - (id % map_size_width)) % (2 * map_size_width) == 0) {
+            upp[i] += 1;
+            down[i] += 1;
         }
-        return neighbors;
-    }
 
-    if (id >= map_size_width * (map_size_height - 1)) {
-        for (int j = 0; j < 3; j++) {
-            neighbors.push_back(sosed[j]);
-        }
-        if (map_size_height % 2 != 0) {
-            neighbors[2] -= 2;
-        }
-        return neighbors;
-    }
-
-    if (((id + 1) % (2 * map_size_width) == 0) or (id % (2 * map_size_width) == 0)) {
-        if (sosed[0] >= 0) {
-            neighbors.push_back(sosed[0]);
-        }
-        neighbors.push_back(sosed[1]);
-        neighbors.push_back(sosed[4]);
-        if (sosed[5] < map_size_width * map_size_height) {
-            neighbors.push_back(sosed[5]);
-        }
-        return neighbors;
-    }
-
-    if (((id - (id % map_size_width)) % (2 * map_size_width)) == 0) {
-        for (int j = 0; j < sosed.size(); j++) {
-            if (j == 2) {
-                neighbors.push_back(sosed[j] - 2);
-                continue;
-            }
-            if ((sosed[j] >= 0) and (sosed[j] < map_size_width * map_size_height)) {
-                neighbors.push_back(sosed[j]);
-            }
-        }
-        return neighbors;
-    }
-
-    for (int j = 0; j < sosed.size(); j++) {
-        if (j == 3) {
-            neighbors.push_back(sosed[j] + 2);
+        if (((id + map_size_width) % (2 * map_size_width) == 0) and (i == 0)) {
             continue;
         }
-        if ((sosed[j] >= 0) and (sosed[j] < map_size_width * map_size_height)) {
-            neighbors.push_back(sosed[j]);
+
+        if (((id + 1 + map_size_width) % (2 * map_size_width) == 0) and (i == 1)) {
+            continue;
         }
+
+        if (upp[i] >= 0) {
+            neighbors.push_back(upp[i]);
+        }
+
+        if (down[i] < map_size_width * map_size_height) {
+            neighbors.push_back(down[i]);
+        }
+
     }
     return neighbors;
 }
