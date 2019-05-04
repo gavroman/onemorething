@@ -5,7 +5,7 @@
 int main()
 {
     Map battle_field("../source/game_map/megamap_test.tmx");
-    sf::RenderWindow window(sf::VideoMode(1080, 720), "One More Thing");
+    sf::RenderWindow window(sf::VideoMode(1250, 850), "One More Thing");
     battle_field.draw_map(window);
     while (window.isOpen())
     {

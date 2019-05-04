@@ -52,8 +52,6 @@ void Map::parse() {
     }
 
     XMLElement * tile_xml = map_xml->FirstChildElement("layer")->FirstChildElement("data")->FirstChildElement("tile");
-    current_x = 0;
-    current_y = 0;
     int i = 0;
     do {
         std::shared_ptr cell = std::make_shared<Cell>();
@@ -63,13 +61,7 @@ void Map::parse() {
         int gid = tile_xml->IntAttribute("gid", 0);
         
         cell->sprite = hex_sprites[gid - 1];
-        if (!(i % map_size_width)) {
-            current_y += sprite_height;
-            current_x = 0;
-        }    
-        cell->sprite.setPosition(current_x, current_y);
-        current_x += sprite_width;
-        
+        cell->sprite.setPosition(calculate_position(cell->id));
         map.emplace_back(cell);
     } while ((tile_xml = tile_xml->NextSiblingElement("tile")));
 
@@ -82,6 +74,19 @@ void Map::parse() {
         std::cout << std::endl;
     }*/
     //===================================================
+}
+
+sf::Vector2f Map::calculate_position(const int id) {
+    int row = id / map_size_width;
+    int col = id % map_size_width;
+    float pos_x = col * hex_size_width;
+    float pos_y = row * (hex_size_height - 13) ;
+    if (row % 2 == 0) {
+        pos_x += hex_size_width / 2;
+    }
+    sf::Vector2f position(pos_x, pos_y);
+    return position;
+    
 }
 
 std::vector<int> Map::search_neighbors(const int id) {

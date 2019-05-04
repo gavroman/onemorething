@@ -38,7 +38,8 @@ class Map {
     std::shared_ptr<Cell> create_hex(); // Возвращает указатель на заполненную текстурку
 
     std::vector<int> search_neighbors(const int id);
-
+    
+    sf::Vector2f calculate_position(const int id);
     void draw_map(sf::RenderWindow& window); // Отрисовывает карту
 
     void proceed_click();
