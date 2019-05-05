@@ -1,11 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <chrono>
 #include <thread>
-#include <iostream>
 
 #include "Map.h"
-
-
 
 int main(const int argc, const char ** argv) {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
