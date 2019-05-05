@@ -7,7 +7,7 @@
 int main()
 {
     Map battle_field("../source/game_map/Mixed_map.tmx");
-    sf::RenderWindow window(sf::VideoMode(1625, 643), "One More Thing");
+    sf::RenderWindow window(sf::VideoMode(1625, 617), "One More Thing");
     while (window.isOpen())
     {
         sf::Event event;

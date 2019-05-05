@@ -77,7 +77,7 @@ sf::Vector2f Map::calculate_position(const int id) {
     int row = id / map_size_width;
     int col = id % map_size_width;
     float pos_x = col * hex_size_width;
-    float pos_y = row * (hex_size_height - 13) ;
+    float pos_y = row * (hex_size_height - 15) ;
     if (row % 2 == 0) {
         pos_x += (float)hex_size_width / 2;
     }
