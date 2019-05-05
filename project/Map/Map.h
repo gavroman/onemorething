@@ -14,7 +14,6 @@
 #include <memory>
 #include <string>
 #include <fstream>
-#include <iostream>
 
 #include "Character.h"
 #include "Player.h"
@@ -34,7 +33,6 @@ class Map {
  public:
     // Map(); Заготовка под пустой конструктор для процедурной генерации карты
     explicit Map(std::string xml_file);
-    void parse(); // Заполняет поля класса и вектор смежности
     std::shared_ptr<Cell> create_hex(); // Возвращает указатель на заполненную текстурку
 
     std::vector<int> search_neighbors(const int id);
