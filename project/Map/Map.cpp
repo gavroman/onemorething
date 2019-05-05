@@ -57,7 +57,7 @@ Map::Map(std::string xml_file)
         int gid = tile_xml->IntAttribute("gid", 0);
 
         cell->sprite = hex_sprites[gid - 1];
-        cell->passability = (gid <= 9); // Первые 9 тайлов проходимы
+        cell->passability = (gid <= 12); // Первые 12 тайлов проходимы
         cell->sprite.setPosition(calculate_position(cell->id));
         map.emplace_back(cell);
     } while ((tile_xml = tile_xml->NextSiblingElement("tile")));
