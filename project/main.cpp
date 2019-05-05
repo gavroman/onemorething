@@ -6,7 +6,7 @@
 
 int main()
 {
-    Map battle_field("../source/game_map/Grass_map.tmx");
+    Map battle_field("../source/game_map/Mixed_map.tmx");
     sf::RenderWindow window(sf::VideoMode(1625, 643), "One More Thing");
     while (window.isOpen())
     {
