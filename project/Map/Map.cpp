@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Map.h"
 #include "tinyxml2.h"
 
@@ -34,6 +35,7 @@ Map::Map(std::string xml_file)
     if(!map_texture.loadFromFile(img_src)) {
         return;
     }
+    map_texture.setSmooth(true);
     std::vector<sf::Sprite> hex_sprites;
     int current_x = 0;
     int current_y = 0;
@@ -58,6 +60,7 @@ Map::Map(std::string xml_file)
         cell->sprite = hex_sprites[gid - 1];
         cell->passability = (gid <= 12); // Первые 12 тайлов проходимы
         cell->sprite.setPosition(calculate_position(cell->id));
+        cell->sprite.scale(sf::Vector2f(scale, scale));
         map.emplace_back(cell);
     } while ((tile_xml = tile_xml->NextSiblingElement("tile")));
 
@@ -75,13 +78,15 @@ Map::Map(std::string xml_file)
 sf::Vector2f Map::calculate_position(const int id) {
     int row = id / map_size_width;
     int col = id % map_size_width;
-    float pos_x = col * hex_size_width;
-    float pos_y = row * (hex_size_height - 15) ;
+
+    float pos_x = col * hex_size_width + offset_x;
+    float pos_y = row * (hex_size_height - 15) + offset_y;
+
     if (row % 2 == 0) {
         pos_x += (float)hex_size_width / 2;
     }
-    sf::Vector2f position(pos_x, pos_y);
-    return position;
+    return sf::Vector2f(pos_x * scale, pos_y * scale);
+    //return sf::Vector2f(pos_x, pos_y);
 }
 
 std::vector<int>  Map::search_neighbors(const int id) {
