@@ -25,8 +25,8 @@ struct Cell {
     std::unique_ptr<Character> character; // Указатель на объект типа "Персонаж"
     std::vector<int> neighbors; // Массив указателей на айдишники соседних гексов
     sf::Sprite sprite; // Спрайт с текстурой
-    int x; // Координаты центра
-    int y; //
+    float x; // Координаты левого верхнего угла
+    float y; //
     bool passability; // Проходимость
 };
 
@@ -41,7 +41,9 @@ class Map {
     sf::Vector2f calculate_position(const int id); // Вычисляет смещения для отрисовки
     void draw_map(sf::RenderWindow& window); // Отрисовывает карту
 
-    void proceed_click(const sf::Vector2i & pos);
+    void proceed_click(const sf::Vector2f & pos);
+    sf::Vector2f get_cell_center(const int id);
+    float calculate_distance(sf::Vector2f p1, sf::Vector2f p2); //Norma in this space
     void update_cell();
 
  protected:
@@ -55,9 +57,9 @@ class Map {
     int hex_size_height;        // Высота гекса
     float hex_offset_y = 15;
 
-    float scale = 1.15;     //  TODO(): когда появится класс персонажа, 
-    float offset_x = 20;    //  эти параметры надо будет перенести
-    float offset_y = 10;   //  в какой-то главный/общий хедер
+    float scale = 2;     //  TODO(): когда появится класс персонажа, 
+    float offset_x = 0;    //  эти параметры надо будет перенести
+    float offset_y = 0;   //  в какой-то главный/общий хедер
 
     sf::Texture map_texture; // Текстура карты, загружается из одной картинки и содержит в себе все тайлы (так же, как это организовано в tiled map editor)
 };

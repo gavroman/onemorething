@@ -5,7 +5,7 @@
 #include "Map.h"
 
 int main(const int argc, const char ** argv) {
-    sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");//, sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing", sf::Style::Fullscreen);
     window.setPosition(sf::Vector2i(0, 0));
     window.setKeyRepeatEnabled(false);
 
@@ -43,8 +43,9 @@ int main(const int argc, const char ** argv) {
                     //std::cout << "Released:  " << pos_released.x << " : " << pos_released.y << std::endl;
 
                     if (pos_pressed == pos_released and pos_released.x and pos_pressed.y) {
-                        //std::cout << "equal" << std::endl;
-                        battle_field.proceed_click(pos_pressed);
+                        sf::Vector2f pos(pos_pressed.x, pos_pressed.y);
+                        std::cout << "Pressed  " << pos.x << " : " << pos.y << std::endl;
+                        battle_field.proceed_click(pos);
                     }
                     break;
                 

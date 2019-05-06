@@ -54,12 +54,17 @@ Map::Map(std::string xml_file)
         cell->id = i++;
         cell->character = nullptr;
         cell->neighbors = search_neighbors(cell->id);
+        
         int gid = tile_xml->IntAttribute("gid", 0);
+        cell->passability = (gid <= 12); // Первые 12 тайлов проходимы
 
         cell->sprite = hex_sprites[gid - 1];
-        cell->passability = (gid <= 12); // Первые 12 тайлов проходимы
-        cell->sprite.setPosition(calculate_position(cell->id));
+        sf::Vector2f sprite_pos = calculate_position(cell->id);  
+        cell->sprite.setPosition(sprite_pos);
         cell->sprite.scale(sf::Vector2f(scale, scale));
+        cell->x = sprite_pos.x;
+        cell->y = sprite_pos.y;
+
         map.emplace_back(cell);
     } while ((tile_xml = tile_xml->NextSiblingElement("tile")));
 
@@ -119,16 +124,48 @@ std::vector<int>  Map::search_neighbors(const int id) {
     return neighbors;
 }
 
-void Map::proceed_click(const sf::Vector2i & pos) { 
-    std::cout << "----------" << std::endl;
+void Map::proceed_click(const sf::Vector2f & pos) { 
+    std::vector<int> candidates_id;
+    //std::cout << "--------------------" << std::endl;
     for (auto& cell : map) {
         sf::FloatRect coords = cell->sprite.getGlobalBounds();
         if(coords.contains(pos.x, pos.y)) {
-            std::cout << "id = " << cell->id << std::endl;   
+            candidates_id.emplace_back(cell->id); 
         }
     }  
-    std::cout << "----------" << std::endl;
+
+    if (candidates_id.size() == 2) { // collision proceed
+        std::vector<sf::Vector2f> candidates_center = {
+            get_cell_center(map[candidates_id[0]]->id),
+            get_cell_center(map[candidates_id[1]]->id)
+        };
+        
+        float dist1 = calculate_distance(pos, candidates_center[0]);    
+        float dist2 = calculate_distance(pos, candidates_center[1]);    
+
+        if (dist1 < dist2) {
+            std::cout << "id = " << candidates_id[0] << std::endl;
+        } else {
+            std::cout << "id = " << candidates_id[1] << std::endl;
+        }
+    } else {
+        get_cell_center(map[candidates_id[0]]->id);
+        std::cout << "id = " << candidates_id[0] << std::endl;
+    }
+
+    //std::cout << "--------------------" << std::endl;
 }
+
+float Map::calculate_distance(sf::Vector2f p1, sf::Vector2f p2) { //Norma in this space
+    return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
+}
+
+sf::Vector2f Map::get_cell_center(const int id) {
+    sf::Vector2f center(map[id]->x + hex_size_width * scale / 2, map[id]->y + hex_size_height  * scale / 2);
+    //std::cout << "center = " << center.x << " : " << center.y << std::endl;
+    return center;
+}
+
 
 void Map::draw_map(sf::RenderWindow& window) {
     window.clear();
