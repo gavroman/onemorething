@@ -79,13 +79,12 @@ sf::Vector2f Map::calculate_position(const int id) {
     int col = id % map_size_width;
 
     float pos_x = col * hex_size_width + offset_x;
-    float pos_y = row * (hex_size_height - 15) + offset_y;
+    float pos_y = row * (hex_size_height - hex_offset_y) + offset_y;
 
     if (row % 2 == 0) {
         pos_x += (float)hex_size_width / 2;
     }
     return sf::Vector2f(pos_x * scale, pos_y * scale);
-    //return sf::Vector2f(pos_x, pos_y);
 }
 
 std::vector<int>  Map::search_neighbors(const int id) {
@@ -120,18 +119,15 @@ std::vector<int>  Map::search_neighbors(const int id) {
     return neighbors;
 }
 
-void Map::proceed_click(const sf::Vector2i pos) { 
-    int id = 0;
-    int pos_y = pos.y - offset_y + ((pos.y / hex_size_height + 1) * 15);
-    int pos_x = pos.x - offset_x;
-    if ((pos_y / hex_size_height) % 2 == 0) {
-        id += (pos_x - (hex_size_width / 2)) / hex_size_width;
-    } else {
-        id += pos_x / hex_size_width;
-    }
-    id += (pos_y / hex_size_height) * map_size_width;
-    std::cout<<id<<std::endl;
-
+void Map::proceed_click(const sf::Vector2i & pos) { 
+    std::cout << "----------" << std::endl;
+    for (auto& cell : map) {
+        sf::FloatRect coords = cell->sprite.getGlobalBounds();
+        if(coords.contains(pos.x, pos.y)) {
+            std::cout << "id = " << cell->id << std::endl;   
+        }
+    }  
+    std::cout << "----------" << std::endl;
 }
 
 void Map::draw_map(sf::RenderWindow& window) {

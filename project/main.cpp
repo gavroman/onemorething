@@ -5,7 +5,8 @@
 #include "Map.h"
 
 int main(const int argc, const char ** argv) {
-    sf::RenderWindow window(sf::VideoMode(1800, 800), "One More Thing");//, sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");//, sf::Style::Fullscreen);
+    window.setPosition(sf::Vector2i(0, 0));
     window.setKeyRepeatEnabled(false);
 
     std::vector<std::string> maps_names;                    // 
@@ -34,15 +35,15 @@ int main(const int argc, const char ** argv) {
     
                 case sf::Event::MouseButtonPressed: 
                     pos_pressed = sf::Mouse::getPosition(window);
-                    std::cout << "Pressed:  " << pos_pressed.x << " : " << pos_pressed.y << std::endl;
+                    //std::cout << "Pressed:  " << pos_pressed.x << " : " << pos_pressed.y << std::endl;
                     break;
     
                 case sf::Event::MouseButtonReleased:
-                    pos_released= sf::Mouse::getPosition(window);
-                    std::cout << "Released:  " << pos_released.x << " : " << pos_released.y << std::endl;
+                    pos_released = sf::Mouse::getPosition(window);
+                    //std::cout << "Released:  " << pos_released.x << " : " << pos_released.y << std::endl;
 
-                    if (pos_pressed == pos_released) {
-                        std::cout << "equal" << std::endl;
+                    if (pos_pressed == pos_released and pos_released.x and pos_pressed.y) {
+                        //std::cout << "equal" << std::endl;
                         battle_field.proceed_click(pos_pressed);
                     }
                     break;
