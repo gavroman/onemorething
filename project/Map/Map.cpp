@@ -43,12 +43,16 @@ Map::Map(std::string xml_file)
             current_y += sprite_height;
             current_x = 0;
         }
-        hex_sprites.emplace_back(sf::Sprite(map_texture, sf::Rect(current_x, current_y, sprite_width, sprite_height)));
+        hex_sprites.emplace_back(sf::Sprite( map_texture, sf::Rect(current_x, 
+                                                                   current_y, 
+                                                                   sprite_width, 
+                                                                   sprite_height)));
         current_x += sprite_width;
     }
-
     int i = 0;
-    XMLElement * tile_xml = map_xml->FirstChildElement("layer")->FirstChildElement("data")->FirstChildElement("tile");
+    XMLElement * tile_xml = map_xml->FirstChildElement("layer")
+                                   ->FirstChildElement("data")
+                                   ->FirstChildElement("tile");
     do {
         std::shared_ptr cell = std::make_shared<Cell>();
         cell->id = i++;
@@ -92,7 +96,7 @@ sf::Vector2f Map::calculate_position(const int id) {
     return sf::Vector2f(pos_x * scale, pos_y * scale);
 }
 
-std::vector<int>  Map::search_neighbors(const int id) {
+std::vector<int> Map::search_neighbors(const int id) {
     std::vector<int> left_right{id - 1, id + 1};
     std::vector<int> upp {id - map_size_width - 1, id - map_size_width};
     std::vector<int> down {id + map_size_width - 1, id + map_size_width};
@@ -124,30 +128,29 @@ std::vector<int>  Map::search_neighbors(const int id) {
     return neighbors;
 }
 
-void Map::proceed_click(const sf::Vector2f & pos) { 
-    std::vector<int> candidates_id;
+int Map::get_cell_id_from_pos(const sf::Vector2f & pos) {    //TODO fix out of range
+    std::vector<int> candidates_id;                          
     for (auto& cell : map) {
         sf::FloatRect coords = cell->sprite.getGlobalBounds();
         if (coords.contains(pos.x, pos.y)) {
             candidates_id.emplace_back(cell->id);
         }
     }  
-    if (candidates_id.size() == 2) { // collision proceed
+    if (candidates_id.size() == 2) {                         // collision proceed
         std::vector<sf::Vector2f> candidates_center = {
             get_cell_center(map[candidates_id[0]]->id),
             get_cell_center(map[candidates_id[1]]->id)
         };
-        
         float dist1 = calculate_distance(pos, candidates_center[0]);    
         float dist2 = calculate_distance(pos, candidates_center[1]);    
 
         if (dist1 < dist2) {
-            std::cout << "id = " << candidates_id[0] << std::endl;
+            return candidates_id[0];
         } else {
-            std::cout << "id = " << candidates_id[1] << std::endl;
+            return candidates_id[1];
         }
     } else {
-        std::cout << "id = " << candidates_id[0] << std::endl;
+        return candidates_id[0];
     }
 }
 
