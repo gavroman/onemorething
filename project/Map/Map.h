@@ -14,6 +14,7 @@
 #include <memory>
 #include <string>
 #include <fstream>
+#include <iostream>
 
 #include "Character.h"
 #include "Player.h"
@@ -37,10 +38,10 @@ class Map {
 
     std::vector<int> search_neighbors(const int id);
     
-    sf::Vector2f calculate_position(const int id);
+    sf::Vector2f calculate_position(const int id); // Вычисляет смещения для отрисовки
     void draw_map(sf::RenderWindow& window); // Отрисовывает карту
 
-    void proceed_click();
+    void proceed_click(const sf::Vector2i pos);
     void update_cell();
 
  protected:
@@ -53,9 +54,9 @@ class Map {
     int hex_size_width;         // Ширина гекса
     int hex_size_height;        // Высота гекса
 
-    float scale = 1.15;     //  TODO(): когда появится класс персонажа, 
-    float offset_x = 20;    //  эти параметры надо будет перенести 
-    float offset_y = 180;   //  в какой-то главный/общий хедер 
+    float scale = 1.;     //  TODO(): когда появится класс персонажа, 
+    float offset_x = 0;//20;    //  эти параметры надо будет перенести 
+    float offset_y = 0;   //  в какой-то главный/общий хедер 
 
     sf::Texture map_texture; // Текстура карты, загружается из одной картинки и содержит в себе все тайлы (так же, как это организовано в tiled map editor)
 };
