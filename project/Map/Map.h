@@ -53,13 +53,14 @@ class Map {
     std::string xml_file_path;  // Путь к файлу
     int map_size_width;         // Ширина карты
     int map_size_height;        // Высота карты
+    
     int hex_size_width;         // Ширина гекса
     int hex_size_height;        // Высота гекса
     float hex_offset_y = 15;
 
-    float scale = 2;     //  TODO(): когда появится класс персонажа, 
-    float offset_x = 0;    //  эти параметры надо будет перенести
-    float offset_y = 0;   //  в какой-то главный/общий хедер
+    float scale = 1.15;     //  TODO(): когда появится класс персонажа, 
+    float offset_x = 20;    //  эти параметры надо будет перенести
+    float offset_y = 180;   //  в какой-то главный/общий хедер
 
     sf::Texture map_texture; // Текстура карты, загружается из одной картинки и содержит в себе все тайлы (так же, как это организовано в tiled map editor)
 };

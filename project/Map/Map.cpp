@@ -126,14 +126,12 @@ std::vector<int>  Map::search_neighbors(const int id) {
 
 void Map::proceed_click(const sf::Vector2f & pos) { 
     std::vector<int> candidates_id;
-    //std::cout << "--------------------" << std::endl;
     for (auto& cell : map) {
         sf::FloatRect coords = cell->sprite.getGlobalBounds();
-        if(coords.contains(pos.x, pos.y)) {
-            candidates_id.emplace_back(cell->id); 
+        if (coords.contains(pos.x, pos.y)) {
+            candidates_id.emplace_back(cell->id);
         }
     }  
-
     if (candidates_id.size() == 2) { // collision proceed
         std::vector<sf::Vector2f> candidates_center = {
             get_cell_center(map[candidates_id[0]]->id),
@@ -149,11 +147,8 @@ void Map::proceed_click(const sf::Vector2f & pos) {
             std::cout << "id = " << candidates_id[1] << std::endl;
         }
     } else {
-        get_cell_center(map[candidates_id[0]]->id);
         std::cout << "id = " << candidates_id[0] << std::endl;
     }
-
-    //std::cout << "--------------------" << std::endl;
 }
 
 float Map::calculate_distance(sf::Vector2f p1, sf::Vector2f p2) { //Norma in this space
@@ -162,10 +157,8 @@ float Map::calculate_distance(sf::Vector2f p1, sf::Vector2f p2) { //Norma in thi
 
 sf::Vector2f Map::get_cell_center(const int id) {
     sf::Vector2f center(map[id]->x + hex_size_width * scale / 2, map[id]->y + hex_size_height  * scale / 2);
-    //std::cout << "center = " << center.x << " : " << center.y << std::endl;
     return center;
 }
-
 
 void Map::draw_map(sf::RenderWindow& window) {
     window.clear();
