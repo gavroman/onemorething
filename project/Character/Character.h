@@ -13,6 +13,12 @@ class Character {
     virtual unsigned int apply_damage() = 0;
     virtual void get_damage(unsigned int damage) = 0;
 
+    void move(int id); // Передвигает на одну! клетку
+
+    void set_active(); // Обновляет статус текущего персонажа и обнуляет предыдущего активного
+    void set_inactive();
+    bool is_active();
+
  protected:
     unsigned int hp;
     unsigned int damage_min;
@@ -20,6 +26,8 @@ class Character {
     unsigned int range;
 
     sf::Sprite sprite;
+
+    bool active;
 };
 
 class Scout : public Character {

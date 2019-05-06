@@ -185,3 +185,45 @@ void Map::draw_map(sf::RenderWindow& window) {
     }
     window.display();
 }
+
+/*void Map::proceed_click(sf::Vector2i& position) {
+
+    // TODO: Поймать клетку
+    // Обработать координаты, если в пределах карты, то проверяем на текущего игрока, если бот, то не обрататываем
+    // Пока делаю с заделом на потенциальный локальный мултиплеер
+
+    int id; // айди клетки
+
+    // TODO: Понять стоит ли использовать try/catch
+    // TODO: Лямбда-функция
+
+    if (map[id]->character) { // Проверяем на интерактивность
+*//*for (int i = 0; i < players[current_player]->get_number_of_characters(); i++) {
+            if ((map[id]->character = players[current_player]->get_char_ptr(i)))
+            {
+
+                break;
+            }
+        }*//*
+
+
+        if ((players[current_player]->is_my_char(map[id]->character))) { // Проверяем владельца
+            if (!(map[id]->character->is_active())) { // Активируем персонажа
+                map[id]->character->set_active();
+                return;
+            }
+
+            return;
+
+            // TODO: Как будет работать хил?
+        }
+else {
+            if () {
+                // TODO: move_and_apply_damage, проверка на досигаемость, проверка на дальность атаки, вектор пути по соседям
+            }
+        }
+
+    } else {
+
+    }
+}*/
