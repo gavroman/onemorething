@@ -5,7 +5,7 @@
 #include "Map.h"
 
 int main(const int argc, const char ** argv) {
-    sf::RenderWindow window(sf::VideoMode(600, 400), "One More Thing");//, sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode(1800, 800), "One More Thing");//, sf::Style::Fullscreen);
     window.setKeyRepeatEnabled(false);
 
     std::vector<std::string> maps_names;                    // 

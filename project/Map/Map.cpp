@@ -121,7 +121,16 @@ std::vector<int>  Map::search_neighbors(const int id) {
 }
 
 void Map::proceed_click(const sf::Vector2i pos) { 
-    //TODO(9rik): print cell's id
+    int id = 0;
+    int pos_y = pos.y - offset_y + ((pos.y / hex_size_height + 1) * 15);
+    int pos_x = pos.x - offset_x;
+    if ((pos_y / hex_size_height) % 2 == 0) {
+        id += (pos_x - (hex_size_width / 2)) / hex_size_width;
+    } else {
+        id += pos_x / hex_size_width;
+    }
+    id += (pos_y / hex_size_height) * map_size_width;
+    std::cout<<id<<std::endl;
 
 }
 
