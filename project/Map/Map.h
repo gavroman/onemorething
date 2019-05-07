@@ -34,13 +34,13 @@ class Map {
  public:
     // Map(); Заготовка под пустой конструктор для процедурной генерации карты
     explicit Map(std::string xml_file);
-    std::shared_ptr<Cell> create_hex();                      // Возвращает указатель на заполненную текстурку
-    std::vector<int> search_neighbors(const int id);
+    std::vector<int> search_neighbors(const int id);         // Заполняет вектор соседей
     sf::Vector2f calculate_position(const int id);           // Вычисляет смещения для отрисовки
     void draw_map(sf::RenderWindow& window);                 // Отрисовывает карту
-    int get_cell_id_from_pos(const sf::Vector2f & pos);
-    sf::Vector2f get_cell_center(const int id);
+    int get_cell_id_from_pos(const sf::Vector2f & pos);      // Достает id по координатам
+    sf::Vector2f get_cell_center(const int id);              // Вычисляет центр клетки
     float calculate_distance(sf::Vector2f point1, sf::Vector2f point2);
+    sf::CircleShape highlight_cell(const int id, sf::Color color, sf::Color border_color);
     void update_cell();
 
  protected:

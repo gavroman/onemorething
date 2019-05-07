@@ -128,12 +128,15 @@ std::vector<int> Map::search_neighbors(const int id) {
     return neighbors;
 }
 
-int Map::get_cell_id_from_pos(const sf::Vector2f & pos) {    //TODO fix out of range
-    std::vector<int> candidates_id;                          
+int Map::get_cell_id_from_pos(const sf::Vector2f & pos) {
+    std::vector<int> candidates_id;
     for (auto& cell : map) {
         sf::FloatRect coords = cell->sprite.getGlobalBounds();
         if (coords.contains(pos.x, pos.y)) {
             candidates_id.emplace_back(cell->id);
+        }
+        if (candidates_id.size() == 2) {
+            break;
         }
     }  
     if (candidates_id.size() == 2) {                         // collision proceed
@@ -141,17 +144,18 @@ int Map::get_cell_id_from_pos(const sf::Vector2f & pos) {    //TODO fix out of r
             get_cell_center(map[candidates_id[0]]->id),
             get_cell_center(map[candidates_id[1]]->id)
         };
-        float dist1 = calculate_distance(pos, candidates_center[0]);    
-        float dist2 = calculate_distance(pos, candidates_center[1]);    
+        float dist1 = calculate_distance(pos, candidates_center[0]);
+        float dist2 = calculate_distance(pos, candidates_center[1]);
 
         if (dist1 < dist2) {
             return candidates_id[0];
         } else {
             return candidates_id[1];
         }
-    } else {
+    } else if(candidates_id.size() == 1){
         return candidates_id[0];
     }
+    return -1;
 }
 
 float Map::calculate_distance(sf::Vector2f p1, sf::Vector2f p2) { //Norma in this space
@@ -162,6 +166,17 @@ sf::Vector2f Map::get_cell_center(const int id) {
     sf::Vector2f center(map[id]->x + hex_size_width * scale / 2, map[id]->y + hex_size_height  * scale / 2);
     return center;
 }
+
+sf::CircleShape Map::highlight_cell(const int id, sf::Color color, sf::Color border_color)  {
+    sf::CircleShape hex_shape(28, 6);
+    hex_shape.setPosition(map[id]->x - 3 * scale, map[id]->y + 0.5 * scale);
+    hex_shape.setScale(scale, scale);
+    hex_shape.setFillColor(color);
+    hex_shape.setOutlineThickness(1);
+    hex_shape.setOutlineColor(border_color);
+    return hex_shape;
+}
+
 
 void Map::draw_map(sf::RenderWindow& window) {
     window.clear();

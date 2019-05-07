@@ -5,7 +5,8 @@
 #include "Map.h"
 
 int main(const int argc, const char ** argv) {
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    //sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
 
     std::vector<std::string> maps_names;                    //
     maps_names.emplace_back("Dark_map.tmx");                //
@@ -19,9 +20,8 @@ int main(const int argc, const char ** argv) {
 
     sf::Vector2i pos_pressed(0, 0);
     sf::Vector2i pos_released(0, 0);
+    battle_field.draw_map(window);
     while (window.isOpen()) {
-        battle_field.draw_map(window);
-
         sf::Event event;
         while (window.pollEvent(event)) {
             switch(event.type) {
@@ -35,10 +35,15 @@ int main(const int argc, const char ** argv) {
 
                 case sf::Event::MouseButtonReleased:
                     pos_released = sf::Mouse::getPosition(window);
-                    if (pos_pressed == pos_released) {
+                    if (pos_pressed == pos_released and pos_pressed.x and pos_pressed.y) {
                         sf::Vector2f pos(pos_pressed.x, pos_pressed.y);
                         int cell_id = battle_field.get_cell_id_from_pos(pos);
+                        battle_field.draw_map(window);
+                        window.display();
+                        window.draw(battle_field.highlight_cell(cell_id, sf::Color(20, 30, 52, 100), sf::Color::Cyan));
+                        window.display();
                         std::cout << "Pressed cell id = " << cell_id <<std::endl;
+
                     }
                     break;
 
