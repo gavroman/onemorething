@@ -38,12 +38,14 @@ int main(const int argc, const char ** argv) {
                     if (pos_pressed == pos_released and pos_pressed.x and pos_pressed.y) {
                         sf::Vector2f pos(pos_pressed.x, pos_pressed.y);
                         int cell_id = battle_field.get_cell_id_from_pos(pos);
-                        battle_field.draw_map(window);
-                        window.display();
-                        window.draw(battle_field.highlight_cell(cell_id, sf::Color(20, 30, 52, 100), sf::Color::Cyan));
-                        window.display();
-                        std::cout << "Pressed cell id = " << cell_id <<std::endl;
-
+                        if (cell_id >= 0) {
+                            battle_field.draw_map(window);
+                            window.display();
+                            sf::Color color(20, 30, 52, 100);
+                            window.draw(battle_field.highlight_cell(cell_id, color, sf::Color::Cyan));
+                            window.display();
+                            std::cout << "Pressed cell id = " << cell_id <<std::endl;
+                        }    
                     }
                     break;
 
