@@ -1,8 +1,15 @@
+//
+// Created by arugaf on 08.05.19.
+//
+
 #include "Map.h"
 #include "tinyxml2.h"
 
-Map::Map(std::string xml_file)
-    : xml_file_path(std::move(xml_file)) {
+/* В этом файле содержится все, что касается самой карты.
+ * Само создание, отрисовка и т.п. */
+
+Map::Map(const std::string xml_file)
+        : xml_file_path(std::move(xml_file)) {
     using namespace tinyxml2;
     XMLDocument doc;
     if (doc.LoadFile(xml_file_path.c_str())) {
@@ -43,27 +50,27 @@ Map::Map(std::string xml_file)
             current_y += sprite_height;
             current_x = 0;
         }
-        hex_sprites.emplace_back(sf::Sprite( map_texture, sf::Rect(current_x, 
-                                                                   current_y, 
-                                                                   sprite_width, 
+        hex_sprites.emplace_back(sf::Sprite( map_texture, sf::Rect(current_x,
+                                                                   current_y,
+                                                                   sprite_width,
                                                                    sprite_height)));
         current_x += sprite_width;
     }
     int i = 0;
     XMLElement * tile_xml = map_xml->FirstChildElement("layer")
-                                   ->FirstChildElement("data")
-                                   ->FirstChildElement("tile");
+            ->FirstChildElement("data")
+            ->FirstChildElement("tile");
     do {
         std::shared_ptr cell = std::make_shared<Cell>();
         cell->id = i++;
         cell->character = nullptr;
         cell->neighbors = search_neighbors(cell->id);
-        
+
         int gid = tile_xml->IntAttribute("gid", 0);
         cell->passability = (gid <= 12); // Первые 12 тайлов проходимы
 
         cell->sprite = hex_sprites[gid - 1];
-        sf::Vector2f sprite_pos = calculate_position(cell->id);  
+        sf::Vector2f sprite_pos = calculate_position(cell->id);
         cell->sprite.setPosition(sprite_pos);
         cell->sprite.scale(sf::Vector2f(scale, scale));
         cell->x = sprite_pos.x;
@@ -74,7 +81,7 @@ Map::Map(std::string xml_file)
 
     //===============вывод id и id соседей===============
     /*for (auto& cell : map) {
-        std::cout << "id: " << cell->id << " neighbors: "; 
+        std::cout << "id: " << cell->id << " neighbors: ";
         for (auto& neighbor : cell->neighbors) {
             std::cout << neighbor << ", ";
         }
@@ -128,102 +135,8 @@ std::vector<int> Map::search_neighbors(const int id) {
     return neighbors;
 }
 
-int Map::get_cell_id_from_pos(const sf::Vector2f & pos) {
-    std::vector<int> candidates_id;
-    for (auto& cell : map) {
-        sf::FloatRect coords = cell->sprite.getGlobalBounds();
-        if (coords.contains(pos.x, pos.y)) {
-            candidates_id.emplace_back(cell->id);
-        }
-        if (candidates_id.size() == 2) {
-            break;
-        }
-    }  
-    if (candidates_id.size() == 2) {                         // collision proceed
-        std::vector<sf::Vector2f> candidates_center = {
-            get_cell_center(map[candidates_id[0]]->id),
-            get_cell_center(map[candidates_id[1]]->id)
-        };
-        float dist1 = calculate_distance(pos, candidates_center[0]);
-        float dist2 = calculate_distance(pos, candidates_center[1]);
-
-        if (dist1 < dist2) {
-            return candidates_id[0];
-        } else {
-            return candidates_id[1];
-        }
-    } else if(candidates_id.size() == 1){
-        return candidates_id[0];
-    }
-    return -1;
-}
-
-float Map::calculate_distance(sf::Vector2f p1, sf::Vector2f p2) { //Norma in this space
-    return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
-}
-
-sf::Vector2f Map::get_cell_center(const int id) {
-    sf::Vector2f center(map[id]->x + hex_size_width * scale / 2, map[id]->y + hex_size_height  * scale / 2);
-    return center;
-}
-
-sf::CircleShape Map::highlight_cell(const int id, sf::Color color, sf::Color border_color)  {
-    sf::CircleShape hex_shape(28, 6);
-    hex_shape.setPosition(map[id]->x - 3 * scale, map[id]->y + 0.5 * scale);
-    hex_shape.setScale(scale, scale);
-    hex_shape.setFillColor(color);
-    hex_shape.setOutlineThickness(1);
-    hex_shape.setOutlineColor(border_color);
-    return hex_shape;
-}
-
-
 void Map::draw_map(sf::RenderWindow& window) {
-    window.clear();
     for (const auto& it : map) {
         window.draw((*it).sprite);
     }
-    window.display();
 }
-
-/*void Map::proceed_click(sf::Vector2i& position) {
-
-    // TODO: Поймать клетку
-    // Обработать координаты, если в пределах карты, то проверяем на текущего игрока, если бот, то не обрататываем
-    // Пока делаю с заделом на потенциальный локальный мултиплеер
-
-    int id; // айди клетки
-
-    // TODO: Понять стоит ли использовать try/catch
-    // TODO: Лямбда-функция
-
-    if (map[id]->character) { // Проверяем на интерактивность
-*//*for (int i = 0; i < players[current_player]->get_number_of_characters(); i++) {
-            if ((map[id]->character = players[current_player]->get_char_ptr(i)))
-            {
-
-                break;
-            }
-        }*//*
-
-
-        if ((players[current_player]->is_my_char(map[id]->character))) { // Проверяем владельца
-            if (!(map[id]->character->is_active())) { // Активируем персонажа
-                map[id]->character->set_active();
-                return;
-            }
-
-            return;
-
-            // TODO: Как будет работать хил?
-        }
-else {
-            if () {
-                // TODO: move_and_apply_damage, проверка на досигаемость, проверка на дальность атаки, вектор пути по соседям
-            }
-        }
-
-    } else {
-
-    }
-}*/

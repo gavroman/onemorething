@@ -15,21 +15,21 @@ enum Current_player {
 
 static Current_player current_player = PLAYER1;
 
-class Player;
 class Character;
 struct Cell;
 
-// static std::vector<std::unique_ptr<Player>> players; // Скорее всего будет в мэйне, но это не точно
-
 class Player {
  public:
-    virtual void move_character(std::vector<int> id); // обновляет состояние клетки и передвигает персонажа
+    Player() = default;
+
+    virtual bool move_character(std::vector<int> id, std::shared_ptr<Character>); // обновляет состояние клетки и передвигает персонажа, здесь же строится путь, если недостижимо, то возвращает false
     std::shared_ptr<Character> get_active_char();
-    bool is_my_char(std::shared_ptr<Character>);
+    bool is_my_char(std::shared_ptr<Character> character);
 
     /*std::shared_ptr<Character> get_char_ptr(int id);
     int get_number_of_characters();*/
 
+    ~Player() = default;
  protected:
     std::vector<std::shared_ptr<Character>> assigned_characters; // Персонажи игрока
     std::vector<std::shared_ptr<Cell>> assigned_cells; // Клетки, доступные игроку
@@ -42,5 +42,7 @@ class User : public Player {
 class Bot : public Player {
 
 };
+
+// std::vector <std::unique_ptr <Player>> players;
 
 #endif //ONEMORETHING_PLAYER_H

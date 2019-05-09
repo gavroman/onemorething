@@ -10,7 +10,7 @@
 
 class Character {
  public:
-    virtual unsigned int apply_damage() = 0;
+    virtual unsigned int apply_damage(std::shared_ptr <Cell> cell) = 0; // Вызывает move_character из Player, если получает false, то возвращает false
     virtual void get_damage(unsigned int damage) = 0;
 
     void move(int id); // Передвигает на одну! клетку
@@ -19,7 +19,11 @@ class Character {
     void set_inactive();
     bool is_active();
 
+    int get_current_cell();
+
  protected:
+    int current_cell;
+
     unsigned int hp;
     unsigned int damage_min;
     unsigned int damage_max;
@@ -30,35 +34,43 @@ class Character {
     bool active;
 };
 
-class Scout : public Character {
+class Melee : public Character {
 
 };
 
-class Archer : public Character {
+class Range : public Character {
 
 };
 
-class Swordman : public Character {
+class Scout : public Melee {
 
 };
 
-class Healer : public Character {
+class Archer : public Range {
 
 };
 
-class Tank : public Character {
+class Swordman : public Melee {
 
 };
 
-class Crosswbowman : public Character {
+class Tank : public Melee {
 
 };
 
-class Berserker : public Character {
+class Crosswbowman : public Range {
 
 };
 
-class Knight : public Character {
+class Berserker : public Melee {
+
+};
+
+class Knight : public Melee {
+
+};
+
+class Healer : public Melee, Range {
 
 };
 
