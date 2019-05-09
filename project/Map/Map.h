@@ -15,6 +15,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
 #include "Character.h"
 #include "Player.h"
@@ -44,6 +45,7 @@ class Map {
 
     std::vector<std::vector<int>> get_adj_matrix();          // Матрица смежности
     std::vector<std::vector<int>> get_trace(const int id, const std::vector<std::vector<int>> matrix_adj, const int distance); //возможные пути с учетом дистанции
+    std::vector<int> get_one_trace(const int id, const std::vector<std::vector<int>> trace, const std::vector<std::vector<int>> matrix_adj);
 
     void update_cell();
 

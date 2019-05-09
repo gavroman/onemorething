@@ -135,6 +135,7 @@ std::vector<int> Map::search_neighbors(const int id) {
     return neighbors;
 }
 
+
 void Map::draw_map(sf::RenderWindow& window) {
     for (const auto& it : map) {
         window.draw((*it).sprite);

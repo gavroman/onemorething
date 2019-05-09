@@ -81,6 +81,34 @@ std::vector<std::vector<int>> Map::get_trace(const int id, const std::vector<std
     return trace;
 }
 
+std::vector<int> Map::get_one_trace(const int id, const std::vector<std::vector<int>> trace, const std::vector<std::vector<int>> matrix_adj) {
+    std::vector<int> one_trace;
+    int id_add = id;
+    one_trace.push_back(id_add);
+    int i = 1;
+    for (i; i < trace.size(); i++) {
+        if (std::find(trace[i].begin(), trace[i].end(), id) != trace[i].end()) {
+            break;
+        }
+    }
+    for (i; id_add != trace[0][0]; i--) {
+        int k = 0;
+        while (matrix_adj[k][0] != id_add) {
+            k++;
+        }
+        std::vector<int> neighbors = matrix_adj[k];
+        for (int j = 0; j < trace[i - 1].size(); j++) {
+            auto find_id = std::find(neighbors.begin(), neighbors.end(), trace[i - 1][j]);
+            if (find_id != neighbors.end()) {
+                id_add = find_id[0];
+                one_trace.push_back(id_add);
+                break;
+            }
+        }
+    }
+    return one_trace;
+}
+
 /*
 void Map::proceed_click(const int& id) {
     if (Проверка на нахождение в области видимости) {
