@@ -11,6 +11,7 @@
 
 #include "Map.h"
 #include "Player.h"
+#include "Character.h"
 
 
 class Game {

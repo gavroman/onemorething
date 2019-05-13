@@ -138,6 +138,14 @@ std::vector<int> Map::find_route(const int id, const std::vector<std::vector<int
         }
     }
     return one_trace;
+}    
+
+void Map::update_cell(std::shared_ptr<Character> character, int id) {
+    if (!map[id]->character) {
+        map[id]->character = character;
+    } else {
+        map[id]->character = nullptr;
+    }
 }
 
 /*

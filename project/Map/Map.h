@@ -39,6 +39,7 @@ class Map {
     sf::CircleShape highlight_cell(const int id, sf::Color color, sf::Color border_color);
 
     void proceed_click(const int& id);
+
     int get_cell_id_from_pos(const sf::Vector2f & pos);      // Достает id по координатам
     std::vector<std::vector<int>> get_adj_matrix();          // Матрица смежности
     std::vector<std::vector<int>> find_move_area(const int id, 
@@ -49,7 +50,9 @@ class Map {
                                    const std::vector<std::vector<int>> matrix_adj);
     bool is_passable(const int id);
     bool is_in_area(const std::vector<std::vector<int>> area, const int id);
-    void update_cell();
+
+    void update_cell(std::shared_ptr<Character> character, int id);
+
 
     std::vector <int> get_route(int start, int end); 
     // Должен срабатывать: 1) когда выбран персонаж И кликнута клетка, куда пойдет персонаж 
