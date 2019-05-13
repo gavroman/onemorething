@@ -15,7 +15,7 @@ Game::Game(const int &map_id) {
 
 void Game::run_game(const std::string xml_file_path) {
     //sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
-     sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
+    sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
 
     Map battle_field("../source/game_map/" + xml_file_path);
 
@@ -27,11 +27,17 @@ void Game::run_game(const std::string xml_file_path) {
 
 
     std::shared_ptr<Character> test_char = std::make_shared<Scout>();
-    battle_field.update_cell(test_char, 53);
+    battle_field.update_cell(test_char, 0);
 
 
     while (window.isOpen()) {
         sf::Event event;
+
+        window.clear();
+        battle_field.draw_map(window);
+        test_char->draw(window);
+        window.display();
+
         while (window.pollEvent(event)) {
             switch(event.type) {
                 case sf::Event::Closed:
@@ -64,6 +70,6 @@ void Game::run_game(const std::string xml_file_path) {
                     break;
             }
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        std::this_thread::sleep_for(std::chrono::milliseconds(130));
     }
 }

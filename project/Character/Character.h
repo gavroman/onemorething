@@ -8,6 +8,14 @@
 #include "Map.h"
 #include "Player.h"
 
+enum Status {
+    IDLE = 0,
+    WALK = 1,
+    ATTACK = 2,
+    HURT = 3,
+    DEAD = 4,
+};
+
 class Character {
  public:
     //virtual unsigned int apply_damage(std::shared_ptr <Cell> cell) = 0; // Вызывает move_character из Player, если получает false, то возвращает false
@@ -21,9 +29,21 @@ class Character {
 
     //int get_current_cell();
 
+    void animate();
+    void draw(sf::RenderWindow& window); // ВРЕМЕННАЯ ФУНКЦИЯ
+
     sf::Sprite sprite; // будет в протектед
  protected:
+    Status status;
     int current_cell;
+
+    sf::Texture idle_texture;
+    sf::Texture walk_texture;
+
+    int texture_x;
+    int texture_y;
+    int texture_height;
+    int texture_width;
 
     unsigned int hp;
     unsigned int damage_min;
@@ -45,11 +65,6 @@ class Range : public Character {
 class Scout : public Character {
  public:
     Scout();
-
-    //unsigned int apply_damage(std::shared_ptr <Cell> cell) override;
-   // void get_damage(unsigned int damage) override;
-private:
-    sf::Texture idle_texture;
 };
 
 class Archer : public Range {
