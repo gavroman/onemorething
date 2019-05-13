@@ -10,8 +10,9 @@
 
 class Character {
  public:
+    //Character() {};
     //virtual unsigned int apply_damage(std::shared_ptr <Cell> cell) = 0; // Вызывает move_character из Player, если получает false, то возвращает false
-   // virtual void get_damage(unsigned int damage) = 0;
+    //virtual void get_damage(unsigned int damage) = 0;
 
     //void move(int id); // Передвигает на одну! клетку
 
@@ -19,11 +20,11 @@ class Character {
     //void set_inactive();
     //bool is_active();
 
-    //int get_current_cell();
+    int get_current_cell();
 
     sf::Sprite sprite; // будет в протектед
  protected:
-    int current_cell;
+    int cell_id;
 
     unsigned int hp;
     unsigned int damage_min;
@@ -42,13 +43,14 @@ class Range : public Character {
 
 };
 
-class Scout : public Character {
+class Scout : virtual public Character {
  public:
     Scout();
 
     //unsigned int apply_damage(std::shared_ptr <Cell> cell) override;
-   // void get_damage(unsigned int damage) override;
-private:
+    // void get_damage(unsigned int damage) override;
+ private:
+    float scale = 0.11;
     sf::Texture idle_texture;
 };
 

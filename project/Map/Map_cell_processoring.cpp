@@ -1,6 +1,7 @@
 #include "Map.h"
 #include "Character.h"
 #include "Player.h"
+#include <iostream>
 
 /* В этом файле содержится все, что касается обработки кликов по клеткам
  * В том числе отрисовка состояния клетки (кликнута, наведен курсор, куда можно пойти и т.п.)*/
@@ -141,11 +142,17 @@ std::vector<int> Map::find_route(const int id, const std::vector<std::vector<int
 }    
 
 void Map::update_cell(std::shared_ptr<Character> character, int id) {
-    if (!map[id]->character) {
+    /*if (!map[id]->character) {
+
         map[id]->character = character;
     } else {
         map[id]->character = nullptr;
     }
+*/
+    int cell_id = map[id]->character->get_current_cell();
+    map[id]->character = character;
+    map[cell_id]->character = nullptr;
+
 }
 
 /*

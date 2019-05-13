@@ -139,8 +139,8 @@ void Map::draw_map(sf::RenderWindow& window) {
     for (const auto& it : map) {
         window.draw((*it).sprite);
         if (it->character) {
-            it->character->sprite.setPosition(it->sprite.getPosition());
-            it->character->sprite.setScale(sf::Vector2f(scale * 0.3, scale * 0.3));
+            sf::Vector2f pos(it->sprite.getPosition());
+            it->character->sprite.setPosition(pos.x - 6, pos.y - 35);
             window.draw(it->character->sprite);
         }
     }

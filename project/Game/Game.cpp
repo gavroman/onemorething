@@ -29,10 +29,8 @@ void Game::run_game(const std::string xml_file_path) {
     int distance = 5;           // радиус хода (надо брать из персонажа)
     bool active = false;        // выбрана ли клетка ()
 
-
     battle_field.draw_map(window);
     window.display();
-
 
     std::shared_ptr<Character> test_char = std::make_shared<Scout>();
     battle_field.update_cell(test_char, 447);
