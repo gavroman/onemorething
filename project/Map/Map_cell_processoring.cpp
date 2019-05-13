@@ -54,6 +54,14 @@ sf::CircleShape Map::highlight_cell(const int id, sf::Color color, sf::Color bor
     return hex_shape;
 }
 
+void Map::update_cell(std::shared_ptr<Character> character, int id) {
+    if (!map[id]->character) {
+        map[id]->character = character;
+    } else {
+        map[id]->character = nullptr;
+    }
+}
+
 /*
 void Map::proceed_click(const int& id) {
     if (Проверка на нахождение в области видимости) {

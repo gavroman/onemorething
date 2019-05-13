@@ -138,5 +138,10 @@ std::vector<int> Map::search_neighbors(const int id) {
 void Map::draw_map(sf::RenderWindow& window) {
     for (const auto& it : map) {
         window.draw((*it).sprite);
+        if (it->character) {
+            it->character->sprite.setPosition(it->sprite.getPosition());
+            it->character->sprite.setScale(sf::Vector2f(scale * 0.3, scale * 0.3));
+            window.draw(it->character->sprite);
+        }
     }
 }

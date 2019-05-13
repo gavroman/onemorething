@@ -41,7 +41,7 @@ class Map {
     sf::CircleShape highlight_cell(const int id, sf::Color color, sf::Color border_color);
 
     void proceed_click(const int& id);
-    void update_cell();
+    void update_cell(std::shared_ptr<Character> character, int id);
 
     std::vector <int> get_route(int start, int end); // Должен срабатывать: 1) когда выбран персонаж И кликнута клетка, куда пойдет персонаж 2) когда выбран персонаж и наведен курсор на клетку в пределах рэйнджа этого персонажа
 
