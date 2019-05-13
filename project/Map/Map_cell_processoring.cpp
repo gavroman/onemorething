@@ -40,9 +40,9 @@ sf::Vector2f Map::get_cell_center(const int id) {
     return center;
 }
 
-sf::CircleShape Map::highlight_cell(const int id, sf::Color color, sf::Color border_color)  {
-    sf::CircleShape hex_shape(72, 6);
-    hex_shape.setPosition(map[id]->x - 4, map[id]->y);
+sf::CircleShape Map::highlight_cell(const int id, sf::Color color, sf::Color border_color) {
+    sf::CircleShape hex_shape(71, 6);
+    hex_shape.setPosition(map[id]->x - 4.6, map[id]->y - 0.3);
     hex_shape.setScale(scale, scale);
     hex_shape.setFillColor(color);
     hex_shape.setOutlineThickness(2);
@@ -52,6 +52,19 @@ sf::CircleShape Map::highlight_cell(const int id, sf::Color color, sf::Color bor
 
 float Map::calculate_distance(sf::Vector2f p1, sf::Vector2f p2) { //Norma in this space
     return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
+}
+
+bool Map::is_passable(const int id) {
+    if (id >= 0) {
+        return map[id]->passability;
+    }
+    return false;
+}
+
+bool Map::is_in_area(const std::vector<std::vector<int>> area, const int id) {
+    return std::find(area[area.size() - 1].begin(), 
+                     area[area.size() - 1].end(),
+                     id) != area[area.size() - 1].end();
 }
 
 std::vector<std::vector<int>> Map::get_adj_matrix() {
@@ -78,7 +91,7 @@ std::vector<std::vector<int>> Map::get_adj_matrix() {
     return matrix;
 }
 
-std::vector<std::vector<int>> Map::get_trace(const int id, const std::vector<std::vector<int>> matrix_adj, const int distance) {
+std::vector<std::vector<int>> Map::find_move_area(const int id, const std::vector<std::vector<int>> matrix_adj, const int distance) {
     std::vector<std::vector<int>> trace;
     trace.push_back({id});
     for (int i = 1; i < distance + 1; i++) {
@@ -99,7 +112,7 @@ std::vector<std::vector<int>> Map::get_trace(const int id, const std::vector<std
     return trace;
 }
 
-std::vector<int> Map::get_one_trace(const int id, const std::vector<std::vector<int>> trace, const std::vector<std::vector<int>> matrix_adj) {
+std::vector<int> Map::find_route(const int id, const std::vector<std::vector<int>> trace, const std::vector<std::vector<int>> matrix_adj) {
     std::vector<int> one_trace;
     int id_add = id;
     one_trace.push_back(id_add);
@@ -127,10 +140,9 @@ std::vector<int> Map::get_one_trace(const int id, const std::vector<std::vector<
     return one_trace;
 }
 
-
 /*
 void Map::proceed_click(const int& id) {
-    if (Проверка на нахождение в области видимости) {
+    if () { //   Проверка на нахождение в области видимости
         if (map[id]->character) { // Проверяем на интерактивность
             if ((players[current_player]->is_my_char(map[id]->character))) { // Проверяем владельца
                 if (!(map[id]->character->is_active())) { // Активируем персонажа

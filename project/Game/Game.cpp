@@ -14,22 +14,19 @@ Game::Game(const int &map_id) {
 }
 
 void Game::run_game(const std::string xml_file_path) {
-    //sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
-    sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    //sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
 
     Map battle_field("../source/game_map/" + xml_file_path);
+    battle_field.draw_map(window);
 
+    std::vector<std::vector<int>> move_area(1);                           //инициализация вектора пути
+    std::vector<std::vector<int>> matrix = battle_field.get_adj_matrix(); //пересчет матрицы смежности должен быть не здесь
+    
     sf::Vector2i pos_pressed(0, 0);
     sf::Vector2i pos_released(0, 0);
-    battle_field.draw_map(window);
-    std::vector<std::vector<int>> trace(1);
-    std::vector<std::vector<int>> matrix = battle_field.get_adj_matrix(); //пересчет матрицы смежности должен быть не здесь
-    std::vector<int> check;
-    for (int i = 0; i < matrix.size(); i++) {
-        check.push_back(matrix[i][0]);
-    }
-    int distance = 5; //радиус хода
-    bool k = false;
+    int distance = 5;           // радиус хода (надо брать из персонажа)
+    bool active = false;        // выбрана ли клетка ()
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -45,29 +42,32 @@ void Game::run_game(const std::string xml_file_path) {
                 case sf::Event::MouseButtonReleased:
                     pos_released = sf::Mouse::getPosition(window);
                     if (pos_pressed == pos_released) {
+                        battle_field.draw_map(window);
                         sf::Vector2f pos(pos_pressed.x, pos_pressed.y);
                         int cell_id = battle_field.get_cell_id_from_pos(pos);
-                        if (std::find(check.begin(), check.end(), cell_id) != check.end()) {
-                            battle_field.draw_map(window);
+                        if (battle_field.is_passable(cell_id)) {
+                        //эта клетка проходима 
                             sf::Color color_trace(20, 240, 45, 225);
-                            if (std::find(trace[trace.size() - 1].begin(), trace[trace.size() - 1].end(),
-                                    cell_id) != trace[trace.size() - 1].end() and k) {
-                                std::vector<int> one_trace = battle_field.get_one_trace(cell_id, trace, matrix);
-                                for (int i = 0; i < one_trace.size(); i++) {
-                                    window.draw(battle_field.highlight_cell(one_trace[i], color_trace, color_trace));
+                            if (battle_field.is_in_area(move_area, cell_id) and active) {
+                                // Эта клетка в подсвеченной зоне и есть активная клетка
+                                // Значит надо рисовать путь
+                                std::vector<int> route = battle_field.find_route(cell_id, move_area, matrix);
+                                for (auto& it : route) {
+                                    window.draw(battle_field.highlight_cell(it, color_trace, color_trace));
                                 }
-                                k = false;
+                                active = false;
                             } else {
-                                trace = battle_field.get_trace(cell_id, matrix, distance);
-                                k = true;
+                                // Нет активной клетки и нарисованной зоны
+                                // Значит надо рисовать зону
+                                move_area = battle_field.find_move_area(cell_id, matrix, distance);
+                                active = true;
                                 sf::Color color(20, 30, 52, 150);
-                                for (int i = 0; i < trace[distance].size(); i++) {
-                                    if (trace[distance][i] == cell_id) {
+                                for (auto& it : move_area[distance]) {
+                                    if (it == cell_id) { // подсветка активной клетки другим цветом
                                         window.draw(battle_field.highlight_cell(cell_id, color_trace, color_trace));
-
                                         continue;
                                     }
-                                    window.draw(battle_field.highlight_cell(trace[distance][i], color, color));
+                                    window.draw(battle_field.highlight_cell(it, color, color));
                                 }
                             }
                         }    

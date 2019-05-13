@@ -36,20 +36,19 @@ class Map {
     explicit Map(const std:: string xml_file);
 
     void draw_map(sf::RenderWindow& window);                 // Отрисовывает карту
-    int get_cell_id_from_pos(const sf::Vector2f & pos);      // Достает id по координатам
-
     sf::CircleShape highlight_cell(const int id, sf::Color color, sf::Color border_color);
 
     void proceed_click(const int& id);
-
+    int get_cell_id_from_pos(const sf::Vector2f & pos);      // Достает id по координатам
     std::vector<std::vector<int>> get_adj_matrix();          // Матрица смежности
-    std::vector<std::vector<int>> get_trace(const int id, 
+    std::vector<std::vector<int>> find_move_area(const int id, 
                                             const std::vector<std::vector<int>> matrix_adj, 
                                             const int distance); //возможные пути с учетом дистанции
-    std::vector<int> get_one_trace(const int id, 
+    std::vector<int> find_route(const int id, 
                                    const std::vector<std::vector<int>> trace, 
                                    const std::vector<std::vector<int>> matrix_adj);
-
+    bool is_passable(const int id);
+    bool is_in_area(const std::vector<std::vector<int>> area, const int id);
     void update_cell();
 
     std::vector <int> get_route(int start, int end); 
