@@ -42,11 +42,11 @@ void Game::run_game(const std::string xml_file_path) {
                 case sf::Event::MouseButtonReleased:
                     pos_released = sf::Mouse::getPosition(window);
                     if (pos_pressed == pos_released) {
-                        battle_field.draw_map(window);
                         sf::Vector2f pos(pos_pressed.x, pos_pressed.y);
                         int cell_id = battle_field.get_cell_id_from_pos(pos);
                         if (battle_field.is_passable(cell_id)) {
                         //эта клетка проходима 
+                            battle_field.draw_map(window);
                             sf::Color color_trace(20, 240, 45, 225);
                             if (battle_field.is_in_area(move_area, cell_id) and active) {
                                 // Эта клетка в подсвеченной зоне и есть активная клетка
