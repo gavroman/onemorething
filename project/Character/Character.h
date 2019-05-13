@@ -53,7 +53,7 @@ class Character {
     bool active;
 };
 
-class Melee : public Character {
+class Melee : virtual public Character {
  public:
     Melee() = default;
 };
@@ -62,7 +62,7 @@ class Range : public Character {
 
 };
 
-class Scout : public Character {
+class Scout : virtual public Melee {
  public:
     Scout();
 };
@@ -72,7 +72,8 @@ class Archer : public Range {
 };
 
 class Swordman : public Melee {
-
+ public:
+    Swordman();
 };
 
 class Tank : public Melee {
