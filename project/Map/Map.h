@@ -60,11 +60,11 @@ class Map {
     
     int hex_size_width;         // Ширина гекса
     int hex_size_height;        // Высота гекса
-    float hex_offset_y = 15;
+    float hex_offset_y = 35;
 
-    float scale = 1.15;         // map scale
-    float offset_x = 20;
-    float offset_y = 180;
+    float scale = 0.465;         // map scale
+    float offset_x = 30;
+    float offset_y = 330;
 
     sf::Texture map_texture;    // Текстура карты
 };

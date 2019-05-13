@@ -58,8 +58,8 @@ Map::Map(const std::string xml_file)
     }
     int i = 0;
     XMLElement * tile_xml = map_xml->FirstChildElement("layer")
-            ->FirstChildElement("data")
-            ->FirstChildElement("tile");
+                                   ->FirstChildElement("data")
+                                   ->FirstChildElement("tile");
     do {
         std::shared_ptr cell = std::make_shared<Cell>();
         cell->id = i++;

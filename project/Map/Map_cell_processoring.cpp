@@ -45,20 +45,18 @@ sf::Vector2f Map::get_cell_center(const int id) {
 }
 
 sf::CircleShape Map::highlight_cell(const int id, sf::Color color, sf::Color border_color)  {
-    sf::CircleShape hex_shape(28, 6);
-    hex_shape.setPosition(map[id]->x - 3 * scale, map[id]->y + 0.5 * scale);
+    sf::CircleShape hex_shape(72, 6);
+    hex_shape.setPosition(map[id]->x - 4, map[id]->y);
     hex_shape.setScale(scale, scale);
     hex_shape.setFillColor(color);
-    hex_shape.setOutlineThickness(1);
+    hex_shape.setOutlineThickness(2);
     hex_shape.setOutlineColor(border_color);
     return hex_shape;
 }
 
 /*
 void Map::proceed_click(const int& id) {
-    if (*/
-/*Проверка на нахождение в области видимости*//*
-) {
+    if (Проверка на нахождение в области видимости) {
         if (map[id]->character) { // Проверяем на интерактивность
             if ((players[current_player]->is_my_char(map[id]->character))) { // Проверяем владельца
                 if (!(map[id]->character->is_active())) { // Активируем персонажа

@@ -14,8 +14,8 @@ Game::Game(const int &map_id) {
 }
 
 void Game::run_game(const std::string xml_file_path) {
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
-    // sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
+    //sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+     sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
 
     Map battle_field("../source/game_map/" + xml_file_path);
 
@@ -50,7 +50,7 @@ void Game::run_game(const std::string xml_file_path) {
                             window.draw(battle_field.highlight_cell(cell_id, color, sf::Color::Cyan));
 
                             window.display();
-                            std::cout << "Pressed cell id = " << cell_id <<std::endl;
+                            //std::cout << "Pressed cell id = " << cell_id <<std::endl;
                         }
                     }
                     break;
