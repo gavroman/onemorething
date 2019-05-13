@@ -57,10 +57,24 @@ float Map::calculate_distance(sf::Vector2f p1, sf::Vector2f p2) { //Norma in thi
 std::vector<std::vector<int>> Map::get_adj_matrix() {
     std::vector<std::vector<int>> matrix;
     for (int id = 0; id < map_size_width * map_size_height; id++) {
-        std::vector<int> neighbors = search_neighbors(id);
-        neighbors.insert(neighbors.begin(), id);
-        matrix.push_back(neighbors);
+        if (map[id]->passability) {
+            std::vector<int> neighbors = search_neighbors(id);
+            for (int i = 0; i < neighbors.size(); i++) {
+                if (!map[neighbors[i]]->passability) {
+                    neighbors.erase(neighbors.begin() + i);
+                    i--;
+                }
+            }
+            neighbors.insert(neighbors.begin(), id);
+            matrix.push_back(neighbors);
+        }
     }
+    /*for (int i = 0; i < matrix.size(); i++) {
+        for (int j = 0; j < matrix[i].size(); j++) {
+            std::cout << matrix[i][j] << ' ';
+        }
+        std::cout<<std::endl;
+    }*/
     return matrix;
 }
 
@@ -70,7 +84,11 @@ std::vector<std::vector<int>> Map::get_trace(const int id, const std::vector<std
     for (int i = 1; i < distance + 1; i++) {
         std::vector<int> trace_distance;
         for (int j = 0; j < trace[i - 1].size(); j++) {
-            std::vector<int> neighbors = search_neighbors(trace[i - 1][j]);
+            int k = 0;
+            while (matrix_adj[k][0] != trace[i - 1][j]) {
+                k++;
+            }
+            std::vector<int> neighbors = matrix_adj[k];
             trace_distance.insert(std::end(trace_distance), std::begin(neighbors), std::end(neighbors));
         }
         sort(trace_distance.begin(), trace_distance.end());
@@ -108,6 +126,7 @@ std::vector<int> Map::get_one_trace(const int id, const std::vector<std::vector<
     }
     return one_trace;
 }
+
 
 /*
 void Map::proceed_click(const int& id) {

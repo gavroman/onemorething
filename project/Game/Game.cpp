@@ -22,8 +22,14 @@ void Game::run_game(const std::string xml_file_path) {
     sf::Vector2i pos_pressed(0, 0);
     sf::Vector2i pos_released(0, 0);
     battle_field.draw_map(window);
-    std::vector<std::vector<int>> matrix = battle_field.get_adj_matrix();
-    int distance = 5;
+    std::vector<std::vector<int>> trace(1);
+    std::vector<std::vector<int>> matrix = battle_field.get_adj_matrix(); //пересчет матрицы смежности должен быть не здесь
+    std::vector<int> check;
+    for (int i = 0; i < matrix.size(); i++) {
+        check.push_back(matrix[i][0]);
+    }
+    int distance = 5; //радиус хода
+    bool k = false;
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -38,20 +44,32 @@ void Game::run_game(const std::string xml_file_path) {
 
                 case sf::Event::MouseButtonReleased:
                     pos_released = sf::Mouse::getPosition(window);
-                    if (pos_pressed == pos_released and pos_pressed.x and pos_pressed.y) {
+                    if (pos_pressed == pos_released) {
                         sf::Vector2f pos(pos_pressed.x, pos_pressed.y);
                         int cell_id = battle_field.get_cell_id_from_pos(pos);
-                        if (cell_id >= 0) {
+                        if (std::find(check.begin(), check.end(), cell_id) != check.end()) {
                             battle_field.draw_map(window);
-                            std::vector<std::vector<int>> trace = battle_field.get_trace(cell_id, matrix, distance);
-                            sf::Color color(20, 30, 52, 100);
-                            for (int i = 0; i < trace[distance].size(); i++) {
-                                if (trace[distance][i] == cell_id) {
-                                    continue;
+                            sf::Color color_trace(20, 240, 45, 225);
+                            if (std::find(trace[trace.size() - 1].begin(), trace[trace.size() - 1].end(),
+                                    cell_id) != trace[trace.size() - 1].end() and k) {
+                                std::vector<int> one_trace = battle_field.get_one_trace(cell_id, trace, matrix);
+                                for (int i = 0; i < one_trace.size(); i++) {
+                                    window.draw(battle_field.highlight_cell(one_trace[i], color_trace, color_trace));
                                 }
-                                window.draw(battle_field.highlight_cell(trace[distance][i], color, sf::Color::Cyan));
+                                k = false;
+                            } else {
+                                trace = battle_field.get_trace(cell_id, matrix, distance);
+                                k = true;
+                                sf::Color color(20, 30, 52, 150);
+                                for (int i = 0; i < trace[distance].size(); i++) {
+                                    if (trace[distance][i] == cell_id) {
+                                        window.draw(battle_field.highlight_cell(cell_id, color_trace, color_trace));
+
+                                        continue;
+                                    }
+                                    window.draw(battle_field.highlight_cell(trace[distance][i], color, color));
+                                }
                             }
-                            window.display();;
                         }    
                     }
                     break;
@@ -60,6 +78,7 @@ void Game::run_game(const std::string xml_file_path) {
                     break;
             }
         }
+        window.display();
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 }
