@@ -32,7 +32,10 @@ void Game::run_game(const std::string xml_file_path) {
     battle_field.draw_map(window);
     window.display();
 
-    std::shared_ptr<Character> test_char = std::make_shared<Scout>(0, battle_field);
+    std::shared_ptr<Character> test_char = std::make_shared<Scout>(34);
+    battle_field.update_cell(test_char, 34);
+    test_char->draw_character(window, battle_field);
+
 
     while (window.isOpen()) {
         sf::Event event;
@@ -53,20 +56,23 @@ void Game::run_game(const std::string xml_file_path) {
                         int cell_id = battle_field.get_cell_id_from_pos(pos);
                         if (battle_field.is_passable(cell_id)) {
                         //эта клетка проходима 
-                            battle_field.draw_map(window);
                             sf::Color color_trace(20, 240, 45, 225);
                             if (battle_field.is_in_area(move_area, cell_id) and active and battle_field.is_empty(cell_id)) {
                                 // Эта клетка в подсвеченной зоне и есть активная клетка
                                 // Значит надо рисовать путь
+                                battle_field.draw_map(window);
                                 std::vector<int> route = battle_field.find_route(cell_id, move_area, matrix);
                                 active = false;
                                 for (auto& it : route) {
                                     window.draw(battle_field.highlight_cell(it, color_trace, color_trace));
                                 }
                                 battle_field.update_cell(test_char, route[0]);
+                                test_char->draw_character(window, battle_field);
+
                             } else if (!battle_field.is_empty(cell_id)) {
                                 // Нет активной клетки и нарисованной зоны
                                 // Значит надо рисовать зону
+                                battle_field.draw_map(window);
                                 move_area = battle_field.find_move_area(cell_id, matrix, distance);
                                 active = true;
                                 sf::Color color(20, 30, 52, 150);
@@ -77,6 +83,7 @@ void Game::run_game(const std::string xml_file_path) {
                                     }
                                     window.draw(battle_field.highlight_cell(it, color, color));
                                 }
+                                test_char->draw_character(window, battle_field);                                
                             }
                         }    
                     }

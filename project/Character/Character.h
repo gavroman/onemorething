@@ -7,7 +7,6 @@
 
 #include "Player.h"
 
-
 class Character {
  public:
     //Character() {};
@@ -21,7 +20,8 @@ class Character {
     //bool is_active();
 
     int get_current_cell();
-    void draw_character(sf::RenderWindow& window);
+    void update_id(int id);
+    void draw_character(sf::RenderWindow& window, class Map field);
 
     sf::Sprite sprite; // будет в протектед
  protected:
@@ -46,7 +46,7 @@ class Range : public Character {
 
 class Scout : virtual public Character {
  public:
-    Scout(const int id, Map battle_field);
+    Scout(const int id);
 
     //  unsigned int apply_damage(std::shared_ptr <Cell> cell) override;
     //  void get_damage(unsigned int damage) override;

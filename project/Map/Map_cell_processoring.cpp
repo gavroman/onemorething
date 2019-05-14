@@ -152,21 +152,37 @@ std::vector<int> Map::find_route(const int id,
     return one_trace;
 }    
 
-void Map::update_cell(std::shared_ptr<Character> character, int id) {
+sf::Vector2f Map::get_cell_pos(const int id) {
+    return sf::Vector2f(map[id]->sprite.getPosition().x, map[id]->sprite.getPosition().y);
+
+}
+
+void Map::update_cell(std::shared_ptr<Character> pers, int id) {
     /*if (!map[id]->character) {
 
         map[id]->character = character;
     } else {
         map[id]->character = nullptr;
     }
-*/
-    if (map[id]->character) {
+*/std::cout << "ZALUPA" << std::endl;
+
+
+    int old_id = pers->get_current_cell();
+    map[id]->character = pers;
+    map[id]->character->update_id(id);
+    if (id != old_id) {
+        map[old_id]->character = nullptr;
+    }
+        
+/*
+
+    if (map[id]->character != nullptr) {
         int cell_id = map[id]->character->get_current_cell();    
         map[cell_id]->character = nullptr;
-        std::cout << "ZALUPA" << std::endl;
+        std::cout << cell_id << std::endl;
     } else {
         map[id]->character = character;
-    }    
+    }    */
 }
 
 /*
