@@ -32,9 +32,10 @@ void Game::run_game(const std::string xml_file_path) {
     battle_field.draw_map(window);
     window.display();
 
-    std::shared_ptr<Character> test_char = std::make_shared<Scout>(34);
-    battle_field.update_cell(test_char, 34);
+    std::shared_ptr<Character> test_char = std::make_shared<Scout>(45);
+    battle_field.update_cell(test_char, 45);
     test_char->draw_character(window, battle_field);
+    window.draw(test_char->sprite);
 
 
     while (window.isOpen()) {
@@ -56,7 +57,7 @@ void Game::run_game(const std::string xml_file_path) {
                         int cell_id = battle_field.get_cell_id_from_pos(pos);
                         if (battle_field.is_passable(cell_id)) {
                         //эта клетка проходима 
-                            sf::Color color_trace(20, 240, 45, 225);
+                            sf::Color color_trace(20, 240, 45, 100);
                             if (battle_field.is_in_area(move_area, cell_id) and active and battle_field.is_empty(cell_id)) {
                                 // Эта клетка в подсвеченной зоне и есть активная клетка
                                 // Значит надо рисовать путь

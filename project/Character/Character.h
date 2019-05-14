@@ -7,6 +7,14 @@
 
 #include "Player.h"
 
+enum Status {
+    IDLE = 0,
+    WALK = 1,
+    ATTACK = 2,
+    HURT = 3,
+    DEAD = 4,
+};
+
 class Character {
  public:
     //Character() {};
@@ -22,10 +30,21 @@ class Character {
     int get_current_cell();
     void update_id(int id);
     void draw_character(sf::RenderWindow& window, class Map field);
+    void animate();
 
     sf::Sprite sprite; // будет в протектед
  protected:
     int cell_id;
+
+    Status status;
+
+    sf::Texture idle_texture;
+    sf::Texture walk_texture;
+
+    int texture_x;
+    int texture_y;
+    int texture_height;
+    int texture_width;
 
     unsigned int hp;
     unsigned int damage_min;
