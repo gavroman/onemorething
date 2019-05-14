@@ -43,11 +43,12 @@ class Map {
     int get_cell_id_from_pos(const sf::Vector2f & pos);      // Достает id по координатам
     std::vector<std::vector<int>> get_adj_matrix();          // Матрица смежности
     std::vector<std::vector<int>> find_move_area(const int id, 
-                                            const std::vector<std::vector<int>> matrix_adj, 
-                                            const int distance); //возможные пути с учетом дистанции
+                                                 const std::vector<std::vector<int>> matrix_adj, 
+                                                 const int distance); //возможные пути с учетом дистанции
     std::vector<int> find_route(const int id, 
-                                   const std::vector<std::vector<int>> trace, 
-                                   const std::vector<std::vector<int>> matrix_adj);
+                                const std::vector<std::vector<int>> trace, 
+                                const std::vector<std::vector<int>> matrix_adj);
+    bool is_empty(const int id);
     bool is_passable(const int id);
     bool is_in_area(const std::vector<std::vector<int>> area, const int id);
 

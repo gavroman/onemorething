@@ -5,8 +5,8 @@
 #ifndef ONEMORETHING_PLAYER_H
 #define ONEMORETHING_PLAYER_H
 
-#include "Character.h"
 #include "Map.h"
+#include "Character.h"
 
 enum Current_player {
     PLAYER1 = 0,

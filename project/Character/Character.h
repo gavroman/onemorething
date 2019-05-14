@@ -5,8 +5,8 @@
 #ifndef ONEMORETHING_CHARACTER_H
 #define ONEMORETHING_CHARACTER_H
 
-#include "Map.h"
 #include "Player.h"
+
 
 class Character {
  public:
@@ -21,6 +21,7 @@ class Character {
     //bool is_active();
 
     int get_current_cell();
+    void draw_character(sf::RenderWindow& window);
 
     sf::Sprite sprite; // будет в протектед
  protected:
@@ -45,10 +46,10 @@ class Range : public Character {
 
 class Scout : virtual public Character {
  public:
-    Scout();
+    Scout(const int id, Map battle_field);
 
-    //unsigned int apply_damage(std::shared_ptr <Cell> cell) override;
-    // void get_damage(unsigned int damage) override;
+    //  unsigned int apply_damage(std::shared_ptr <Cell> cell) override;
+    //  void get_damage(unsigned int damage) override;
  private:
     float scale = 0.11;
     sf::Texture idle_texture;

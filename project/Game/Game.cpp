@@ -14,8 +14,8 @@ Game::Game(const int &map_id) {
 }
 
 void Game::run_game(const std::string xml_file_path) {
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
-    //sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
+    //sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
 
     Map battle_field("../source/game_map/" + xml_file_path);
     battle_field.draw_map(window);
@@ -32,8 +32,7 @@ void Game::run_game(const std::string xml_file_path) {
     battle_field.draw_map(window);
     window.display();
 
-    std::shared_ptr<Character> test_char = std::make_shared<Scout>();
-    battle_field.update_cell(test_char, 447);
+    std::shared_ptr<Character> test_char = std::make_shared<Scout>(0, battle_field);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -56,15 +55,16 @@ void Game::run_game(const std::string xml_file_path) {
                         //эта клетка проходима 
                             battle_field.draw_map(window);
                             sf::Color color_trace(20, 240, 45, 225);
-                            if (battle_field.is_in_area(move_area, cell_id) and active) {
+                            if (battle_field.is_in_area(move_area, cell_id) and active and battle_field.is_empty(cell_id)) {
                                 // Эта клетка в подсвеченной зоне и есть активная клетка
                                 // Значит надо рисовать путь
                                 std::vector<int> route = battle_field.find_route(cell_id, move_area, matrix);
+                                active = false;
                                 for (auto& it : route) {
                                     window.draw(battle_field.highlight_cell(it, color_trace, color_trace));
                                 }
-                                active = false;
-                            } else {
+                                battle_field.update_cell(test_char, route[0]);
+                            } else if (!battle_field.is_empty(cell_id)) {
                                 // Нет активной клетки и нарисованной зоны
                                 // Значит надо рисовать зону
                                 move_area = battle_field.find_move_area(cell_id, matrix, distance);

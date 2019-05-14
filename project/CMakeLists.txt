@@ -10,6 +10,6 @@ include_directories(${SFML_INCLUDE_DIR})
 
 include_directories(SYSTEM ./Map ./Character ./Player ./tinyxml2 ./Game)
 
-add_executable(onemorething main.cpp Map/Map.h tinyxml2/tinyxml2.h Player/Player.h Character/Character.h Map/Map.cpp tinyxml2/tinyxml2.cpp Map/Map_cell_processoring.cpp Game/Game.cpp Game/Game.h Character/Character.cpp)
+add_executable(onemorething main.cpp Map/Map.cpp Map/Map_cell_processoring.cpp tinyxml2/tinyxml2.cpp Game/Game.cpp Character/Character.cpp)
 
 target_link_libraries(onemorething ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})

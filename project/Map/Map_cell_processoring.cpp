@@ -55,6 +55,13 @@ float Map::calculate_distance(sf::Vector2f p1, sf::Vector2f p2) { //Norma in thi
     return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
 }
 
+bool Map::is_empty(const int id) {
+    if (id >= 0) {
+        return map[id]->character == nullptr;
+    }
+    return false;
+}    
+
 bool Map::is_passable(const int id) {
     if (id >= 0) {
         return map[id]->passability;
@@ -92,7 +99,9 @@ std::vector<std::vector<int>> Map::get_adj_matrix() {
     return matrix;
 }
 
-std::vector<std::vector<int>> Map::find_move_area(const int id, const std::vector<std::vector<int>> matrix_adj, const int distance) {
+std::vector<std::vector<int>> Map::find_move_area(const int id, 
+                                                  const std::vector<std::vector<int>> matrix_adj, 
+                                                  const int distance) {
     std::vector<std::vector<int>> trace;
     trace.push_back({id});
     for (int i = 1; i < distance + 1; i++) {
@@ -113,7 +122,9 @@ std::vector<std::vector<int>> Map::find_move_area(const int id, const std::vecto
     return trace;
 }
 
-std::vector<int> Map::find_route(const int id, const std::vector<std::vector<int>> trace, const std::vector<std::vector<int>> matrix_adj) {
+std::vector<int> Map::find_route(const int id, 
+                                 const std::vector<std::vector<int>> trace, 
+                                 const std::vector<std::vector<int>> matrix_adj) {
     std::vector<int> one_trace;
     int id_add = id;
     one_trace.push_back(id_add);
@@ -149,10 +160,13 @@ void Map::update_cell(std::shared_ptr<Character> character, int id) {
         map[id]->character = nullptr;
     }
 */
-    int cell_id = map[id]->character->get_current_cell();
-    map[id]->character = character;
-    map[cell_id]->character = nullptr;
-
+    if (map[id]->character) {
+        int cell_id = map[id]->character->get_current_cell();    
+        map[cell_id]->character = nullptr;
+        std::cout << "ZALUPA" << std::endl;
+    } else {
+        map[id]->character = character;
+    }    
 }
 
 /*
