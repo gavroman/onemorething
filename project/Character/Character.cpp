@@ -29,7 +29,6 @@ void Character::animate() {
 }
 
 void Character::draw_character(sf::RenderWindow& window, class Map field) {
-	//sstd::cout << "id = " << cell_id <<std::endl;
 	sf::Vector2f pos = field.get_cell_pos(cell_id);
     sprite.setPosition(pos.x - 6, pos.y - 35);
     window.draw(sprite);
@@ -39,10 +38,17 @@ int Character::get_current_cell() {
 	return cell_id;
 }
 
-void Character::update_id(int id) {
+void Character::update_id(const int id) {
 	cell_id = id;
 }
 
+void Character::set_active(const bool active_stmt) {
+    active = active_stmt;
+}
+
+bool Character::is_active() {
+    return active;
+}
 
 Scout::Scout(const int id) {
 

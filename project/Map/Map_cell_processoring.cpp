@@ -7,6 +7,7 @@
  * В том числе отрисовка состояния клетки (кликнута, наведен курсор, куда можно пойти и т.п.)*/
 
 int Map::get_cell_id_from_pos(const sf::Vector2f & pos) {
+
     std::vector<int> candidates_id;
     for (auto& cell : map) {
         sf::FloatRect coords = cell->sprite.getGlobalBounds();
@@ -73,7 +74,7 @@ bool Map::is_empty(const int id) {
     if (id >= 0) {
         return map[id]->character == nullptr;
     }
-    return false;
+    return true;
 }    
 
 bool Map::is_passable(const int id) {
@@ -168,7 +169,10 @@ std::vector<int> Map::find_route(const int id,
 
 sf::Vector2f Map::get_cell_pos(const int id) {
     return sf::Vector2f(map[id]->sprite.getPosition().x, map[id]->sprite.getPosition().y);
+}
 
+void Map::set_active_char(const int id, bool active) {
+    map[id]->character->set_active(active);
 }
 
 void Map::update_cell(std::shared_ptr<Character> pers, int id) {

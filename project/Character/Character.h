@@ -23,12 +23,11 @@ class Character {
 
     //void move(int id); // Передвигает на одну! клетку
 
-    //void set_active(); // Обновляет статус текущего персонажа и обнуляет предыдущего активного
-    //void set_inactive();
-    //bool is_active();
+    void set_active(const bool active_stmt);
+    bool is_active();
 
     int get_current_cell();
-    void update_id(int id);
+    void update_id(const int id);
     void draw_character(sf::RenderWindow& window, class Map field);
     void animate();
 

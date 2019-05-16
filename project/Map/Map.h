@@ -60,6 +60,7 @@ class Map {
     bool is_passable(const int id);
     bool is_in_area(const std::vector<std::vector<int>> area, const int id);
 
+    void set_active_char(const int id, bool active);
     void update_cell(std::shared_ptr<Character> character, int id);
 
 
