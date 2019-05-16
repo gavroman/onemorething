@@ -10,8 +10,9 @@ void Character::animate() {
             sprite.setTextureRect(sf::Rect(texture_x, texture_y, texture_width, texture_height));
             if (texture_x >= texture_width * 4) {
                 texture_x = 0;
+            } else {
+                texture_x += texture_width;
             }
-            texture_x += texture_width;
             break;
         }
         case WALK: {
@@ -19,18 +20,18 @@ void Character::animate() {
             sprite.setTextureRect(sf::Rect(texture_x, texture_y, texture_width, texture_height));
             if (texture_x >= texture_width * 4) {
                 texture_x = 0;
+            } else {
+                texture_x += texture_width;
             }
-            texture_x += texture_width;
             break;
         }
     }
 }
 
 void Character::draw_character(sf::RenderWindow& window, class Map field) {
-	std::cout << "id = " << cell_id <<std::endl;
+	//sstd::cout << "id = " << cell_id <<std::endl;
 	sf::Vector2f pos = field.get_cell_pos(cell_id);
     sprite.setPosition(pos.x - 6, pos.y - 35);
-    animate();
     window.draw(sprite);
 }
 

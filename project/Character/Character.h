@@ -65,13 +65,12 @@ class Range : public Character {
 
 class Scout : virtual public Character {
  public:
-    Scout(const int id);
+    Scout(const int cell_id);
 
     //  unsigned int apply_damage(std::shared_ptr <Cell> cell) override;
     //  void get_damage(unsigned int damage) override;
  private:
     float scale = 0.11;
-    sf::Texture idle_texture;
 };
 
 class Archer : public Range {

@@ -51,6 +51,20 @@ sf::CircleShape Map::highlight_cell(const int id, sf::Color color, sf::Color bor
     return hex_shape;
 }
 
+void Map::add_highlight_cells(const std::vector<int> ids, sf::Color color, sf::Color border_color) {
+    for (auto& it : ids) {
+        std::shared_ptr hghlt = std::make_shared<Highlighting>();
+        hghlt->id = it;
+        hghlt->fill_color = color; 
+        hghlt->border_color = border_color;
+        highlighted_cells.emplace_back(hghlt);
+    }
+}
+
+void Map::drop_highlight_cells() {
+    highlighted_cells = {};
+}
+
 float Map::calculate_distance(sf::Vector2f p1, sf::Vector2f p2) { //Norma in this space
     return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
 }
@@ -158,31 +172,12 @@ sf::Vector2f Map::get_cell_pos(const int id) {
 }
 
 void Map::update_cell(std::shared_ptr<Character> pers, int id) {
-    /*if (!map[id]->character) {
-
-        map[id]->character = character;
-    } else {
-        map[id]->character = nullptr;
-    }
-*/std::cout << "ZALUPA" << std::endl;
-
-
     int old_id = pers->get_current_cell();
     map[id]->character = pers;
     map[id]->character->update_id(id);
     if (id != old_id) {
         map[old_id]->character = nullptr;
     }
-        
-/*
-
-    if (map[id]->character != nullptr) {
-        int cell_id = map[id]->character->get_current_cell();    
-        map[cell_id]->character = nullptr;
-        std::cout << cell_id << std::endl;
-    } else {
-        map[id]->character = character;
-    }    */
 }
 
 /*

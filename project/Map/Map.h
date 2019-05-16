@@ -30,12 +30,20 @@ struct Cell {
     bool passability;                     // Проходимость
 };
 
+struct Highlighting {
+    int id;
+    sf::Color fill_color;
+    sf::Color border_color;
+};
+
 class Map {
  public:
     // Map(); Заготовка под пустой конструктор для процедурной генерации карты
     explicit Map(const std:: string xml_file);
 
     void draw_map(sf::RenderWindow& window);                 // Отрисовывает карту
+    void add_highlight_cells(const std::vector<int> ids, sf::Color color, sf::Color border_color);
+    void drop_highlight_cells();
     sf::CircleShape highlight_cell(const int id, sf::Color color, sf::Color border_color);
 
     void proceed_click(const int& id);
@@ -69,7 +77,7 @@ class Map {
     static float calculate_distance(sf::Vector2f point1, sf::Vector2f point2);
 
     std::vector<std::shared_ptr<Cell>> map; // Вектор смежности карты
-
+    std::vector<std::shared_ptr<Highlighting>> highlighted_cells;
     std::string xml_file_path;  // Путь к файлу
     int map_size_width;         // Ширина карты
     int map_size_height;        // Высота карты
@@ -80,7 +88,7 @@ class Map {
 
     float scale = 0.465;         // map scale
     float offset_x = 30;
-    float offset_y = 330;
+    float offset_y = 400;
 
     sf::Texture map_texture;    // Текстура карты
 };

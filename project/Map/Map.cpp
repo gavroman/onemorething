@@ -136,12 +136,12 @@ std::vector<int> Map::search_neighbors(const int id) {
 }
 
 void Map::draw_map(sf::RenderWindow& window) {
+    window.clear();
+
     for (const auto& it : map) {
         window.draw((*it).sprite);
-        /*if (it->character) {
-            sf::Vector2f pos(it->sprite.getPosition());
-            it->character->sprite.setPosition(pos.x - 6, pos.y - 35);
-            window.draw(it->character->sprite);
-        }*/
     }
+    for (const auto& it : highlighted_cells) {
+        window.draw(highlight_cell(it->id, it->fill_color, it->border_color));
+    }    
 }
