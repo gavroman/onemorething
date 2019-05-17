@@ -18,7 +18,6 @@ void Character::animate() {
         case WALK: {
             sprite.setTexture(walk_texture);
             sprite.setTextureRect(sf::Rect(texture_x, texture_y, texture_width, texture_height));
-            std::cout << texture_x << std::endl;
             if (texture_x >= texture_width * 4) {
                 texture_x = 0;
             } else {
@@ -58,8 +57,8 @@ bool Character::is_active() {
 Scout::Scout(const int id) {
     move_range = 4;
 	cell_id = id;
-    status = IDLE;
-    //status = WALK;
+    //status = IDLE;
+    status = WALK;
 
     idle_texture.loadFromFile("../source/characters/scout/1/Scout_idle.png");
     walk_texture.loadFromFile("../source/characters/scout/1/Scout_walk.png");

@@ -14,8 +14,8 @@ Game::Game(const int &map_id) {
 }
 
 void Game::run_game(const std::string xml_file_path) {
-    //sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
-    sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    //sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
     window.setFramerateLimit(8);
 
     Map btl_fld("../source/game_map/" + xml_file_path);    
@@ -75,7 +75,7 @@ void Game::run_game(const std::string xml_file_path) {
                             btl_fld.drop_highlight_cells();
                             btl_fld.add_highlight_cells(move_area[test_char->get_mv_range()], color, color);
                             btl_fld.add_highlight_cells({move_area[0][0]}, color_trace, color_trace);   
-                        } else if (btl_fld.is_in_area(move_area, cell_id)) {
+                        } else if (test_char->is_active() and btl_fld.is_in_area(move_area, cell_id)) {
                             std::vector<int> route = btl_fld.find_route(cell_id, move_area, matrix);
                             test_char->set_active(false);
                             btl_fld.drop_highlight_cells();
@@ -84,6 +84,7 @@ void Game::run_game(const std::string xml_file_path) {
                             matrix = btl_fld.get_adj_matrix();
                         }
                     }
+
                     break;
     
                 default: 
