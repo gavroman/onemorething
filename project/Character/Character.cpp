@@ -18,6 +18,7 @@ void Character::animate() {
         case WALK: {
             sprite.setTexture(walk_texture);
             sprite.setTextureRect(sf::Rect(texture_x, texture_y, texture_width, texture_height));
+            std::cout << texture_x << std::endl;
             if (texture_x >= texture_width * 4) {
                 texture_x = 0;
             } else {
@@ -60,10 +61,10 @@ Scout::Scout(const int id) {
     sprite.setTexture(idle_texture);
     sprite.setScale(sf::Vector2f(scale, scale));
     status = IDLE;
+    //status = WALK;
     texture_x = 0;
     texture_y = 0;
     texture_height = 776;
     texture_width = 590;
-
 }
 

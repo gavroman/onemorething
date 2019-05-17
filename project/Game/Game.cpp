@@ -14,14 +14,15 @@ Game::Game(const int &map_id) {
 }
 
 void Game::run_game(const std::string xml_file_path) {
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
-    //sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
+    //sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
+    //window.setFramerateLimit(10);
 
-    Map battle_field("../source/game_map/" + xml_file_path);
-    battle_field.draw_map(window);
+
+    Map btl_fld("../source/game_map/" + xml_file_path);    
 
     std::vector<std::vector<int>> move_area(1);                           //инициализация вектора пути
-    std::vector<std::vector<int>> matrix = battle_field.get_adj_matrix(); //пересчет матрицы смежности должен быть не здесь
+    std::vector<std::vector<int>> matrix = btl_fld.get_adj_matrix(); //пересчет матрицы смежности должен быть не здесь
     
     sf::Vector2i pos_pressed(0, 0);
     sf::Vector2i pos_released(0, 0);
@@ -31,9 +32,12 @@ void Game::run_game(const std::string xml_file_path) {
 
 
     std::shared_ptr<Character> test_char = std::make_shared<Scout>(45);
-    battle_field.update_cell(test_char, 45);
+    btl_fld.update_cell(test_char, 45);
 
     while (window.isOpen()) {
+        if (!window.hasFocus()) {
+            continue;
+        }
         sf::Event event;
         while (window.pollEvent(event)) {
             switch(event.type) {
@@ -44,15 +48,15 @@ void Game::run_game(const std::string xml_file_path) {
                 case sf::Event::MouseMoved: {
                     sf::Vector2i new_pos = sf::Mouse::getPosition(window);
                     sf::Vector2f pos_moved(new_pos.x, new_pos.y);
-                    int hvd_cell_id = battle_field.get_cell_id_from_pos(pos_moved);
-                    if (!battle_field.is_empty(hvd_cell_id) and !active) {
-                        move_area = battle_field.find_move_area(hvd_cell_id, matrix, distance);
+                    int hvd_cell_id = btl_fld.get_cell_id_from_pos(pos_moved);
+                    if (!btl_fld.is_empty(hvd_cell_id) and !test_char->is_active()) {
+                        move_area = btl_fld.find_move_area(hvd_cell_id, matrix, distance);
                         sf::Color color(20, 30, 82, 100);
-                        battle_field.drop_highlight_cells();
-                        battle_field.add_highlight_cells(move_area[distance], color, color);
+                        btl_fld.drop_highlight_cells();
+                        btl_fld.add_highlight_cells(move_area[distance], color, color);
                         //std::cout << hvd_cell_id << std::endl;
-                    } else if (!active){                    
-                        battle_field.drop_highlight_cells();
+                    } else if (!test_char->is_active()) {                    
+                        btl_fld.drop_highlight_cells();
                     }
                     break;
                 }    
@@ -65,34 +69,34 @@ void Game::run_game(const std::string xml_file_path) {
                     pos_released = sf::Mouse::getPosition(window);
                     if (pos_pressed == pos_released) {
                         sf::Vector2f pos(pos_pressed.x, pos_pressed.y);
-                        int cell_id = battle_field.get_cell_id_from_pos(pos);
-                        if (active and !battle_field.is_in_area(move_area, cell_id)) { 
+                        int cell_id = btl_fld.get_cell_id_from_pos(pos);
+                        if (test_char->is_active() and !btl_fld.is_in_area(move_area, cell_id)) { 
                         //если был клик не в зоне, снятие подсветки, деактивация персонажа
-                            battle_field.drop_highlight_cells();
-                            active = false;
+                            btl_fld.drop_highlight_cells();
+                            test_char->set_active(false);
                         }
-                        if (battle_field.is_passable(cell_id)) {
+                        if (btl_fld.is_passable(cell_id)) {
                         //эта клетка проходима 
                             sf::Color color_trace(20, 240, 45, 100);
-                            if (battle_field.is_in_area(move_area, cell_id) and active and battle_field.is_empty(cell_id)) {
-                                // Эта клетка в подсвеченной зоне и есть активная клетка
-                                // Значит надо рисовать путь
-                                //battle_field.set_active_char(cell_id, false);
-                                std::vector<int> route = battle_field.find_route(cell_id, move_area, matrix);
-                                active = false;
-                                battle_field.drop_highlight_cells();
-                                battle_field.add_highlight_cells(route, color_trace, color_trace);
-                                battle_field.update_cell(test_char, route[0]);
+                            if (btl_fld.is_in_area(move_area, cell_id) and test_char->is_active() and btl_fld.is_empty(cell_id)) {
+                                /*Эта клетка в подсвеченной зоне и есть активная клетка
+                                Значит надо рисовать путь */
+                                //btl_fld.set_active_char(cell_id, false);
+                                std::vector<int> route = btl_fld.find_route(cell_id, move_area, matrix);
+                                test_char->set_active(false);
+                                btl_fld.drop_highlight_cells();
+                                btl_fld.add_highlight_cells(route, color_trace, color_trace);
+                                btl_fld.update_cell(test_char, route[0]);
 
-                            } else if (!battle_field.is_empty(cell_id)) {
-                                // Нет активной клетки и нарисованной зоны
-                                // Значит надо рисовать зону
-                                move_area = battle_field.find_move_area(cell_id, matrix, distance);
-                                active = true;
+                            } else if (!btl_fld.is_empty(cell_id)) {
+                                /*Нет активной клетки и нарисованной зоны
+                                Значит надо рисовать зону*/
+                                move_area = btl_fld.find_move_area(cell_id, matrix, distance);
+                                test_char->set_active(true);
                                 sf::Color color(20, 30, 52, 150);
-                                battle_field.drop_highlight_cells();
-                                battle_field.add_highlight_cells(move_area[distance], color, color);
-                                battle_field.add_highlight_cells({move_area[0][0]}, color_trace, color_trace);
+                                btl_fld.drop_highlight_cells();
+                                btl_fld.add_highlight_cells(move_area[distance], color, color);
+                                btl_fld.add_highlight_cells({move_area[0][0]}, color_trace, color_trace);
                             }
                         }
                     }
@@ -103,9 +107,9 @@ void Game::run_game(const std::string xml_file_path) {
             }
         }
 
+        btl_fld.draw_map(window);
+        test_char->draw_character(window, btl_fld);
         test_char->animate();
-        battle_field.draw_map(window);
-        test_char->draw_character(window, battle_field);
         window.display();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(160));

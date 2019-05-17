@@ -171,10 +171,6 @@ sf::Vector2f Map::get_cell_pos(const int id) {
     return sf::Vector2f(map[id]->sprite.getPosition().x, map[id]->sprite.getPosition().y);
 }
 
-void Map::set_active_char(const int id, bool active) {
-    map[id]->character->set_active(active);
-}
-
 void Map::update_cell(std::shared_ptr<Character> pers, int id) {
     int old_id = pers->get_current_cell();
     map[id]->character = pers;
