@@ -36,7 +36,11 @@ void Character::draw_character(sf::RenderWindow& window, class Map field) {
 }
 
 int Character::get_current_cell() {
-	return cell_id;
+    return cell_id;
+}
+
+int Character::get_mv_range() {
+    return move_range;
 }
 
 void Character::update_id(const int id) {
@@ -52,19 +56,23 @@ bool Character::is_active() {
 }
 
 Scout::Scout(const int id) {
-
+    move_range = 4;
 	cell_id = id;
+    status = IDLE;
+    //status = WALK;
+
     idle_texture.loadFromFile("../source/characters/scout/1/Scout_idle.png");
     walk_texture.loadFromFile("../source/characters/scout/1/Scout_walk.png");
     idle_texture.setSmooth(true);
     walk_texture.setSmooth(true);
-    sprite.setTexture(idle_texture);
-    sprite.setScale(sf::Vector2f(scale, scale));
-    status = IDLE;
-    //status = WALK;
     texture_x = 0;
     texture_y = 0;
     texture_height = 776;
     texture_width = 590;
+
+    sprite.setTexture(idle_texture);
+    sprite.setTextureRect(sf::Rect(texture_x, texture_y, texture_width, texture_height));
+    sprite.setScale(sf::Vector2f(scale, scale));
+    
 }
 

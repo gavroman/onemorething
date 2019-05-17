@@ -5,6 +5,13 @@
 
 /* В этом файле содержится все, что касается обработки кликов по клеткам
  * В том числе отрисовка состояния клетки (кликнута, наведен курсор, куда можно пойти и т.п.)*/
+bool Map::compare_positions(const sf::Vector2f& pos1, const sf::Vector2f& pos2) {
+    float diff = calculate_distance(pos1, pos2);
+    if (diff < 1000) { // TODO: протестить с мышкой
+        return true;
+    }
+    return false;
+}
 
 int Map::get_cell_id_from_pos(const sf::Vector2f & pos) {
 

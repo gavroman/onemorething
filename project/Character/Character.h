@@ -7,13 +7,7 @@
 
 #include "Player.h"
 
-enum Status {
-    IDLE = 0,
-    WALK = 1,
-    ATTACK = 2,
-    HURT = 3,
-    DEAD = 4,
-};
+enum Status { IDLE, WALK, ATTACK, HURT, DEAD};
 
 class Character {
  public:
@@ -27,30 +21,29 @@ class Character {
     bool is_active();
 
     int get_current_cell();
+    int get_mv_range();
+    
     void update_id(const int id);
     void draw_character(sf::RenderWindow& window, class Map field);
     void animate();
 
-    sf::Sprite sprite; // будет в протектед
  protected:
     int cell_id;
-
     Status status;
+    bool active;
 
+    sf::Sprite sprite;
     sf::Texture idle_texture;
     sf::Texture walk_texture;
-
     int texture_x;
     int texture_y;
     int texture_height;
     int texture_width;
 
-    unsigned int hp;
-    unsigned int damage_min;
-    unsigned int damage_max;
-    unsigned int range;
-
-    bool active;
+    int hp;
+    int damage_min;
+    int damage_max;
+    int move_range;
 };
 
 class Melee : public Character {

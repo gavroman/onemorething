@@ -19,7 +19,6 @@
 #include "Character.h"
 #include "Player.h"
 
-
 struct Cell {
     int id;
     std::shared_ptr<Character> character; // Указатель на объект типа "Персонаж"
@@ -49,10 +48,12 @@ class Map {
     void proceed_click(const int& id);
 
     int get_cell_id_from_pos(const sf::Vector2f & pos);      // Достает id по координатам
+    bool compare_positions(const sf::Vector2f& pos1, const sf::Vector2f& pos2);
     std::vector<std::vector<int>> get_adj_matrix();          // Матрица смежности
     std::vector<std::vector<int>> find_move_area(const int id, 
                                                  const std::vector<std::vector<int>> matrix_adj, 
                                                  const int distance); //возможные пути с учетом дистанции
+
     std::vector<int> find_route(const int id, 
                                 const std::vector<std::vector<int>> trace, 
                                 const std::vector<std::vector<int>> matrix_adj);
