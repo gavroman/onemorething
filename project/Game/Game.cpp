@@ -32,8 +32,6 @@ void Game::run_game(const std::string xml_file_path) {
 
     std::shared_ptr<Character> test_char = std::make_shared<Scout>(45);
     battle_field.update_cell(test_char, 45);
-    test_char->draw_character(window, battle_field);
-    window.draw(test_char->sprite);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -68,7 +66,8 @@ void Game::run_game(const std::string xml_file_path) {
                     if (pos_pressed == pos_released) {
                         sf::Vector2f pos(pos_pressed.x, pos_pressed.y);
                         int cell_id = battle_field.get_cell_id_from_pos(pos);
-                        if (active and !battle_field.is_in_area(move_area, cell_id)) { //если был клик не в зоне, снятие подсветки, деактивация персонажа
+                        if (active and !battle_field.is_in_area(move_area, cell_id)) { 
+                        //если был клик не в зоне, снятие подсветки, деактивация персонажа
                             battle_field.drop_highlight_cells();
                             active = false;
                         }
@@ -103,6 +102,7 @@ void Game::run_game(const std::string xml_file_path) {
                     break;
             }
         }
+
         test_char->animate();
         battle_field.draw_map(window);
         test_char->draw_character(window, battle_field);
