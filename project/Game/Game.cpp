@@ -4,6 +4,8 @@
 
 #include "Game.h"
 
+extern std::vector<std::unique_ptr<Player>> players;
+
 Game::Game(const int &map_id) {
     maps = {"Dark_map.tmx",
             "Grass_map.tmx",
@@ -24,7 +26,22 @@ void Game::run_game(const std::string xml_file_path) {
 
     std::vector<std::vector<int>> move_area;
     std::vector<std::vector<int>> matrix = btl_fld.get_adj_matrix();
-    
+
+    players.push_back(std::make_unique<User>());
+    players.push_back(std::make_unique<Bot>());
+
+    // переход хода будет осуществляться в обработчике событий после любого действия, приводящего к передвижению/действию персонажа через переменную current_player
+
+    // выбор активных персонажей должен будет осуществляться по значению указателя в клетке
+
+    btl_fld.update_cell(players[current_player]->assigned_characters[0], 45);
+    btl_fld.update_cell(players[current_player]->assigned_characters[1], 20);
+    btl_fld.update_cell(players[1]->assigned_characters[0], 200);
+    btl_fld.update_cell(players[1]->assigned_characters[1], 300);
+    players[current_player]->assigned_characters[0]->draw_character(window, btl_fld);
+    players[1]->assigned_characters[0]->draw_character(window, btl_fld);
+
+
     std::shared_ptr<Character> test_char = std::make_shared<Scout>(45);
     btl_fld.update_cell(test_char, 45);
     
@@ -94,6 +111,10 @@ void Game::run_game(const std::string xml_file_path) {
 
         btl_fld.draw_map(window);
         test_char->draw_character(window, btl_fld);
+        players[0]->assigned_characters[0]->draw_character(window, btl_fld);
+        players[1]->assigned_characters[0]->draw_character(window, btl_fld);
+        players[0]->assigned_characters[0]->animate();
+        players[1]->assigned_characters[0]->animate();
         test_char->animate();
         window.display();
 

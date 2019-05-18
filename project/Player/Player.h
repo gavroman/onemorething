@@ -20,18 +20,22 @@ struct Cell;
 
 class Player {
  public:
-    Player() = default;
+    // Player(std::vector<int> characters, class Map field); // нормальный конструктор
+    Player();
 
-    virtual bool move_character(std::vector<int> id, std::shared_ptr<Character>); // обновляет состояние клетки и передвигает персонажа, здесь же строится путь, если недостижимо, то возвращает false
+    //virtual bool move_character(std::vector<int> id, std::shared_ptr<Character> character); // обновляет состояние клетки и передвигает персонажа, здесь же строится путь, если недостижимо, то возвращает false
+    //virtual void attack_with_character(std::shared_ptr<Character> my_char, std::shared_ptr<Character> target_char);
     std::shared_ptr<Character> get_active_char();
     bool is_my_char(std::shared_ptr<Character> character);
 
     /*std::shared_ptr<Character> get_char_ptr(int id);
     int get_number_of_characters();*/
 
+    std::vector<std::shared_ptr<Character>> assigned_characters; // Персонажи игрока БУДЕТ В ПРОТЕКТЕД, НЕ В ПАБЛИК
+
+
     ~Player() = default;
  protected:
-    std::vector<std::shared_ptr<Character>> assigned_characters; // Персонажи игрока
     std::vector<std::shared_ptr<Cell>> assigned_cells; // Клетки, доступные игроку
 };
 
@@ -42,7 +46,5 @@ class User : public Player {
 class Bot : public Player {
 
 };
-
-// std::vector <std::unique_ptr <Player>> players;
 
 #endif //ONEMORETHING_PLAYER_H
