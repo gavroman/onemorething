@@ -9,7 +9,7 @@
  * В том числе отрисовка состояния клетки (кликнута, наведен курсор, куда можно пойти и т.п.)*/
 bool Map::compare_positions(const sf::Vector2f& pos1, const sf::Vector2f& pos2) {
     float diff = calculate_distance(pos1, pos2);
-    if (diff < 1000) { // TODO: протестить с мышкой
+    if (diff < 1500) {
         return true;
     }
     return false;
@@ -194,15 +194,12 @@ std::vector<sf::Vector2f> Map::discrete_positions(const int id1, const int id2, 
     float dx = (get_cell_pos(id2).x - get_cell_pos(id1).x) / step;
     float dy = (get_cell_pos(id2).y - get_cell_pos(id1).y) / step;
     for (int i = 0; i != step; i++) {
-        //std::cout << "ZALUPA" << std::endl;
         float pos_x = get_cell_pos(id1).x + dx * i;    
         float pos_y = get_cell_pos(id1).y + dy * i;
         positions.emplace_back(sf::Vector2f(pos_x, pos_y));
     }
     return positions;
 }
-
-
 
 /*
 void Map::proceed_click(const int& id) {

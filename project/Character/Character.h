@@ -7,7 +7,7 @@
 
 #include "Player.h"
 
-enum Status {IDLE, WALK, ATTACK, HURT, DEAD };
+enum Status {IDLE, WALK, ATTACK, HURT, DYING, DEAD };
 
 class Character {
  public:
@@ -30,8 +30,8 @@ class Character {
     void animate();
 
  protected:
-    int cell_id;
     Status status;
+    int cell_id;
     bool active;
     bool inverse;
 
@@ -43,12 +43,16 @@ class Character {
     sf::Sprite sprite;
     sf::Texture idle_texture;
     sf::Texture walk_texture;
+    sf::Texture hurt_texture;
+    sf::Texture attack_texture;
+    sf::Texture die_texture;
+
     int texture_x;
     int texture_y;
     int texture_height;
     int texture_width;
+    int sprites_amount;
     float scale;
-
     float map_offset_x;
     float map_offset_y;
 

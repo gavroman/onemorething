@@ -35,9 +35,9 @@ void Game::run_game(const std::string xml_file_path) {
         }
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (!test_char->is_idle()) {
-                break;
-            }
+            //if (!test_char->is_idle()) {    // блокирует все события если перс не спокоен
+            //    break;
+            //}
             switch(event.type) {                
                 case sf::Event::Closed:
                     window.close();

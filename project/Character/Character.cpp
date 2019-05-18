@@ -7,8 +7,10 @@ void Character::animate() {
     switch(status) {
         case IDLE: {
             sprite.setTexture(idle_texture);
+            texture_width = idle_texture.getSize().x / sprites_amount;
+            texture_height = idle_texture.getSize().y;
             sprite.setTextureRect(sf::Rect(texture_x, texture_y, texture_width, texture_height));
-            if (texture_x >= texture_width * 4) {
+            if (texture_x >= texture_width * (sprites_amount - 1)) {
                 texture_x = 0;
             } else {
                 texture_x += texture_width;
@@ -18,8 +20,10 @@ void Character::animate() {
 
         case WALK: {
             sprite.setTexture(walk_texture);
+            texture_width = walk_texture.getSize().x / sprites_amount;
+            texture_height = walk_texture.getSize().y;
             sprite.setTextureRect(sf::Rect(texture_x, texture_y, texture_width, texture_height));
-            if (texture_x >= texture_width * 4) {
+            if (texture_x >= texture_width * (sprites_amount - 1)) {
                 texture_x = 0;
             } else {
                 texture_x += texture_width;
@@ -40,6 +44,53 @@ void Character::animate() {
                     sprite.setOrigin(0, 0);
                 }
             }
+            break;            
+        }
+
+        case ATTACK: {
+            sprite.setTexture(attack_texture);
+            texture_width = attack_texture.getSize().x / sprites_amount;
+            texture_height = attack_texture.getSize().y;
+            sprite.setTextureRect(sf::Rect(texture_x, texture_y, texture_width, texture_height));
+            if (texture_x >= texture_width * (sprites_amount - 1)) {
+                texture_x = 0;
+            } else {
+                texture_x += texture_width;
+            }
+            break;
+        }
+
+        case HURT: {
+            sprite.setTexture(hurt_texture);
+            texture_width = hurt_texture.getSize().x / sprites_amount;
+            texture_height = hurt_texture.getSize().y;
+            sprite.setTextureRect(sf::Rect(texture_x, texture_y, texture_width, texture_height));
+            if (texture_x >= texture_width * (sprites_amount - 1)) {
+                texture_x = 0;
+            } else {
+                texture_x += texture_width;
+            }
+            break;
+        } 
+
+        case DYING: {
+            sprite.setTexture(die_texture);
+            texture_width = die_texture.getSize().x / sprites_amount;
+            texture_height = die_texture.getSize().y;
+            sprite.setTextureRect(sf::Rect(texture_x, texture_y, texture_width, texture_height));
+            if (texture_x >= texture_width * (sprites_amount - 1)) {
+                texture_x = 0;
+            } else {
+                texture_x += texture_width;
+            }
+            break;
+        }
+
+        case DEAD: {
+            sprite.setTexture(die_texture);
+            texture_width = die_texture.getSize().x / sprites_amount;
+            texture_height = die_texture.getSize().y;
+            sprite.setTextureRect(sf::Rect(texture_x * (sprites_amount - 1), texture_y, texture_width, texture_height));
             break;
         }
     }
@@ -47,7 +98,6 @@ void Character::animate() {
 
 void Character::move(std::vector<int> way, class Map field) {
     status = WALK;
-
     std::reverse(way.begin(), way.end());
     std::vector<sf::Vector2f> positions;
     for (int i = 0; i != way.size() - 1 ; i++) {
@@ -105,12 +155,18 @@ Scout::Scout(const int id) {
 
     idle_texture.loadFromFile("../source/characters/scout/PLAYER2/idle.png");
     walk_texture.loadFromFile("../source/characters/scout/PLAYER2/walk.png");
+    hurt_texture.loadFromFile("../source/characters/scout/PLAYER2/hurt.png");
+    attack_texture.loadFromFile("../source/characters/scout/PLAYER2/attack.png");
+    die_texture.loadFromFile("../source/characters/scout/PLAYER2/die.png");
     idle_texture.setSmooth(true);
     walk_texture.setSmooth(true);
+    hurt_texture.setSmooth(true);
+    attack_texture.setSmooth(true);
+    die_texture.setSmooth(true);
+
     texture_x = 0;
     texture_y = 0;
-    texture_height = 776;
-    texture_width = 590;
+    sprites_amount = 5;
     scale = 0.11;
 
     sprite.setTexture(idle_texture);
