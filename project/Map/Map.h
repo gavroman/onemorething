@@ -53,7 +53,6 @@ class Map {
     std::vector<std::vector<int>> find_move_area(const int id, 
                                                  const std::vector<std::vector<int>> matrix_adj, 
                                                  const int distance); //возможные пути с учетом дистанции
-
     std::vector<int> find_route(const int id, 
                                 const std::vector<std::vector<int>> trace, 
                                 const std::vector<std::vector<int>> matrix_adj);

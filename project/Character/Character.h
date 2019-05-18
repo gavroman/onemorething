@@ -7,7 +7,7 @@
 
 #include "Player.h"
 
-enum Status { IDLE, WALK, ATTACK, HURT, DEAD};
+enum Status {IDLE, WALK, ATTACK, HURT, DEAD };
 
 class Character {
  public:
@@ -19,10 +19,11 @@ class Character {
 
     void set_active(const bool active_stmt);
     bool is_active();
+    bool is_idle();
 
     int get_current_cell();
     int get_mv_range();
-    
+
     void update_id(const int id);
     void move(std::vector<int> way, class Map field);
     void draw(sf::RenderWindow& window, class Map field);
@@ -32,6 +33,7 @@ class Character {
     int cell_id;
     Status status;
     bool active;
+    bool inverse;
 
     int hp;
     int damage_min;
@@ -45,6 +47,7 @@ class Character {
     int texture_y;
     int texture_height;
     int texture_width;
+    float scale;
 
     float map_offset_x;
     float map_offset_y;
@@ -70,8 +73,6 @@ class Scout : virtual public Character {
 
     //  unsigned int apply_damage(std::shared_ptr <Cell> cell) override;
     //  void get_damage(unsigned int damage) override;
- private:
-    float scale = 0.11;
 };
 
 class Archer : public Range {

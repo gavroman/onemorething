@@ -193,22 +193,12 @@ std::vector<sf::Vector2f> Map::discrete_positions(const int id1, const int id2, 
     std::vector<sf::Vector2f> positions;
     float dx = (get_cell_pos(id2).x - get_cell_pos(id1).x) / step;
     float dy = (get_cell_pos(id2).y - get_cell_pos(id1).y) / step;
-    //std::cout << "dx = " << dx << std::endl;
-    //std::cout << "dy = " << dy << std::endl;
-
     for (int i = 0; i != step; i++) {
         //std::cout << "ZALUPA" << std::endl;
         float pos_x = get_cell_pos(id1).x + dx * i;    
         float pos_y = get_cell_pos(id1).y + dy * i;
         positions.emplace_back(sf::Vector2f(pos_x, pos_y));
     }
-
-
-    
-    //for (int i = 0; i != positions.size(); i++) {
-    //    std::cout << "discr pos " << i << ")  " << positions[i].x << "   " << positions[i].y << std::endl;
-    //}
-    //std::cout << "---" << std::endl;
     return positions;
 }
 

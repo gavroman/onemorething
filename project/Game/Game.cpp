@@ -1,7 +1,6 @@
 //
 // Created by arugaf on 08.05.19.
 //
-
 #include "Game.h"
 
 Game::Game(const int &map_id) {
@@ -14,8 +13,8 @@ Game::Game(const int &map_id) {
 }
 
 void Game::run_game(const std::string xml_file_path) {
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
-    //sf::RenderWindow window(sf::VideoMode(1920, 500), "One More Thing");
+    //sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
     window.setFramerateLimit(8);
 
     Map btl_fld("../source/game_map/" + xml_file_path);    
@@ -25,7 +24,7 @@ void Game::run_game(const std::string xml_file_path) {
     std::vector<std::vector<int>> move_area;
     std::vector<std::vector<int>> matrix = btl_fld.get_adj_matrix();
     
-    std::shared_ptr<Character> test_char = std::make_shared<Scout>(45);
+    std::shared_ptr<Character> test_char = std::make_shared<Scout>(197);
     btl_fld.update_cell(test_char, 197);
     
     sf::Vector2i pos_pressed;
@@ -36,7 +35,10 @@ void Game::run_game(const std::string xml_file_path) {
         }
         sf::Event event;
         while (window.pollEvent(event)) {
-            switch(event.type) {
+            if (!test_char->is_idle()) {
+                break;
+            }
+            switch(event.type) {                
                 case sf::Event::Closed:
                     window.close();
                     break;
@@ -80,8 +82,6 @@ void Game::run_game(const std::string xml_file_path) {
                             test_char->set_active(false);
                             btl_fld.drop_highlight_cells();
                             btl_fld.add_highlight_cells(route, color_trace, color_trace);
-                            
-
                             test_char->move(route, btl_fld);
                             btl_fld.update_cell(test_char, route[0]);
                             matrix = btl_fld.get_adj_matrix();
@@ -93,12 +93,10 @@ void Game::run_game(const std::string xml_file_path) {
                     break;
             }
         }
-
         btl_fld.draw_map(window);
         test_char->draw(window, btl_fld);
         test_char->animate();
         window.display();
-
         //std::this_thread::sleep_for(std::chrono::milliseconds(160)); // установлен лимит кадров средсвами SFML
     }
 }
