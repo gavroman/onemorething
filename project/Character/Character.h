@@ -24,13 +24,19 @@ class Character {
     int get_mv_range();
     
     void update_id(const int id);
-    void draw_character(sf::RenderWindow& window, class Map field);
+    void move(std::vector<int> way, class Map field);
+    void draw(sf::RenderWindow& window, class Map field);
     void animate();
 
  protected:
     int cell_id;
     Status status;
     bool active;
+
+    int hp;
+    int damage_min;
+    int damage_max;
+    int move_range;
 
     sf::Sprite sprite;
     sf::Texture idle_texture;
@@ -40,10 +46,13 @@ class Character {
     int texture_height;
     int texture_width;
 
-    int hp;
-    int damage_min;
-    int damage_max;
-    int move_range;
+    float map_offset_x;
+    float map_offset_y;
+
+ private:
+    int animation_steps = 3;
+    int current_animate_index;                   //for move animation
+    std::vector<sf::Vector2f> animate_positions; //for move animation   
 };
 
 class Melee : public Character {

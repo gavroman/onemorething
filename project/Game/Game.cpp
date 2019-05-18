@@ -15,7 +15,7 @@ Game::Game(const int &map_id) {
 
 void Game::run_game(const std::string xml_file_path) {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
-    //sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
+    //sf::RenderWindow window(sf::VideoMode(1920, 500), "One More Thing");
     window.setFramerateLimit(8);
 
     Map btl_fld("../source/game_map/" + xml_file_path);    
@@ -26,7 +26,7 @@ void Game::run_game(const std::string xml_file_path) {
     std::vector<std::vector<int>> matrix = btl_fld.get_adj_matrix();
     
     std::shared_ptr<Character> test_char = std::make_shared<Scout>(45);
-    btl_fld.update_cell(test_char, 45);
+    btl_fld.update_cell(test_char, 197);
     
     sf::Vector2i pos_pressed;
     sf::Vector2i pos_released;
@@ -80,11 +80,13 @@ void Game::run_game(const std::string xml_file_path) {
                             test_char->set_active(false);
                             btl_fld.drop_highlight_cells();
                             btl_fld.add_highlight_cells(route, color_trace, color_trace);
+                            
+
+                            test_char->move(route, btl_fld);
                             btl_fld.update_cell(test_char, route[0]);
                             matrix = btl_fld.get_adj_matrix();
                         }
                     }
-
                     break;
     
                 default: 
@@ -93,7 +95,7 @@ void Game::run_game(const std::string xml_file_path) {
         }
 
         btl_fld.draw_map(window);
-        test_char->draw_character(window, btl_fld);
+        test_char->draw(window, btl_fld);
         test_char->animate();
         window.display();
 

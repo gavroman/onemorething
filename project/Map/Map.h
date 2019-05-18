@@ -70,6 +70,7 @@ class Map {
     //                     2) когда выбран персонаж и наведен курсор на клетку в пределах 
     //                        рэйнджа этого персонажа
     sf::Vector2f get_cell_pos(const int id);
+    std::vector<sf::Vector2f> discrete_positions(const int id1, const int id2, const int step);
 
  private:
     std::vector<int> search_neighbors(const int id);         // Заполняет вектор соседей
