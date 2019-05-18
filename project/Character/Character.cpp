@@ -57,8 +57,8 @@ bool Character::is_active() {
 Scout::Scout(const int id) {
     move_range = 4;
 	cell_id = id;
-    //status = IDLE;
-    status = WALK;
+    status = IDLE;
+    //status = WALK;
 
     idle_texture.loadFromFile("../source/characters/scout/1/Scout_idle.png");
     walk_texture.loadFromFile("../source/characters/scout/1/Scout_walk.png");
