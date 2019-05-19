@@ -17,12 +17,15 @@ class Character {
 
     //void move(int id); // Передвигает на одну! клетку
 
+    void set_move_area(std::vector<std::vector<int>>& area);
+    void set_route(std::vector<int>& way);
     void set_active(const bool active_stmt);
     bool is_active();
     bool is_idle();
 
     int get_current_cell();
     int get_mv_range();
+    std::vector<std::vector<int>> get_move_area();
 
     void update_id(const int id);
     void move(std::vector<int> way, class Map field);
@@ -34,6 +37,8 @@ class Character {
     Status status;
     bool active;
     bool inverse;
+    std::vector<std::vector<int>> move_area;
+    std::vector<int> route;
 
     int hp;
     int damage_min;

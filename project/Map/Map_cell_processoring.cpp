@@ -99,7 +99,7 @@ bool Map::is_in_area(const std::vector<std::vector<int>> area, const int id) {
                      id) != area[area.size() - 1].end();
 }
 
-std::vector<std::vector<int>> Map::get_adj_matrix() {
+void Map::get_adj_matrix() {
     std::vector<std::vector<int>> matrix;
     for (int id = 0; id < map_size_width * map_size_height; id++) {
         if (map[id]->passability) {
@@ -120,22 +120,22 @@ std::vector<std::vector<int>> Map::get_adj_matrix() {
         }
         std::cout<<std::endl;
     }*/
-    return matrix;
+    adj_matrix = matrix;
 }
 
-std::vector<std::vector<int>> Map::find_move_area(const int id, 
-                                                  const std::vector<std::vector<int>> matrix_adj, 
-                                                  const int distance) {
+std::vector<std::vector<int>> Map::find_move_area(const int id, const int distance) {
     std::vector<std::vector<int>> trace;
     trace.push_back({id});
     for (int i = 1; i < distance + 1; i++) {
         std::vector<int> trace_distance;
         for (int j = 0; j < trace[i - 1].size(); j++) {
             int k = 0;
-            while (matrix_adj[k][0] != trace[i - 1][j]) {
+
+            while (adj_matrix[k][0] != trace[i - 1][j]) {
                 k++;
             }
-            std::vector<int> neighbors = matrix_adj[k];
+
+            std::vector<int> neighbors = adj_matrix[k];
             trace_distance.insert(std::end(trace_distance), std::begin(neighbors), std::end(neighbors));
         }
         sort(trace_distance.begin(), trace_distance.end());
@@ -146,9 +146,7 @@ std::vector<std::vector<int>> Map::find_move_area(const int id,
     return trace;
 }
 
-std::vector<int> Map::find_route(const int id, 
-                                 const std::vector<std::vector<int>> trace, 
-                                 const std::vector<std::vector<int>> matrix_adj) {
+std::vector<int> Map::find_route(const int id, const std::vector<std::vector<int>> trace) {
     std::vector<int> one_trace;
     int id_add = id;
     one_trace.push_back(id_add);
@@ -160,10 +158,10 @@ std::vector<int> Map::find_route(const int id,
     }
     for (i; id_add != trace[0][0]; i--) {
         int k = 0;
-        while (matrix_adj[k][0] != id_add) {
+        while (adj_matrix[k][0] != id_add) {
             k++;
         }
-        std::vector<int> neighbors = matrix_adj[k];
+        std::vector<int> neighbors = adj_matrix[k];
         for (int j = 0; j < trace[i - 1].size(); j++) {
             auto find_id = std::find(neighbors.begin(), neighbors.end(), trace[i - 1][j]);
             if (find_id != neighbors.end()) {

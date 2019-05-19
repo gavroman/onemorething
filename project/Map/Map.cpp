@@ -78,7 +78,7 @@ Map::Map(const std::string xml_file)
 
         map.emplace_back(cell);
     } while ((tile_xml = tile_xml->NextSiblingElement("tile")));
-
+    get_adj_matrix();
     //===============вывод id и id соседей===============
     /*for (auto& cell : map) {
         std::cout << "id: " << cell->id << " neighbors: ";
@@ -135,7 +135,7 @@ std::vector<int> Map::search_neighbors(const int id) {
     return neighbors;
 }
 
-void Map::draw_map(sf::RenderWindow& window) {
+void Map::draw(sf::RenderWindow& window) {
     window.clear();
 
     for (const auto& it : map) {

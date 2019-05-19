@@ -9,7 +9,7 @@
 #include <chrono>
 #include <thread>
 
-//#include "Player.h"
+#include "Player.h"
 #include "Map.h"
 #include "Character.h"
 

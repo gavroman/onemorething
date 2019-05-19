@@ -27,6 +27,7 @@ void Character::animate() {
             sprite.setPosition(animate_positions[current_animate_index]);    
             if (++current_animate_index == animate_positions.size()) {
                 current_animate_index = 0;
+                std::cout << "walk end" << std::endl;
                 status = IDLE;
             }
             if (current_animate_index != 0) {
@@ -41,13 +42,14 @@ void Character::animate() {
                 }
             }
             break;
+
         }
     }
 }
 
 void Character::move(std::vector<int> way, class Map field) {
+    animate_positions = {};
     status = WALK;
-
     std::reverse(way.begin(), way.end());
     std::vector<sf::Vector2f> positions;
     for (int i = 0; i != way.size() - 1 ; i++) {
@@ -78,12 +80,24 @@ int Character::get_mv_range() {
     return move_range;
 }
 
+std::vector<std::vector<int>> Character::get_move_area() {
+    return move_area;
+}
+
 void Character::update_id(const int id) {
 	cell_id = id;
 }
 
 void Character::set_active(const bool active_stmt) {
     active = active_stmt;
+}
+
+void Character::set_move_area(std::vector<std::vector<int>>& area) {
+    move_area = area;
+}
+
+void Character::set_route(std::vector<int>& way) {
+    route = way;
 }
 
 bool Character::is_active() {
@@ -94,14 +108,16 @@ bool Character::is_idle() {
     return status == IDLE;
 }
 
+
+
 Scout::Scout(const int id) {
-    move_range = 5;
+    move_range = 4;
 	cell_id = id;
     map_offset_x = 6;
     map_offset_y = 35;
+    active = false;
 
     status = IDLE;
-    inverse = true;
 
     idle_texture.loadFromFile("../source/characters/scout/PLAYER2/idle.png");
     walk_texture.loadFromFile("../source/characters/scout/PLAYER2/walk.png");
