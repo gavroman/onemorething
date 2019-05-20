@@ -35,6 +35,7 @@ void Game::run_game(const std::string xml_file_path) {
             if (players[curr_plr]->make_turn(btl_fld, event, window)) {
                 curr_plr = (curr_plr == HMN)? BOT: HMN;
                 std::cout << curr_plr << std::endl;
+                btl_fld.get_adj_matrix();
             }
 
         }    

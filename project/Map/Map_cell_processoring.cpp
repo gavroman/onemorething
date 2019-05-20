@@ -105,7 +105,7 @@ void Map::get_adj_matrix() {
         if (map[id]->passability) {
             std::vector<int> neighbors = search_neighbors(id);
             for (int i = 0; i < neighbors.size(); i++) {
-                if (!map[neighbors[i]]->passability) {
+                if (!map[neighbors[i]]->passability or map[neighbors[i]]->character) {
                     neighbors.erase(neighbors.begin() + i);
                     i--;
                 }

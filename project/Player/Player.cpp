@@ -135,6 +135,15 @@ Bot::Bot(class Map field) {
 
 bool Bot::make_turn(class Map& btl_fld, sf::Event event, sf::RenderWindow& window) {
     //TODO (9rik): Ярик ебашь
+    int char_index = rand() % 7;
+    int cell_char = chars[char_index]->get_current_cell();
+    std::vector<std::vector<int>> move_area = btl_fld.find_move_area(cell_char, chars[char_index]->get_mv_range());
+    int move_cell = move_area[move_area.size() - 1][rand() % move_area[move_area.size() - 1].size()];
+    btl_fld.update_cell(chars[char_index], move_cell);
+
+    //std::cout << char_index << std::endl;
+    //std::cout << cell_char << std::endl;
+    //std::cout << rand() % move_area[move_area.size() - 1].size() << std::endl;
     switch(event.type) {
         case sf::Event::Closed: {
             window.close();
@@ -146,7 +155,7 @@ bool Bot::make_turn(class Map& btl_fld, sf::Event event, sf::RenderWindow& windo
                 return true;
             }
         }
-    }   
-    return false; 
+    }
+    return true;
 }
 
