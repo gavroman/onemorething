@@ -17,7 +17,7 @@ Game::Game(const int &map_id) {
 void Game::run_game(const std::string xml_file_path) {
     //sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
     sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
-    window.setFramerateLimit(8);
+    window.setFramerateLimit(12);
 
     Map btl_fld("../source/game_map/" + xml_file_path);    
 
@@ -34,7 +34,7 @@ void Game::run_game(const std::string xml_file_path) {
             //btl_fld.get_adj_matrix();
             if (players[curr_plr]->make_turn(btl_fld, event, window)) {
                 curr_plr = (curr_plr == HMN)? BOT: HMN;
-                std::cout << curr_plr << std::endl;
+                std::cout << "Current player = " << curr_plr << std::endl;
             }
 
         }    

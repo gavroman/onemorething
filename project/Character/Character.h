@@ -26,6 +26,7 @@ class Character {
     int get_current_cell();
     int get_mv_range();
     std::vector<std::vector<int>> get_move_area();
+    int get_status();
 
     void update_id(const int id);
     void move(std::vector<int> way, class Map field);
@@ -58,8 +59,8 @@ class Character {
     float map_offset_y;
 
  private:
-    int animation_steps = 3;
-    int current_animate_index;                   //for move animation
+    int animation_steps = 4;
+    int current_animate_index = 0;               //for move animation
     std::vector<sf::Vector2f> animate_positions; //for move animation   
 };
 

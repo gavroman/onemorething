@@ -23,7 +23,7 @@ int Player::get_active_char_index() {
 }
 
 int Player::get_chars_size() {
-	return chars.size();
+    return chars.size();
 }
 
 void Player::deactivate_all_chars() {
@@ -96,12 +96,13 @@ bool Human::make_turn(class Map& btl_fld, sf::Event event, sf::RenderWindow& win
                         std::vector<std::vector<int>> move_area = chars[active_char_index]->get_move_area();
                         if (btl_fld.is_in_area(move_area, cell_id)) {
                             std::vector<int> route = btl_fld.find_route(cell_id, move_area);
+                            std::cout << "______________Построидли маршрут и погнали нахуй" << std::endl;
                             btl_fld.drop_highlight_cells();
                             btl_fld.add_highlight_cells(route, color_trace, color_trace);
-                            //chars[active_char_index]->move(route, btl_fld);
+                            chars[active_char_index]->move(route, btl_fld);  //НЕРАБОЧЕЕ ГАВНО
                             btl_fld.update_cell(chars[active_char_index], route[0]);
                             chars[active_char_index]->set_active(false);
-                            return true; //окончание хода
+                            //return true; //окончание хода
                         } else {
                             btl_fld.drop_highlight_cells();
                             chars[active_char_index]->set_active(false);
@@ -115,6 +116,11 @@ bool Human::make_turn(class Map& btl_fld, sf::Event event, sf::RenderWindow& win
         default: 
             break;   
     }
+    //for (auto& chr : chars) {
+    //    if (chr->get_status() != IDLE) {
+    //        return false;
+    //    }
+    //}
     return false;
 }
 

@@ -24,7 +24,7 @@ void Character::animate() {
             } else {
                 texture_x += texture_width;
             }
-            sprite.setPosition(animate_positions[current_animate_index]);    
+            sprite.setPosition(animate_positions[current_animate_index]);
             if (++current_animate_index == animate_positions.size()) {
                 current_animate_index = 0;
                 std::cout << "walk end" << std::endl;
@@ -42,13 +42,12 @@ void Character::animate() {
                 }
             }
             break;
-
         }
     }
 }
 
 void Character::move(std::vector<int> way, class Map field) {
-    animate_positions = {};
+    //animate_positions = {};
     status = WALK;
     std::reverse(way.begin(), way.end());
     std::vector<sf::Vector2f> positions;
@@ -58,6 +57,7 @@ void Character::move(std::vector<int> way, class Map field) {
             discr_pos.x -= map_offset_x;
             discr_pos.y -= map_offset_y;
             positions.emplace_back(discr_pos);
+            std::cout << "discr_pos = " << discr_pos.x << "   " << discr_pos.y << std::endl;
         }
     }
     positions.emplace_back(field.get_cell_pos(way[way.size() - 1]));
@@ -84,6 +84,10 @@ std::vector<std::vector<int>> Character::get_move_area() {
     return move_area;
 }
 
+int Character::get_status() {
+    return status;
+}
+
 void Character::update_id(const int id) {
 	cell_id = id;
 }
@@ -107,8 +111,6 @@ bool Character::is_active() {
 bool Character::is_idle() {
     return status == IDLE;
 }
-
-
 
 Scout::Scout(const int id) {
     move_range = 4;
