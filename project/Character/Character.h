@@ -5,13 +5,16 @@
 #ifndef ONEMORETHING_CHARACTER_H
 #define ONEMORETHING_CHARACTER_H
 
+#define SOURCE "../source/characters/"
+
+#include "Map.h"
 #include "Player.h"
 
 enum Status {IDLE, WALK, ATTACK, HURT, DYING, DEAD };
 
 class Character {
  public:
-    //Character() {};
+    Character();
     //virtual unsigned int apply_damage(std::shared_ptr <Cell> cell) = 0; // Вызывает move_character из Player, если получает false, то возвращает false
     //virtual void get_damage(unsigned int damage) = 0;
 
@@ -59,52 +62,61 @@ class Character {
  private:
     int animation_steps = 3;
     int current_animate_index;                   //for move animation
-    std::vector<sf::Vector2f> animate_positions; //for move animation   
+    std::vector<sf::Vector2f> animate_positions; //for move animation
 };
 
-class Melee : public Character {
+class Melee : public virtual Character {
  public:
-    Melee() = default;
-};
-
-class Range : public Character {
-
-};
-
-class Scout : virtual public Character {
- public:
-    Scout(const int cell_id);
+    // Melee();
 
     //  unsigned int apply_damage(std::shared_ptr <Cell> cell) override;
     //  void get_damage(unsigned int damage) override;
 };
 
-class Archer : public Range {
+class Range : public virtual Character {
 
+};
+
+class Scout : public Melee {
+ public:
+    Scout(const int id);
+};
+
+class Archer : public Range {
+ public:
+    Archer(const int id);
 };
 
 class Swordman : public Melee {
-
+ public:
+    Swordman(const int id);
 };
 
 class Tank : public Melee {
-
+ public:
+    Tank(const int id);
 };
 
-class Crosswbowman : public Range {
-
+class Wizard : public Range {
+ public:
+    Wizard(const int id);
 };
 
 class Berserker : public Melee {
-
+ public:
+    Berserker(const int id);
 };
 
 class Knight : public Melee {
-
+ public:
+    Knight(const int id);
 };
 
-class Healer : public Melee, Range {
-
+class Healer : public Melee, public Range {
+ public:
+    Healer(const int id);
+ private:
+    sf::Texture heal_texture;
 };
 
 #endif //ONEMORETHING_CHARACTER_H

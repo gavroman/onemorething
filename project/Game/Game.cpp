@@ -24,8 +24,18 @@ void Game::run_game(const std::string xml_file_path) {
     std::vector<std::vector<int>> move_area;
     std::vector<std::vector<int>> matrix = btl_fld.get_adj_matrix();
     
-    std::shared_ptr<Character> test_char = std::make_shared<Scout>(197);
+    std::shared_ptr<Character> test_char = std::make_shared<Healer>(197);
+    std::shared_ptr<Character> test_char2 = std::make_shared<Scout>(250);
+
     btl_fld.update_cell(test_char, 197);
+    btl_fld.update_cell(test_char2, 250);
+
+    // инициализация игроков и персонажей::
+    // вектор указателей игроков
+    // current_player = PLAYER1;
+    // первый игрок
+    // current_player = PLAYER2;
+    // второй игрок
     
     sf::Vector2i pos_pressed;
     sf::Vector2i pos_released;
@@ -96,6 +106,9 @@ void Game::run_game(const std::string xml_file_path) {
         btl_fld.draw_map(window);
         test_char->draw(window, btl_fld);
         test_char->animate();
+
+        test_char2->draw(window, btl_fld);
+        test_char2->animate();
         window.display();
         //std::this_thread::sleep_for(std::chrono::milliseconds(160)); // установлен лимит кадров средсвами SFML
     }
