@@ -105,7 +105,7 @@ void Map::get_adj_matrix() {
         if (map[id]->passability) {
             std::vector<int> neighbors = search_neighbors(id);
             for (int i = 0; i < neighbors.size(); i++) {
-                if (!map[neighbors[i]]->passability) {
+                if (!map[neighbors[i]]->passability or map[neighbors[i]]->character != nullptr) {
                     neighbors.erase(neighbors.begin() + i);
                     i--;
                 }
@@ -130,11 +130,9 @@ std::vector<std::vector<int>> Map::find_move_area(const int id, const int distan
         std::vector<int> trace_distance;
         for (int j = 0; j < trace[i - 1].size(); j++) {
             int k = 0;
-
             while (adj_matrix[k][0] != trace[i - 1][j]) {
                 k++;
             }
-
             std::vector<int> neighbors = adj_matrix[k];
             trace_distance.insert(std::end(trace_distance), std::begin(neighbors), std::end(neighbors));
         }
@@ -156,7 +154,7 @@ std::vector<int> Map::find_route(const int id, const std::vector<std::vector<int
             break;
         }
     }
-    for (i; id_add != trace[0][0]; i--) {
+    for (i; i != 1; i--) {
         int k = 0;
         while (adj_matrix[k][0] != id_add) {
             k++;
@@ -171,6 +169,7 @@ std::vector<int> Map::find_route(const int id, const std::vector<std::vector<int
             }
         }
     }
+    one_trace.push_back(trace[0][0]);
     return one_trace;
 }    
 

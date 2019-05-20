@@ -33,13 +33,13 @@ void Player::deactivate_all_chars() {
 }
 
 Human::Human(class Map field) {
-    chars.push_back(std::make_shared<Scout>(11, PLAYER1));
-    chars.push_back(std::make_shared<Archer>(12, PLAYER1));
-    chars.push_back(std::make_shared<Healer>(13, PLAYER1));
-    chars.push_back(std::make_shared<Knight>(14, PLAYER1));
+    //chars.push_back(std::make_shared<Scout>(11, PLAYER1));
+    //chars.push_back(std::make_shared<Archer>(12, PLAYER1));
+    //chars.push_back(std::make_shared<Healer>(13, PLAYER1));
+    //chars.push_back(std::make_shared<Knight>(14, PLAYER1));
     chars.push_back(std::make_shared<Swordman>(15, PLAYER1));
-    chars.push_back(std::make_shared<Tank>(16, PLAYER1));
-    chars.push_back(std::make_shared<Wizard>(17, PLAYER1));
+    //chars.push_back(std::make_shared<Tank>(16, PLAYER1));
+    //chars.push_back(std::make_shared<Wizard>(17, PLAYER1));
     chars.push_back(std::make_shared<Berserker>(18, PLAYER1));
 
     for (auto &chr : chars) {
@@ -120,13 +120,13 @@ bool Human::make_turn(class Map& btl_fld, sf::Event event, sf::RenderWindow& win
 
 
 Bot::Bot(class Map field) {
-    chars.push_back(std::make_shared<Scout>(110, PLAYER2));
-    chars.push_back(std::make_shared<Archer>(111, PLAYER2));
-    chars.push_back(std::make_shared<Healer>(112, PLAYER2));
-    chars.push_back(std::make_shared<Knight>(113, PLAYER2));
+    //chars.push_back(std::make_shared<Scout>(110, PLAYER2));
+    //chars.push_back(std::make_shared<Archer>(111, PLAYER2));
+    //chars.push_back(std::make_shared<Healer>(112, PLAYER2));
+    //chars.push_back(std::make_shared<Knight>(113, PLAYER2));
     chars.push_back(std::make_shared<Swordman>(114, PLAYER2));
-    chars.push_back(std::make_shared<Tank>(115, PLAYER2));
-    chars.push_back(std::make_shared<Wizard>(116, PLAYER2));
+    //chars.push_back(std::make_shared<Tank>(115, PLAYER2));
+    //chars.push_back(std::make_shared<Wizard>(116, PLAYER2));
     chars.push_back(std::make_shared<Berserker>(117, PLAYER1));
 
     for (auto &chr : chars) {

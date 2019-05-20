@@ -24,6 +24,7 @@ void Game::run_game(const std::string xml_file_path) {
     players.push_back(std::make_unique<Human>(btl_fld)); //создание игроков
     players.push_back(std::make_unique<Bot>(btl_fld));
     Current_player curr_plr = PLAYER1;
+    btl_fld.get_adj_matrix();
 
     while (window.isOpen()) {
         if (!window.hasFocus()) {
@@ -33,7 +34,9 @@ void Game::run_game(const std::string xml_file_path) {
         while (window.pollEvent(event)) {
             if (players[curr_plr]->make_turn(btl_fld, event, window)) {
                 curr_plr = (curr_plr == PLAYER1)? PLAYER2: PLAYER1;
+                btl_fld.get_adj_matrix();
                 std::cout << "Current player = " << curr_plr << std::endl;
+
             }
         }    
         btl_fld.draw(window);
