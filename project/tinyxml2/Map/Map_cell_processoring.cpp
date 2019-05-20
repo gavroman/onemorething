@@ -189,7 +189,7 @@ void Map::update_cell(std::shared_ptr<Character> pers, int id) {
 
 std::vector<sf::Vector2f> Map::discrete_positions(const int id1, const int id2, const int step) {
     std::vector<sf::Vector2f> positions;
-    //std::cout << "cell id = " << id1 << "    "<< get_cell_pos(id1).x << "   "<< get_cell_pos(id1).y <<std::endl;
+    std::cout << "cell id = " << id1 << "    "<< get_cell_pos(id1).x << "   "<< get_cell_pos(id1).y <<std::endl;
     float dx = (get_cell_pos(id2).x - get_cell_pos(id1).x) / step;
     float dy = (get_cell_pos(id2).y - get_cell_pos(id1).y) / step;
     for (int i = 0; i != step; i++) {

@@ -19,7 +19,8 @@ void Game::run_game(const std::string xml_file_path) {
     sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
     window.setFramerateLimit(12);
 
-    Map btl_fld("../source/game_map/" + xml_file_path);
+    Map btl_fld("../source/game_map/" + xml_file_path);    
+
 
     players.push_back(std::make_unique<Human>(btl_fld)); //создание игроков
     players.push_back(std::make_unique<Bot>(btl_fld));
@@ -36,6 +37,7 @@ void Game::run_game(const std::string xml_file_path) {
                 std::cout << "Current player = " << curr_plr << std::endl;
             }
         }    
+        //std::cout << "pre draw" << std::endl;
         btl_fld.draw(window);
         for (int i = 0; i != players[PLAYER1]->get_chars_size(); i++) {
             players[PLAYER1]->get_char(i)->draw(window, btl_fld);
@@ -43,6 +45,7 @@ void Game::run_game(const std::string xml_file_path) {
             players[PLAYER1]->get_char(i)->animate();
             players[PLAYER2]->get_char(i)->animate();
         }
+        //std::cout << "post draw" << std::endl;
         window.display();
         //std::this_thread::sleep_for(std::chrono::milliseconds(160)); // установлен лимит кадров средсвами SFML
     }

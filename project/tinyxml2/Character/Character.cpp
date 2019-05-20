@@ -7,19 +7,19 @@
 
 // TODO: Общее: смещение при hurt
 
-Character::Character() {
-    status = IDLE;
+/*Character::Character() {
+    std::cout << "dskhfdsl'hf'ldksnfkldsn!!!" << std::endl;
+    status = WALK;
     inverse = true;
-
+    active = false;
     idle_texture.setSmooth(true);
     walk_texture.setSmooth(true);
     hurt_texture.setSmooth(true);
     attack_texture.setSmooth(true);
     die_texture.setSmooth(true);
-
     texture_x = 0;
     texture_y = 0;
-}
+}*/
 
 Scout::Scout(const int id, const int current_player) {
     std::string PLAYER;
