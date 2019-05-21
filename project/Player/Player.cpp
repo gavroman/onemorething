@@ -35,24 +35,30 @@ void Player::deactivate_all_chars() {
 bool Player::is_all_idle() {
     for (auto& chr : chars) {
         if (chr->get_status() != IDLE) {
-            std::cout << "FALSE " << chr->get_status() << std::endl;
             return false;
         }    
     }
-    //std::cout << "TRUE" << std::endl;
     return true;
 }
 
 Human::Human(class Map field) {
     chars.push_back(std::make_shared<Scout>(416, PLAYER1));
+    std::cout << "1 character's textures loaded" << std::endl;
     chars.push_back(std::make_shared<Archer>(384, PLAYER1));
+    std::cout << "2 character's textures loaded" << std::endl;
     chars.push_back(std::make_shared<Healer>(352, PLAYER1));
+    std::cout << "3 character's textures loaded" << std::endl;
     chars.push_back(std::make_shared<Knight>(320, PLAYER1));
-    chars.push_back(std::make_shared<Swordman>(288, PLAYER1));
+    std::cout << "4 character's textures loaded" << std::endl;
+    chars.push_back(std::make_shared<Swordman>(288, PLAYER1));    
+    std::cout << "5 character's textures loaded" << std::endl;
     chars.push_back(std::make_shared<Tank>(256, PLAYER1));
+    std::cout << "6 character's textures loaded" << std::endl;
     chars.push_back(std::make_shared<Wizard>(224, PLAYER1));
+    std::cout << "7 character's textures loaded" << std::endl;
     chars.push_back(std::make_shared<Berserker>(192, PLAYER1));
-    std::cout << "Human done" << std::endl;
+    std::cout << "8 character's textures loaded" << std::endl;
+    std::cout << "PLAYER1 done" << std::endl;
     for (auto &chr : chars) {
     	field.update_cell(chr, chr->get_current_cell());
     }
@@ -135,14 +141,22 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
 
 Bot::Bot(class Map field) {
     chars.push_back(std::make_shared<Scout>(31, PLAYER2));
+    std::cout << "1 character's textures loaded" << std::endl;
     chars.push_back(std::make_shared<Archer>(63, PLAYER2));
+    std::cout << "2 character's textures loaded" << std::endl;
     chars.push_back(std::make_shared<Healer>(95, PLAYER2));
+    std::cout << "3 character's textures loaded" << std::endl;
     chars.push_back(std::make_shared<Knight>(127, PLAYER2));
+    std::cout << "4 character's textures loaded" << std::endl;
     chars.push_back(std::make_shared<Swordman>(159, PLAYER2));
+    std::cout << "5 character's textures loaded" << std::endl;
     chars.push_back(std::make_shared<Tank>(191, PLAYER2));
+    std::cout << "6 character's textures loaded" << std::endl;
     chars.push_back(std::make_shared<Wizard>(223, PLAYER2));    
+    std::cout << "7 character's textures loaded" << std::endl;
     chars.push_back(std::make_shared<Berserker>(255, PLAYER2));
-    std::cout << "Bot done" << std::endl;
+    std::cout << "8 character's textures loaded" << std::endl;
+    std::cout << "PLAYER2 done" << std::endl;
     for (auto &chr : chars) {
     	field.update_cell(chr, chr->get_current_cell());
     }
