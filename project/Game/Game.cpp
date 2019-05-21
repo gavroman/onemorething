@@ -18,8 +18,8 @@ void Game::run_game(const std::string xml_file_path) {
     
 
     Map btl_fld("../source/game_map/" + xml_file_path);
-    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER1)); //создание игроков
-    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2));
+    players.push_back(std::make_unique<Human>(btl_fld, PLAYER1)); //создание игроков
+    players.push_back(std::make_unique<Human>(btl_fld, PLAYER2));
     btl_fld.get_adj_matrix();
 
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
