@@ -31,6 +31,7 @@ void Game::run_game(const std::string xml_file_path) {
         if (!window.hasFocus()) {
             continue;
         }
+
             //sf::Event event;
             //while (window.pollEvent(event)) {
             if (!made_turn)
@@ -49,10 +50,14 @@ void Game::run_game(const std::string xml_file_path) {
         btl_fld.draw(window);
         for (int i = 0; i != players[PLAYER1]->get_chars_size(); i++) {
             players[PLAYER1]->get_char(i)->draw(window, btl_fld);
-            players[PLAYER2]->get_char(i)->draw(window, btl_fld);
             players[PLAYER1]->get_char(i)->animate();
+        }
+
+        for (int i = 0; i != players[PLAYER2]->get_chars_size(); i++) {
+            players[PLAYER2]->get_char(i)->draw(window, btl_fld);
             players[PLAYER2]->get_char(i)->animate();
         }
+
         window.display();
         //std::this_thread::sleep_for(std::chrono::milliseconds(160)); // установлен лимит кадров средсвами SFML
     }

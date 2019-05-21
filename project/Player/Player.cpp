@@ -44,15 +44,14 @@ bool Player::is_all_idle() {
 }
 
 Human::Human(class Map field) {
-    //chars.push_back(std::make_shared<Scout>(11, PLAYER1));
-    //chars.push_back(std::make_shared<Archer>(12, PLAYER1));
-    //chars.push_back(std::make_shared<Healer>(13, PLAYER1));
-    //chars.push_back(std::make_shared<Knight>(14, PLAYER1));
-    chars.push_back(std::make_shared<Swordman>(15, PLAYER1));
-    //chars.push_back(std::make_shared<Tank>(16, PLAYER1));
-    //chars.push_back(std::make_shared<Wizard>(17, PLAYER1));
-    chars.push_back(std::make_shared<Berserker>(18, PLAYER1));
-
+    //chars.push_back(std::make_shared<Scout>(10, PLAYER1));
+    //chars.push_back(std::make_shared<Archer>(11, PLAYER1));
+    //chars.push_back(std::make_shared<Healer>(12, PLAYER1));
+    //chars.push_back(std::make_shared<Knight>(13, PLAYER1));
+    //chars.push_back(std::make_shared<Swordman>(14, PLAYER1));
+    //chars.push_back(std::make_shared<Tank>(15, PLAYER1));
+    //chars.push_back(std::make_shared<Wizard>(16, PLAYER1));
+    //chars.push_back(std::make_shared<Berserker>(17, PLAYER1));
     for (auto &chr : chars) {
     	field.update_cell(chr, chr->get_current_cell());
     }
@@ -110,7 +109,7 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                                 std::vector<int> route = btl_fld.find_route(cell_id, move_area);
                                 btl_fld.drop_highlight_cells();
                                 btl_fld.add_highlight_cells(route, color_trace, color_trace);
-                                chars[active_char_index]->move(route, btl_fld);  //НЕРАБОЧЕЕ ГАВНО
+                                chars[active_char_index]->move(route, btl_fld);
                                 btl_fld.update_cell(chars[active_char_index], route[0]);
                                 chars[active_char_index]->set_active(false);
                                 return true; //окончание хода
@@ -138,11 +137,10 @@ Bot::Bot(class Map field) {
     //chars.push_back(std::make_shared<Archer>(111, PLAYER2));
     //chars.push_back(std::make_shared<Healer>(112, PLAYER2));
     //chars.push_back(std::make_shared<Knight>(113, PLAYER2));
-    chars.push_back(std::make_shared<Swordman>(114, PLAYER2));
+    //chars.push_back(std::make_shared<Swordman>(114, PLAYER2));
     //chars.push_back(std::make_shared<Tank>(115, PLAYER2));
     //chars.push_back(std::make_shared<Wizard>(116, PLAYER2));
-    chars.push_back(std::make_shared<Berserker>(117, PLAYER1));
-
+    //chars.push_back(std::make_shared<Berserker>(117, PLAYER2));
     for (auto &chr : chars) {
     	field.update_cell(chr, chr->get_current_cell());
     }
@@ -157,16 +155,14 @@ bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                 window.close();
                 break;
             }
-            
-            case sf::Event::KeyPressed: { // окончание хода по нажатию кнопки A
-               if (event.key.code == sf::Keyboard::A) {
-                    return true;
-                }
-            }
-            default: 
-                return false;
-        }   
+        }    
     }
-    return false; 
+    int char_index = rand() % get_chars_size();
+    int cell_char = chars[char_index]->get_current_cell();
+    std::vector<std::vector<int>> move_area = btl_fld.find_move_area(cell_char, chars[char_index]->get_mv_range());
+    int move_cell = move_area[move_area.size() - 1][rand() % move_area[move_area.size() - 1].size()];
+    std::vector<int> route = btl_fld.find_route(move_cell, move_area);
+    chars[char_index]->move(route, btl_fld);
+    btl_fld.update_cell(chars[char_index], move_cell);
+    return true; 
 }
-
