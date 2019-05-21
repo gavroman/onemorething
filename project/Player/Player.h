@@ -35,7 +35,7 @@ class Player {
 
 class Human : public Player {
  public:
-    Human(class Map field);
+    Human(class Map field, Current_player player);
     sf::Vector2i pos_pressed;
     sf::Vector2i pos_released;
     bool make_turn(class Map& btl_fld, sf::RenderWindow& window) override;
@@ -43,8 +43,8 @@ class Human : public Player {
 
 class Bot : public Player {
  public:   
+    Bot(class Map field, Current_player player);
     bool make_turn(class Map& btl_fld, sf::RenderWindow& window) override;
-    Bot(class Map field);
 };
 
 #endif //ONEMORETHING_PLAYER_H

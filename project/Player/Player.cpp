@@ -41,22 +41,29 @@ bool Player::is_all_idle() {
     return true;
 }
 
-Human::Human(class Map field) {
-    chars.push_back(std::make_shared<Scout>(416, PLAYER1));
+Human::Human(class Map field, Current_player player) {
+    std::vector<int> poses = {};
+    if(player == PLAYER1) {
+        poses = {416, 384, 352, 320, 288, 256, 224, 192};
+    } else {
+        poses = {31, 63, 95, 127, 159, 191, 223, 255};
+    }
+    int pos_index = 0;
+    chars.push_back(std::make_shared<Scout>(poses[pos_index++], player));
     std::cout << "1 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Archer>(384, PLAYER1));
+    chars.push_back(std::make_shared<Archer>(poses[pos_index++], player));
     std::cout << "2 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Healer>(352, PLAYER1));
+    chars.push_back(std::make_shared<Healer>(poses[pos_index++], player));
     std::cout << "3 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Knight>(320, PLAYER1));
+    chars.push_back(std::make_shared<Knight>(poses[pos_index++], player));
     std::cout << "4 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Swordman>(288, PLAYER1));    
+    chars.push_back(std::make_shared<Swordman>(poses[pos_index++], player));
     std::cout << "5 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Tank>(256, PLAYER1));
+    chars.push_back(std::make_shared<Tank>(poses[pos_index++], player));
     std::cout << "6 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Wizard>(224, PLAYER1));
+    chars.push_back(std::make_shared<Wizard>(poses[pos_index++], player));    
     std::cout << "7 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Berserker>(192, PLAYER1));
+    chars.push_back(std::make_shared<Berserker>(poses[pos_index++], player));
     std::cout << "8 character's textures loaded" << std::endl;
     std::cout << "PLAYER1 done" << std::endl;
     for (auto &chr : chars) {
@@ -139,22 +146,29 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
 
 
 
-Bot::Bot(class Map field) {
-    chars.push_back(std::make_shared<Scout>(31, PLAYER2));
+Bot::Bot(class Map field, Current_player player) {
+    std::vector<int> poses = {};
+    if(player == PLAYER1) {
+        poses = {416, 384, 352, 320, 288, 256, 224, 192};
+    } else {
+        poses = {31, 63, 95, 127, 159, 191, 223, 255};
+    }
+    int pos_index = 0;
+    chars.push_back(std::make_shared<Scout>(poses[pos_index++], player));
     std::cout << "1 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Archer>(63, PLAYER2));
+    chars.push_back(std::make_shared<Archer>(poses[pos_index++], player));
     std::cout << "2 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Healer>(95, PLAYER2));
+    chars.push_back(std::make_shared<Healer>(poses[pos_index++], player));
     std::cout << "3 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Knight>(127, PLAYER2));
+    chars.push_back(std::make_shared<Knight>(poses[pos_index++], player));
     std::cout << "4 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Swordman>(159, PLAYER2));
+    chars.push_back(std::make_shared<Swordman>(poses[pos_index++], player));
     std::cout << "5 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Tank>(191, PLAYER2));
+    chars.push_back(std::make_shared<Tank>(poses[pos_index++], player));
     std::cout << "6 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Wizard>(223, PLAYER2));    
+    chars.push_back(std::make_shared<Wizard>(poses[pos_index++], player));    
     std::cout << "7 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Berserker>(255, PLAYER2));
+    chars.push_back(std::make_shared<Berserker>(poses[pos_index++], player));
     std::cout << "8 character's textures loaded" << std::endl;
     std::cout << "PLAYER2 done" << std::endl;
     for (auto &chr : chars) {
