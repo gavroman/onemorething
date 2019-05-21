@@ -32,7 +32,7 @@ void Character::animate() {
                 texture_x += texture_width;
             }
             sprite.setPosition(animate_positions[current_animate_index]);
-            if (++current_animate_index == animate_positions.size()) {
+            if (++current_animate_index == animate_positions.size() - 1) {
                 current_animate_index = 0;
                 status = IDLE;
             }

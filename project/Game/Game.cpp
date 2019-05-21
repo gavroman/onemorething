@@ -15,8 +15,8 @@ Game::Game(const int &map_id) {
 }
 
 void Game::run_game(const std::string xml_file_path) {
-    //sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
-    sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    //sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
     window.setFramerateLimit(12);
 
     Map btl_fld("../source/game_map/" + xml_file_path);

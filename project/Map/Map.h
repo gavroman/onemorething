@@ -17,6 +17,9 @@
 #include "Character.h"
 #include "Player.h"
 
+
+
+//width="32" height="14" - map properties
 struct Cell {
     int id;
     std::shared_ptr<Character> character; // Указатель на объект типа "Персонаж"
