@@ -14,7 +14,7 @@ struct Cell;
 
 class Player {
  public:
-    virtual bool make_turn(class Map& btl_fld, sf::Event event, sf::RenderWindow& window) = 0;
+    virtual bool make_turn(class Map& btl_fld, sf::RenderWindow& window) = 0;
     //virtual bool move_character(std::vector<int> id, std::shared_ptr<Character> character); // обновляет состояние клетки и передвигает персонажа, здесь же строится путь, если недостижимо, то возвращает false
     //virtual void attack_with_character(std::shared_ptr<Character> my_char, std::shared_ptr<Character> target_char);
     std::shared_ptr<Character> get_char(const int index);
@@ -22,6 +22,7 @@ class Player {
     int get_active_char_index();
     int get_char_index_from_cell(int cell_id);
     void deactivate_all_chars();
+    bool is_all_idle();
     
     ~Player() = default;
  protected:
@@ -37,12 +38,12 @@ class Human : public Player {
     Human(class Map field);
     sf::Vector2i pos_pressed;
     sf::Vector2i pos_released;
-    bool make_turn(class Map& btl_fld, sf::Event event, sf::RenderWindow& window) override;
+    bool make_turn(class Map& btl_fld, sf::RenderWindow& window) override;
 };
 
 class Bot : public Player {
  public:   
-    bool make_turn(class Map& btl_fld, sf::Event event, sf::RenderWindow& window) override;
+    bool make_turn(class Map& btl_fld, sf::RenderWindow& window) override;
     Bot(class Map field);
 };
 

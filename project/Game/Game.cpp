@@ -1,4 +1,4 @@
-//
+    //
 // Created by arugaf on 08.05.19.
 //
 #include "Game.h"
@@ -25,20 +25,27 @@ void Game::run_game(const std::string xml_file_path) {
     players.push_back(std::make_unique<Bot>(btl_fld));
     Current_player curr_plr = PLAYER1;
     btl_fld.get_adj_matrix();
+    bool made_turn = false;
 
     while (window.isOpen()) {
         if (!window.hasFocus()) {
             continue;
         }
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (players[curr_plr]->make_turn(btl_fld, event, window)) {
-                curr_plr = (curr_plr == PLAYER1)? PLAYER2: PLAYER1;
-                btl_fld.get_adj_matrix();
-                std::cout << "Current player = " << curr_plr << std::endl;
+            //sf::Event event;
+            //while (window.pollEvent(event)) {
+            if (!made_turn)
+                made_turn = players[curr_plr]->make_turn(btl_fld, window);
 
-            }
-        }    
+            if(made_turn)
+                if (players[curr_plr]->is_all_idle()) {
+                    made_turn = false;
+                    btl_fld.get_adj_matrix();
+                    curr_plr = (curr_plr == PLAYER1)? PLAYER2: PLAYER1;
+                    std::cout << "Current player = " << curr_plr << std::endl;
+                }
+                
+            //}
+
         btl_fld.draw(window);
         for (int i = 0; i != players[PLAYER1]->get_chars_size(); i++) {
             players[PLAYER1]->get_char(i)->draw(window, btl_fld);

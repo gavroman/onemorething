@@ -32,6 +32,17 @@ void Player::deactivate_all_chars() {
     }
 }
 
+bool Player::is_all_idle() {
+    for (auto& chr : chars) {
+        if (chr->get_status() != IDLE) {
+            std::cout << "FALSE " << chr->get_status() << std::endl;
+            return false;
+        }    
+    }
+    //std::cout << "TRUE" << std::endl;
+    return true;
+}
+
 Human::Human(class Map field) {
     //chars.push_back(std::make_shared<Scout>(11, PLAYER1));
     //chars.push_back(std::make_shared<Archer>(12, PLAYER1));
@@ -48,72 +59,75 @@ Human::Human(class Map field) {
     deactivate_all_chars();
 }
 
-bool Human::make_turn(class Map& btl_fld, sf::Event event, sf::RenderWindow& window) {
-    switch(event.type) {
-        case sf::Event::Closed: {
-            window.close();
-            break;
-        }
-
-        case sf::Event::MouseMoved: {
-            sf::Vector2i new_pos = sf::Mouse::getPosition(window);
-            int hvd_cell_id = btl_fld.get_cell_id_from_pos(sf::Vector2f(new_pos));
-            int char_index = get_char_index_from_cell(hvd_cell_id);
-            if (char_index != -1 and get_active_char_index() == -1) {
-                std::vector<std::vector<int>> move_area = btl_fld.find_move_area(hvd_cell_id, chars[char_index]->get_mv_range());
-                btl_fld.drop_highlight_cells();
-                btl_fld.add_highlight_cells(move_area[chars[char_index]->get_mv_range()], hover_color, hover_color);
-            } else if (get_active_char_index() == -1) {
-                btl_fld.drop_highlight_cells();
-            }    
-            break;
-        }
-
-        case sf::Event::MouseButtonPressed: {
-            pos_pressed = sf::Mouse::getPosition(window);
-            break;
-        }
-
-        case sf::Event::MouseButtonReleased: {
-            pos_released = sf::Mouse::getPosition(window);
-            if (btl_fld.compare_positions(sf::Vector2f(pos_pressed), sf::Vector2f(pos_released))) {
-                sf::Vector2f pos(pos_pressed.x, pos_pressed.y);
-                int cell_id = btl_fld.get_cell_id_from_pos(sf::Vector2f(pos_pressed));
-                int char_index = get_char_index_from_cell(cell_id);
-                if (char_index != -1) {
-                    //отрисовка зоны
-                    std::vector<std::vector<int>> move_area = btl_fld.find_move_area(cell_id, chars[char_index]->get_mv_range());
-                    chars[char_index]->set_move_area(move_area);
-                    deactivate_all_chars();
-                    chars[char_index]->set_active(true);
-                    btl_fld.drop_highlight_cells();
-                    btl_fld.add_highlight_cells(move_area[chars[char_index]->get_mv_range()], color, color);
-                    btl_fld.add_highlight_cells({move_area[0][0]}, color_trace, color_trace);   
-                } else {
-                    int active_char_index = get_active_char_index();
-                    if (active_char_index != -1) {
-                        std::vector<std::vector<int>> move_area = chars[active_char_index]->get_move_area();
-                        if (btl_fld.is_in_area(move_area, cell_id)) {
-                            std::vector<int> route = btl_fld.find_route(cell_id, move_area);
-                            btl_fld.drop_highlight_cells();
-                            btl_fld.add_highlight_cells(route, color_trace, color_trace);
-                            chars[active_char_index]->move(route, btl_fld);  //НЕРАБОЧЕЕ ГАВНО
-                            btl_fld.update_cell(chars[active_char_index], route[0]);
-                            chars[active_char_index]->set_active(false);
-                            return true; //окончание хода
-                        } else {
-                            btl_fld.drop_highlight_cells();
-                            chars[active_char_index]->set_active(false);
-                        }    
-                    }
-                } 
+bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
+    sf::Event event;
+    while (window.pollEvent(event)) {
+        switch(event.type) {
+            case sf::Event::Closed: {
+                window.close();
+                break;
             }
-            break;
-        }
 
-        default: 
-            break;   
-    }
+            case sf::Event::MouseMoved: {
+                sf::Vector2i new_pos = sf::Mouse::getPosition(window);
+                int hvd_cell_id = btl_fld.get_cell_id_from_pos(sf::Vector2f(new_pos));
+                int char_index = get_char_index_from_cell(hvd_cell_id);
+                if (char_index != -1 and get_active_char_index() == -1) {
+                    std::vector<std::vector<int>> move_area = btl_fld.find_move_area(hvd_cell_id, chars[char_index]->get_mv_range());
+                    btl_fld.drop_highlight_cells();
+                    btl_fld.add_highlight_cells(move_area[chars[char_index]->get_mv_range()], hover_color, hover_color);
+                } else if (get_active_char_index() == -1) {
+                    btl_fld.drop_highlight_cells();
+                }    
+                break;
+            }
+
+            case sf::Event::MouseButtonPressed: {
+                pos_pressed = sf::Mouse::getPosition(window);
+                break;
+            }
+
+            case sf::Event::MouseButtonReleased: {
+                pos_released = sf::Mouse::getPosition(window);
+                if (btl_fld.compare_positions(sf::Vector2f(pos_pressed), sf::Vector2f(pos_released))) {
+                    sf::Vector2f pos(pos_pressed.x, pos_pressed.y);
+                    int cell_id = btl_fld.get_cell_id_from_pos(sf::Vector2f(pos_pressed));
+                    int char_index = get_char_index_from_cell(cell_id);
+                    if (char_index != -1) {
+                        //отрисовка зоны
+                        std::vector<std::vector<int>> move_area = btl_fld.find_move_area(cell_id, chars[char_index]->get_mv_range());
+                        chars[char_index]->set_move_area(move_area);
+                        deactivate_all_chars();
+                        chars[char_index]->set_active(true);
+                        btl_fld.drop_highlight_cells();
+                        btl_fld.add_highlight_cells(move_area[chars[char_index]->get_mv_range()], color, color);
+                        btl_fld.add_highlight_cells({move_area[0][0]}, color_trace, color_trace);   
+                    } else {
+                        int active_char_index = get_active_char_index();
+                        if (active_char_index != -1) {
+                            std::vector<std::vector<int>> move_area = chars[active_char_index]->get_move_area();
+                            if (btl_fld.is_in_area(move_area, cell_id)) {
+                                std::vector<int> route = btl_fld.find_route(cell_id, move_area);
+                                btl_fld.drop_highlight_cells();
+                                btl_fld.add_highlight_cells(route, color_trace, color_trace);
+                                chars[active_char_index]->move(route, btl_fld);  //НЕРАБОЧЕЕ ГАВНО
+                                btl_fld.update_cell(chars[active_char_index], route[0]);
+                                chars[active_char_index]->set_active(false);
+                                return true; //окончание хода
+                            } else {
+                                btl_fld.drop_highlight_cells();
+                                chars[active_char_index]->set_active(false);
+                            }    
+                        }
+                    } 
+                }
+                break;
+            }
+
+            default: 
+                return false;   
+            }
+        }
     return false;
 }
 
@@ -134,20 +148,25 @@ Bot::Bot(class Map field) {
     }
 }
 
-bool Bot::make_turn(class Map& btl_fld, sf::Event event, sf::RenderWindow& window) {
+bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
     //TODO (9rik): Ярик ебашь
-    switch(event.type) {
-        case sf::Event::Closed: {
-            window.close();
-            break;
-        }
-
-        case sf::Event::KeyPressed: { // окончание хода по нажатию кнопки A
-            if (event.key.code == sf::Keyboard::A) {
-                return true;
+    sf::Event event;
+    while (window.pollEvent(event)) {
+        switch(event.type) {
+            case sf::Event::Closed: {
+                window.close();
+                break;
             }
-        }
-    }   
+            
+            case sf::Event::KeyPressed: { // окончание хода по нажатию кнопки A
+               if (event.key.code == sf::Keyboard::A) {
+                    return true;
+                }
+            }
+            default: 
+                return false;
+        }   
+    }
     return false; 
 }
 
