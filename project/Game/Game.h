@@ -107,6 +107,8 @@ class Choice_menu {
 
     sf::RectangleShape select();
 
+    void change_pos(int icon_num);
+
     sf::Text menu_name;
 
     sf::Texture background_texture;
@@ -119,6 +121,8 @@ class Choice_menu {
     sf::Texture plus_button_texture;
     sf::Texture minus_button_texture;
     sf::Texture ribbon_texture;
+    sf::Texture frame_texture;
+    sf::Texture chars_preview_texture;
 
     sf::Sprite background;
     sf::Sprite menu;
@@ -130,6 +134,8 @@ class Choice_menu {
     sf::Sprite plus_button;
     sf::Sprite minus_button;
     sf::Sprite ribbon;
+    std::vector<sf::Sprite> frame;
+    sf::Sprite chars_preview;
 
     sf::Texture stat_bar_texture;
     std::vector<sf::Sprite> stat_bar;
@@ -144,6 +150,9 @@ class Choice_menu {
             {150, 100, 70},
             {50, 50, 50}
     };
+
+    std::vector<sf::Texture> icons_texture;
+    std::vector<sf::Sprite> icons;
 
     sf::RectangleShape draw_stat(int size, sf::Color bar_color, int index);
 
@@ -164,7 +173,6 @@ class Choice_menu {
 
     const int selected_offset_x = 159;
     const int selected_offset_y = 269;
-    const int icons_distance = 87;
 
     const int pm_button_offset_x = 207;
     const int pm_button_offset_y = 175;
@@ -177,14 +185,23 @@ class Choice_menu {
     const int menu_name_offset_x = 160;
     const int menu_name_y = 270;
 
-    const int char_name_offset_x = 225;
-    const int char_name_offset_y = 247;
+    const int char_name_offset_x = 182;
+    const int char_name_offset_y = 53;
 
     const int stat_bar_offset_x = 430;
     const int stat_bar_offset_y = 325;
     const int stat_bar_offset = 6;
 
     const int max_stat = 222;
+
+    const int frame_offset_x = 145;
+    const int frame_offset_y = 257;
+    const int frame_offset = 10;
+
+    const int chars_preview_width = 250;
+    const int chars_preview_height = 252;
+    const int chars_preview_offset_x = 435;
+    const int chars_preview_offset_y = 370;
 
     int current_frame = 0;
 };

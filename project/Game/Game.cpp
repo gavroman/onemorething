@@ -73,6 +73,7 @@ void Game::run_game(const std::string xml_file_path) {
             std::cout << "Current player = " << curr_plr << std::endl;
         }
 
+    std::vector<sf::Sprite> icons;
         btl_fld.draw(*window);
         for (int i = 0; i != players[PLAYER1]->get_chars_size(); i++) {
             players[PLAYER1]->get_char(i)->draw(*window, btl_fld);
@@ -103,6 +104,14 @@ void Game::show_main_menu() {
                             break;
                         }
                         case sf::Keyboard::Down: {
+                            menu.move_down();
+                            break;
+                        }
+                        case sf::Keyboard::W: {
+                            menu.move_up();
+                            break;
+                        }
+                        case sf::Keyboard::S: {
                             menu.move_down();
                             break;
                         }
@@ -153,6 +162,14 @@ void Game::show_choice_menu() {
                             menu.move_right();
                             break;
                         }
+                        case sf::Keyboard::A: {
+                            menu.move_left();
+                            break;
+                        }
+                        case sf::Keyboard::D: {
+                            menu.move_right();
+                            break;
+                        }
                         case sf::Keyboard::Equal: {
                             menu.insert();
                             break;
@@ -166,6 +183,14 @@ void Game::show_choice_menu() {
                             break;
                         }
                         case sf::Keyboard::Down: {
+                            menu.move_down();
+                            break;
+                        }
+                        case sf::Keyboard::W: {
+                            menu.move_up();
+                            break;
+                        }
+                        case sf::Keyboard::S: {
                             menu.move_down();
                             break;
                         }
@@ -370,19 +395,19 @@ Choice_menu::Choice_menu(float width, float height) {
 
     char_names.emplace_back(sf::Text("Scout", font));
     char_names.emplace_back(sf::Text("Archer", font));
-    char_names.emplace_back(sf::Text("Swordman", font));
-    char_names.emplace_back(sf::Text("Tank", font));
+    char_names.emplace_back(sf::Text("Swordmaster", font));
+    char_names.emplace_back(sf::Text("Guardian", font));
     char_names.emplace_back(sf::Text("Wizard", font));
     char_names.emplace_back(sf::Text("Berserker", font));
-    char_names.emplace_back(sf::Text("Knight", font));
-    char_names.emplace_back(sf::Text("Healer", font));
+    char_names.emplace_back(sf::Text("Conqueror", font));
+    char_names.emplace_back(sf::Text("Druid", font));
 
     for (auto& it : char_names) {
         it.setOutlineColor(sf::Color::Black);
         it.setOutlineThickness(2);
 
         it.setOrigin(it.findCharacterPos(it.getString().getSize() / 2).x, 0);
-        it.setPosition(menu_texture.getSize().x + char_name_offset_x, menu.getPosition().y + char_name_offset_y);
+        it.setPosition(menu_texture.getSize().x + char_name_offset_x, menu_texture.getSize().y - char_name_offset_y);
     }
 
     stat_bar_texture.loadFromFile("../source/menu/Stats.png");
@@ -404,6 +429,41 @@ Choice_menu::Choice_menu(float width, float height) {
         stats[i].setPosition(stat_bar[i].getPosition().x - 17,
                              stat_bar[i].getPosition().y - 8);
     }
+
+    for (int i = 0; i < 8; i++) {
+        icons_texture.emplace_back(sf::Texture());
+    }
+    icons_texture[0].loadFromFile("../source/menu/Scout.png");
+    icons_texture[1].loadFromFile("../source/menu/Archer.png");
+    icons_texture[2].loadFromFile("../source/menu/Swordman.png");
+    icons_texture[3].loadFromFile("../source/menu/Tank.png");
+    icons_texture[4].loadFromFile("../source/menu/Wizard.png");
+    icons_texture[5].loadFromFile("../source/menu/Berserker.png");
+    icons_texture[6].loadFromFile("../source/menu/Knight.png");
+    icons_texture[7].loadFromFile("../source/menu/Healer.png");
+
+    for (auto& it : icons_texture) {
+        it.setSmooth(true);
+        icons.emplace_back(sf::Sprite(it));
+    }
+
+    for (auto& it : icons) {
+        it.setColor(sf::Color(255, 255, 255, 230));
+    }
+
+    frame_texture.loadFromFile("../source/menu/Frame.png");
+    frame_texture.setSmooth(true);
+    for (int i = 0; i < 5; i++) {
+        frame.emplace_back(sf::Sprite(frame_texture));
+        frame[i].setPosition(menu.getPosition().x + frame_offset_x,
+                         menu.getPosition().y + frame_offset_y + (frame_texture.getSize().y - frame_offset) * i);
+    }
+
+    chars_preview_texture.loadFromFile("../source/menu/Chars.png");
+    chars_preview_texture.setSmooth(true);
+    chars_preview.setTexture(chars_preview_texture);
+    chars_preview.setTextureRect(sf::IntRect(0, 0, chars_preview_width, chars_preview_height));
+    chars_preview.setPosition(menu.getPosition().x + chars_preview_offset_x, menu.getPosition().y + chars_preview_offset_y);
 }
 
 std::unique_ptr<sf::RenderWindow> Choice_menu::draw(std::unique_ptr<sf::RenderWindow> window) {
@@ -470,12 +530,25 @@ std::unique_ptr<sf::RenderWindow> Choice_menu::draw(std::unique_ptr<sf::RenderWi
         window->draw(minus_button);
     }
 
-    window->draw(select());
-
     window->draw(menu_name);
     window->draw(char_names[selected_char]);
 
-    if (current_frame < 222) {
+    for (const auto& it : frame) {
+        window->draw(it);
+    }
+
+    for (int i = 0; i < 5; i++) {
+        if (selected_chars[i] != -1) {
+            change_pos(i);
+            window->draw(icons[selected_chars[i]]);
+        }
+    }
+
+    window->draw(select());
+
+    window->draw(chars_preview);
+
+    if (current_frame < max_stat) {
         current_frame += 6;
     }
 
@@ -489,6 +562,8 @@ void Choice_menu::move_left() {
         selected_char--;
     }
 
+    chars_preview.setTextureRect(sf::Rect(chars_preview_width * selected_char, 0, chars_preview_width, chars_preview_height));
+
     current_frame = 0;
 
     return;
@@ -500,6 +575,8 @@ void Choice_menu::move_right() {
     } else {
         selected_char++;
     }
+
+    chars_preview.setTextureRect(sf::Rect(chars_preview_width * selected_char, 0, chars_preview_width, chars_preview_height));
 
     current_frame = 0;
 
@@ -528,7 +605,7 @@ sf::RectangleShape Choice_menu::select() {
     rect.setOutlineColor(sf::Color::White);
     rect.setFillColor(sf::Color::Transparent);
     rect.setPosition(menu.getPosition().x + selected_offset_x,
-                     menu.getPosition().y + selected_offset_y + selected_icon * icons_distance);
+                     menu.getPosition().y + selected_offset_y + selected_icon * (frame_texture.getSize().y - frame_offset));
     return rect;
 }
 
@@ -568,6 +645,12 @@ sf::RectangleShape Choice_menu::draw_stat(int size, sf::Color bar_color, int ind
     stat_bar_rect.setPosition(stat_bar[index].getPosition().x + 12,
                               stat_bar[index].getPosition().y + 3);
     return stat_bar_rect;
+}
+
+void Choice_menu::change_pos(int icon_num) {
+    icons[selected_chars[icon_num]].setPosition(menu.getPosition().x + selected_offset_x,
+                     menu.getPosition().y + selected_offset_y + icon_num * (frame_texture.getSize().y - frame_offset));
+    return;
 }
 
 Loading::Loading(float width, float height) {
