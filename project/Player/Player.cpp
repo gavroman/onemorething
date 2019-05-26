@@ -41,7 +41,7 @@ bool Player::is_all_idle() {
     return true;
 }
 
-Human::Human(class Map field, Current_player player) {
+Human::Human(class Map field, Current_player player, std::vector<int> characters) {
     std::vector<int> poses = {};
     if(player == PLAYER1) {
         poses = {416, 384, 352, 320, 288, 256, 224, 192};
@@ -49,22 +49,51 @@ Human::Human(class Map field, Current_player player) {
         poses = {31, 63, 95, 127, 159, 191, 223, 255};
     }
     int pos_index = 0;
-    chars.push_back(std::make_shared<Scout>(poses[pos_index++], player));
-    std::cout << "1 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Archer>(poses[pos_index++], player));
-    std::cout << "2 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Healer>(poses[pos_index++], player));
-    std::cout << "3 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Knight>(poses[pos_index++], player));
-    std::cout << "4 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Swordman>(poses[pos_index++], player));
-    std::cout << "5 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Tank>(poses[pos_index++], player));
-    std::cout << "6 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Wizard>(poses[pos_index++], player));    
-    std::cout << "7 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Berserker>(poses[pos_index++], player));
-    std::cout << "8 character's textures loaded" << std::endl;
+
+    for (const auto& it : characters) {
+        switch (it) {
+            case 0: {
+                chars.push_back(std::make_shared<Scout>(poses[pos_index++], player));
+                std::cout << "Scout textures loaded" << std::endl;
+                break;
+            }
+            case 1: {
+                chars.push_back(std::make_shared<Archer>(poses[pos_index++], player));
+                std::cout << "Archer textures loaded" << std::endl;
+                break;
+            }
+            case 2: {
+                chars.push_back(std::make_shared<Swordman>(poses[pos_index++], player));
+                std::cout << "Swordman textures loaded" << std::endl;
+                break;
+            }
+            case 3: {
+                chars.push_back(std::make_shared<Tank>(poses[pos_index++], player));
+                std::cout << "Tank textures loaded" << std::endl;
+                break;
+            }
+            case 4: {
+                chars.push_back(std::make_shared<Wizard>(poses[pos_index++], player));
+                std::cout << "Wizard textures loaded" << std::endl;
+                break;
+            }
+            case 5: {
+                chars.push_back(std::make_shared<Berserker>(poses[pos_index++], player));
+                std::cout << "Berserker textures loaded" << std::endl;
+                break;
+            }
+            case 6: {
+                chars.push_back(std::make_shared<Knight>(poses[pos_index++], player));
+                std::cout << "Knight textures loaded" << std::endl;
+                break;
+            }
+            case 7: {
+                chars.push_back(std::make_shared<Healer>(poses[pos_index++], player));
+                std::cout << "Healer textures loaded" << std::endl;
+                break;
+            }
+        }
+    }
     std::cout << "PLAYER1 done" << std::endl;
     for (auto &chr : chars) {
     	field.update_cell(chr, chr->get_current_cell());
@@ -138,7 +167,7 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
             }
 
             default: 
-                return false;   
+                return false;
             }
         }
     return false;
@@ -146,7 +175,7 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
 
 
 
-Bot::Bot(class Map field, Current_player player) {
+Bot::Bot(class Map field, Current_player player, std::vector<int> characters) {
     std::vector<int> poses = {};
     if(player == PLAYER1) {
         poses = {416, 384, 352, 320, 288, 256, 224, 192};
@@ -154,22 +183,50 @@ Bot::Bot(class Map field, Current_player player) {
         poses = {31, 63, 95, 127, 159, 191, 223, 255};
     }
     int pos_index = 0;
-    chars.push_back(std::make_shared<Scout>(poses[pos_index++], player));
-    std::cout << "1 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Archer>(poses[pos_index++], player));
-    std::cout << "2 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Healer>(poses[pos_index++], player));
-    std::cout << "3 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Knight>(poses[pos_index++], player));
-    std::cout << "4 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Swordman>(poses[pos_index++], player));
-    std::cout << "5 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Tank>(poses[pos_index++], player));
-    std::cout << "6 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Wizard>(poses[pos_index++], player));    
-    std::cout << "7 character's textures loaded" << std::endl;
-    chars.push_back(std::make_shared<Berserker>(poses[pos_index++], player));
-    std::cout << "8 character's textures loaded" << std::endl;
+    for (const auto& it : characters) {
+        switch (it) {
+            case 0: {
+                chars.push_back(std::make_shared<Scout>(poses[pos_index++], player));
+                std::cout << "Scout textures loaded" << std::endl;
+                break;
+            }
+            case 1: {
+                chars.push_back(std::make_shared<Archer>(poses[pos_index++], player));
+                std::cout << "Archer textures loaded" << std::endl;
+                break;
+            }
+            case 2: {
+                chars.push_back(std::make_shared<Swordman>(poses[pos_index++], player));
+                std::cout << "Swordman textures loaded" << std::endl;
+                break;
+            }
+            case 3: {
+                chars.push_back(std::make_shared<Tank>(poses[pos_index++], player));
+                std::cout << "Tank textures loaded" << std::endl;
+                break;
+            }
+            case 4: {
+                chars.push_back(std::make_shared<Wizard>(poses[pos_index++], player));
+                std::cout << "Wizard textures loaded" << std::endl;
+                break;
+            }
+            case 5: {
+                chars.push_back(std::make_shared<Berserker>(poses[pos_index++], player));
+                std::cout << "Berserker textures loaded" << std::endl;
+                break;
+            }
+            case 6: {
+                chars.push_back(std::make_shared<Knight>(poses[pos_index++], player));
+                std::cout << "Knight textures loaded" << std::endl;
+                break;
+            }
+            case 7: {
+                chars.push_back(std::make_shared<Healer>(poses[pos_index++], player));
+                std::cout << "Healer textures loaded" << std::endl;
+                break;
+            }
+        }
+    }
     std::cout << "PLAYER2 done" << std::endl;
     for (auto &chr : chars) {
     	field.update_cell(chr, chr->get_current_cell());

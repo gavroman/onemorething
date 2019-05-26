@@ -5,35 +5,66 @@
 
 extern std::vector<std::unique_ptr<Player>> players;
 
-Game::Game(const int &map_id) {
+Game::Game() {
     maps = {"Dark_map.tmx",
             "Grass_map.tmx",
             "Snow_map.tmx",
             "Mixed_map.tmx",
             "Mixed_map_v2.tmx"};
-    run_game(maps[map_id]);
+
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    //window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 750), "One More Thing");
+    status = MAIN_MENU;
+    process_event();
+    //run_game(maps[map_id]);
+}
+
+void Game::process_event() {
+    while (window->isOpen()) {
+        switch (status) {
+            case MAIN_MENU: {
+                show_main_menu();
+                break;
+            }
+            case START_MENU: {
+                show_choice_menu();
+                break;
+            }
+            case MAP_MENU: {
+                break;
+            }
+            case RUN_GAME: {
+                run_game(maps[2]);
+                break;
+            }
+        }
+    }
 }
 
 void Game::run_game(const std::string xml_file_path) {
-    
-
+    Loading loading_screen(window->getSize().x, window->getSize().y);
+    window = loading_screen.draw(std::move(window));
     Map btl_fld("../source/game_map/" + xml_file_path);
-    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER1)); //создание игроков
-    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2));
+    window = loading_screen.draw(std::move(window));
+    players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, characters)); //создание игроков
+    window = loading_screen.draw(std::move(window));
+    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({0, 1, 2, 3, 4})));
+    window = loading_screen.draw(std::move(window));
     btl_fld.get_adj_matrix();
 
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
     //sf::RenderWindow window(sf::VideoMode(1920, 750), "One More Thing");
-    window.setFramerateLimit(12);
+    //sf::RenderWindow window (sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    window->setFramerateLimit(12);
     
     Current_player curr_plr = PLAYER1;
     bool made_turn = false;
-    while (window.isOpen()) {
-        if (!window.hasFocus()) {
+    //window->requestFocus();
+    while (window->isOpen()) {
+        /*if (!window->hasFocus()) {
             continue;
-        }
+        }*/
         if (!made_turn) {
-            made_turn = players[curr_plr]->make_turn(btl_fld, window);
+            made_turn = players[curr_plr]->make_turn(btl_fld, *window);
         }
         if (made_turn and players[curr_plr]->is_all_idle()) {
             made_turn = false;
@@ -42,18 +73,548 @@ void Game::run_game(const std::string xml_file_path) {
             std::cout << "Current player = " << curr_plr << std::endl;
         }
 
-        btl_fld.draw(window);
+        btl_fld.draw(*window);
         for (int i = 0; i != players[PLAYER1]->get_chars_size(); i++) {
-            players[PLAYER1]->get_char(i)->draw(window, btl_fld);
+            players[PLAYER1]->get_char(i)->draw(*window, btl_fld);
             players[PLAYER1]->get_char(i)->animate();
         }
 
         for (int i = 0; i != players[PLAYER2]->get_chars_size(); i++) {
-            players[PLAYER2]->get_char(i)->draw(window, btl_fld);
+            players[PLAYER2]->get_char(i)->draw(*window, btl_fld);
             players[PLAYER2]->get_char(i)->animate();
         }
 
-        window.display();
+        window->display();
         //std::this_thread::sleep_for(std::chrono::milliseconds(160)); // установлен лимит кадров средсвами SFML
     }
+}
+
+void Game::show_main_menu() {
+    Menu menu(window->getSize().x, window->getSize().y);
+    window->setFramerateLimit(12);
+    while (window->isOpen()) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            switch (event.type) {
+                case sf::Event::KeyReleased: {
+                    switch (event.key.code) {
+                        case sf::Keyboard::Up: {
+                            menu.move_up();
+                            break;
+                        }
+                        case sf::Keyboard::Down: {
+                            menu.move_down();
+                            break;
+                        }
+                        case sf::Keyboard::Return: {
+                            switch (menu.selected_item) {
+                                case 0: {
+                                    status = START_MENU;
+                                    return;
+                                }
+                                case 1: {
+                                    window->close();
+                                    break;
+                                }
+                                default: {
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+                case sf::Event::Closed: {
+                    window->close();
+                    break;
+                }
+            }
+        }
+        window->clear();
+        window = menu.draw(std::move(window));
+        window->display();
+    }
+}
+
+void Game::show_choice_menu() {
+    Choice_menu menu(window->getSize().x, window->getSize().y);
+    window->setFramerateLimit(60);
+    while (window->isOpen()) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            switch (event.type) {
+                case sf::Event::KeyReleased: {
+                    switch (event.key.code) {
+                        case sf::Keyboard::Left: {
+                            menu.move_left();
+                            break;
+                        }
+                        case sf::Keyboard::Right: {
+                            menu.move_right();
+                            break;
+                        }
+                        case sf::Keyboard::Equal: {
+                            menu.insert();
+                            break;
+                        }
+                        case sf::Keyboard::Dash: {
+                            menu.delete_char();
+                            break;
+                        }
+                        case sf::Keyboard::Up: {
+                            menu.move_up();
+                            break;
+                        }
+                        case sf::Keyboard::Down: {
+                            menu.move_down();
+                            break;
+                        }
+                        case sf::Keyboard::Return: {
+                            if (menu.is_playable()) {
+                                status = RUN_GAME;
+                                characters.assign(menu.selected_chars, menu.selected_chars + 5);
+                                for (auto it : characters) {
+                                    std::cout << it << std::endl;
+                                }
+                                return;
+                            }
+                        }
+                        case sf::Keyboard::Escape: {
+                            status = MAIN_MENU;
+                            return;
+                        }
+                    }
+                    break;
+                }
+                case sf::Event::Closed: {
+                    window->close();
+                    break;
+                }
+            }
+        }
+
+        window->clear();
+        window = menu.draw(std::move(window));
+        window->display();
+    }
+}
+
+Menu::Menu(float width, float height) {
+    font.loadFromFile("../source/menu/Enchanted_Land.otf");
+
+    gold.r = 212;
+    gold.g = 175;
+    gold.b = 55;
+
+    background_texture.loadFromFile("../source/menu/Background.png");
+    background_texture.setSmooth(true);
+    background.setTexture(background_texture);
+
+    main_menu_texture.loadFromFile("../source/menu/Main.png");
+    main_menu_texture.setSmooth(true);
+    main_menu.setTexture(main_menu_texture);
+    //main_menu.setScale(width / 1920, height / 1080);
+    main_menu.setPosition((width - main_menu_texture.getSize().x) / 2 + offset, (height - main_menu_texture.getSize().y) / 2);
+
+    button_texture.loadFromFile("../source/menu/Button.png");
+    button_texture.setSmooth(true);
+
+    button.emplace_back(sf::Sprite(button_texture));
+    button.emplace_back(sf::Sprite(button_texture));
+
+    button[0].setTexture(button_texture);
+    button[0].setPosition(main_menu.getPosition().x + (main_menu_texture.getSize().x - button_texture.getSize().x) / 2 - offset,
+                       main_menu.getPosition().y + main_menu_texture.getSize().y / (NUM_OF_MAIN_MENU_BUTTONS + 1) + button_offset);
+    button[1].setTexture(button_texture);
+    button[1].setPosition(main_menu.getPosition().x + (main_menu_texture.getSize().x - button_texture.getSize().x) / 2 - offset,
+                         main_menu.getPosition().y + main_menu_texture.getSize().y / (NUM_OF_MAIN_MENU_BUTTONS + 1) + button_offset * 1.6);
+
+    menu_button.emplace_back(sf::Text());
+    menu_button.emplace_back(sf::Text());
+
+    menu_button[0].setFont(font);
+    menu_button[0].setFillColor(sf::Color::White);
+    menu_button[0].setOutlineColor(sf::Color::Black);
+    menu_button[0].setOutlineThickness(1);
+    menu_button[0].setString("Play");
+    menu_button[0].setPosition(button[0].getPosition().x + button_texture.getSize().x / 2 - offset - text_offset_x,
+                               button[0].getPosition().y + button_texture.getSize().y / 2 - text_offset_y);
+
+    menu_button[1].setFont(font);
+    menu_button[1].setFillColor(sf::Color::White);
+    menu_button[1].setOutlineColor(sf::Color::Black);
+    menu_button[1].setOutlineThickness(1);
+    menu_button[1].setString("Quit");
+    menu_button[1].setPosition(button[0].getPosition().x + button_texture.getSize().x / 2 - offset - text_offset_x,
+                               button[1].getPosition().y + button_texture.getSize().y / 2 - text_offset_y);
+
+    game_name.setFont(font);
+    game_name.setFillColor(sf::Color::Black);
+    game_name.setOutlineColor(gold);
+    game_name.setOutlineThickness(3);
+    game_name.setCharacterSize(60);
+    game_name.setString("One More Thing");
+    game_name.setPosition(width / 2 - 135, 200);
+
+}
+
+std::unique_ptr<sf::RenderWindow> Menu::draw(std::unique_ptr<sf::RenderWindow> window) {
+    window->draw(background);
+    window->draw(main_menu);
+    for (const auto& it : button) {
+        window->draw(it);
+    }
+    window->draw(game_name);
+
+    for (const auto& it : menu_button) {
+        window->draw(it);
+    }
+
+    return std::move(window);
+}
+
+void Menu::move_up() {
+    if (selected_item <= 0 || selected_item > menu_button.size() - 1) {
+        menu_button[0].setFillColor(sf::Color::White);
+        selected_item = menu_button.size() - 1;
+    } else {
+        menu_button[selected_item].setFillColor(sf::Color::White);
+        selected_item--;
+    }
+    menu_button[selected_item].setFillColor(gold);
+}
+
+void Menu::move_down() {
+    if (selected_item >= menu_button.size() - 1) {
+        menu_button[menu_button.size() - 1].setFillColor(sf::Color::White); // Хз почему не работает через end
+        selected_item = 0;
+    } else {
+        menu_button[selected_item].setFillColor(sf::Color::White);
+        selected_item++;
+    }
+    menu_button[selected_item].setFillColor(gold);
+}
+
+Choice_menu::Choice_menu(float width, float height) {
+    font.loadFromFile("../source/menu/Enchanted_Land.otf");
+
+    gold.r = 212;
+    gold.g = 175;
+    gold.b = 55;
+
+    menu_name.setFont(font);
+    menu_name.setFillColor(gold);
+    menu_name.setOutlineColor(sf::Color::Black);
+    menu_name.setOutlineThickness(3);
+    menu_name.setCharacterSize(60);
+    menu_name.setString("Gather your squad");
+    menu_name.setPosition(width / 2 - menu_name_offset_x, menu_name_y);
+
+    background_texture.loadFromFile("../source/menu/Background.png");
+    background_texture.setSmooth(true);
+    background.setTexture(background_texture);
+
+    menu_texture.loadFromFile("../source/menu/Character.png");
+    menu_texture.setSmooth(true);
+    menu.setTexture(menu_texture);
+    menu.setPosition((width - menu_texture.getSize().x) / 2, (height - menu_texture.getSize().y) / 2);
+
+    choose_button_texture.loadFromFile("../source/menu/Choose_button.png");
+    choose_button_texture.setSmooth(true);
+    choose_button.setTexture(choose_button_texture);
+    choose_button.setPosition(menu.getPosition().x + menu_texture.getSize().x / 2 - choose_button_offset_x,
+                              menu.getPosition().y + menu_texture.getSize().y / 2 + choose_button_offset_y);
+
+    close_button_texture.loadFromFile("../source/menu/Close_button.png");
+    close_button_texture.setSmooth(true);
+    close_button.setTexture(close_button_texture);
+    close_button.setScale(0.6, 0.6);
+    close_button.setPosition(menu.getPosition().x + menu_texture.getSize().x - close_button_offset_x,
+                       menu.getPosition().y + close_button_offset_y);
+
+    play_button_texture.loadFromFile("../source/menu/Play_button.png");
+    play_button_texture.setSmooth(true);
+    play_button.setTexture(play_button_texture);
+    play_button.setScale(0.8, 0.8);
+    play_button.setPosition(menu.getPosition().x + menu_texture.getSize().x - play_button_offset_x,
+                            menu.getPosition().y + menu_texture.getSize().y - play_button_offset_y);
+
+    left_button_texture.loadFromFile("../source/menu/Button_left.png");
+    right_button_texture.loadFromFile("../source/menu/Button_right.png");
+    left_button_texture.setSmooth(true);
+    right_button_texture.setSmooth(true);
+    left_button.setTexture(left_button_texture);
+    right_button.setTexture(right_button_texture);
+    left_button.setPosition(choose_button.getPosition().x - 2,
+                            choose_button.getPosition().y + rl_button_offset_y);
+    right_button.setPosition(choose_button.getPosition().x + choose_button_texture.getSize().x - 15,
+                             choose_button.getPosition().y + rl_button_offset_y);
+
+    plus_button_texture.loadFromFile("../source/menu/Plus_button.png");
+    minus_button_texture.loadFromFile("../source/menu/Minus_button.png");
+    plus_button_texture.setSmooth(true);
+    minus_button_texture.setSmooth(true);
+    plus_button.setTexture(plus_button_texture);
+    minus_button.setTexture(minus_button_texture);
+    plus_button.setPosition(menu.getPosition().x + menu_texture.getSize().x - pm_button_offset_x,
+                            menu.getPosition().y + menu_texture.getSize().y - pm_button_offset_y);
+    minus_button.setPosition(plus_button.getPosition().x - m_button_offset_x,
+                            plus_button.getPosition().y + m_button_offset_y);
+
+    ribbon_texture.loadFromFile("../source/menu/Ribbon.png");
+    ribbon_texture.setSmooth(true);
+    ribbon.setTexture(ribbon_texture);
+    ribbon.setPosition(menu.getPosition().x + menu_texture.getSize().x - ribbon_offset_x,
+                       menu.getPosition().y + menu_texture.getSize().y - ribbon_offset_y);
+    ribbon.setScale(0.7, 0.7);
+
+    char_names.emplace_back(sf::Text("Scout", font));
+    char_names.emplace_back(sf::Text("Archer", font));
+    char_names.emplace_back(sf::Text("Swordman", font));
+    char_names.emplace_back(sf::Text("Tank", font));
+    char_names.emplace_back(sf::Text("Wizard", font));
+    char_names.emplace_back(sf::Text("Berserker", font));
+    char_names.emplace_back(sf::Text("Knight", font));
+    char_names.emplace_back(sf::Text("Healer", font));
+
+    for (auto& it : char_names) {
+        it.setOutlineColor(sf::Color::Black);
+        it.setOutlineThickness(2);
+
+        it.setOrigin(it.findCharacterPos(it.getString().getSize() / 2).x, 0);
+        it.setPosition(menu_texture.getSize().x + char_name_offset_x, menu.getPosition().y + char_name_offset_y);
+    }
+
+    stat_bar_texture.loadFromFile("../source/menu/Stats.png");
+    stat_bar_texture.setSmooth(true);
+
+    stats.emplace_back(sf::Text("hp", font, 20));
+    stats.emplace_back(sf::Text("dmg", font, 20));
+    stats.emplace_back(sf::Text("spd", font, 20));
+
+    for (auto& it : stats) {
+        it.setOutlineColor(sf::Color::Black);
+        it.setOutlineThickness(1);
+    }
+
+    for (int i = 0; i < 3; i++) {
+        stat_bar.emplace_back(sf::Sprite(stat_bar_texture));
+        stat_bar[i].setPosition(menu.getPosition().x + menu_texture.getSize().x - stat_bar_offset_x,
+                                menu.getPosition().y + (stat_bar_texture.getSize().y - stat_bar_offset) * i + stat_bar_offset_y);
+        stats[i].setPosition(stat_bar[i].getPosition().x - 17,
+                             stat_bar[i].getPosition().y - 8);
+    }
+}
+
+std::unique_ptr<sf::RenderWindow> Choice_menu::draw(std::unique_ptr<sf::RenderWindow> window) {
+    window->draw(background);
+    window->draw(menu);
+    window->draw(choose_button);
+    window->draw(close_button);
+
+    for (auto it : selected_chars) {
+        play_button.setColor(sf::Color::Red);
+        if (it == -1) {
+            play_button.setColor(sf::Color::White);
+            break;
+        }
+    }
+
+    for (auto it : stat_bar) {
+        window->draw(it);
+    }
+
+    for (auto it : stats) {
+        window->draw(it);
+    }
+
+    if (current_frame >= char_stats[selected_char].hp) {
+        window->draw(draw_stat(char_stats[selected_char].hp, sf::Color(60, 255, 113, 150), 0));
+    } else {
+        window->draw(draw_stat(current_frame, sf::Color(60, 255, 113, 150), 0));
+    }
+    if (current_frame >= char_stats[selected_char].dmg) {
+        window->draw(draw_stat(char_stats[selected_char].dmg, sf::Color(255, 0, 0, 150), 1));
+    } else {
+        window->draw(draw_stat(current_frame, sf::Color(255, 0, 0, 150), 1));
+    }
+    if (current_frame >= char_stats[selected_char].spd) {
+        window->draw(draw_stat(char_stats[selected_char].spd, sf::Color(127, 255, 212, 150), 2));
+    } else {
+        window->draw(draw_stat(current_frame, sf::Color(127, 255, 212, 150), 2));
+    }
+
+    window->draw(ribbon);
+
+    window->draw(play_button);
+    if (selected_char < 7) {
+        window->draw(right_button);
+    }
+    if (selected_char > 0) {
+        window->draw(left_button);
+    }
+    if (characters[selected_char]) {
+        if (!characters[selected_char]) {
+            plus_button.setColor(sf::Color(255, 255, 255, 100));
+        } else {
+            plus_button.setColor(sf::Color::White);
+        }
+        window->draw(plus_button);
+
+    } else {
+        if (selected_chars[selected_icon] != selected_char) {
+            minus_button.setColor(sf::Color(255, 255, 255, 100));
+        } else {
+            minus_button.setColor(sf::Color::White);
+        }
+        window->draw(minus_button);
+    }
+
+    window->draw(select());
+
+    window->draw(menu_name);
+    window->draw(char_names[selected_char]);
+
+    if (current_frame < 222) {
+        current_frame += 6;
+    }
+
+    return std::move(window);
+}
+
+void Choice_menu::move_left() {
+    if (selected_char <= 0) {
+        return;
+    } else {
+        selected_char--;
+    }
+
+    current_frame = 0;
+
+    return;
+}
+
+void Choice_menu::move_right() {
+    if (selected_char >= 7) {
+        return;
+    } else {
+        selected_char++;
+    }
+
+    current_frame = 0;
+
+    return;
+}
+
+void Choice_menu::move_down() {
+    if (selected_icon >= 4) {
+        return;
+    } else {
+        selected_icon++;
+    }
+}
+
+void Choice_menu::move_up() {
+    if (selected_icon <= 0) {
+        return;
+    } else {
+        selected_icon--;
+    }
+}
+
+sf::RectangleShape Choice_menu::select() {
+    sf::RectangleShape rect(sf::Vector2f(72, 72));
+    rect.setOutlineThickness(1);
+    rect.setOutlineColor(sf::Color::White);
+    rect.setFillColor(sf::Color::Transparent);
+    rect.setPosition(menu.getPosition().x + selected_offset_x,
+                     menu.getPosition().y + selected_offset_y + selected_icon * icons_distance);
+    return rect;
+}
+
+void Choice_menu::insert() {
+    if (selected_chars[selected_icon] != selected_char && characters[selected_char]) {
+        if (selected_chars[selected_icon] != -1) {
+            characters[selected_chars[selected_icon]] = true;
+        }
+        selected_chars[selected_icon] = selected_char;
+        characters[selected_char] = false;
+    }
+
+    for (auto it : selected_chars) {
+        std::cout << it << " ";
+    }
+    std::cout << std::endl;
+}
+
+void Choice_menu::delete_char() {
+    if (selected_chars[selected_icon] == selected_char) {
+        selected_chars[selected_icon] = -1;
+        characters[selected_char] = true;
+    }
+    for (auto it : selected_chars) {
+        std::cout << it << " ";
+    }
+    std::cout << std::endl;
+}
+
+bool Choice_menu::is_playable() {
+    return play_button.getColor() == sf::Color::Red;
+}
+
+sf::RectangleShape Choice_menu::draw_stat(int size, sf::Color bar_color, int index) {
+    sf::RectangleShape stat_bar_rect(sf::Vector2f(size, stat_bar_texture.getSize().y - 11));
+    stat_bar_rect.setFillColor(bar_color);
+    stat_bar_rect.setPosition(stat_bar[index].getPosition().x + 12,
+                              stat_bar[index].getPosition().y + 3);
+    return stat_bar_rect;
+}
+
+Loading::Loading(float width, float height) {
+    font.loadFromFile("../source/menu/Enchanted_Land.otf");
+
+    gold.r = 212;
+    gold.g = 175;
+    gold.b = 55;
+
+    background_texture.loadFromFile("../source/menu/Background.png");
+    background_texture.setSmooth(true);
+    background.setTexture(background_texture);
+
+    loading_bar_texture.loadFromFile("../source/menu/LoadingBar.png");
+    loading_bar_texture.setSmooth(true);
+    loading_bar.setTexture(loading_bar_texture);
+    loading_bar.setPosition((width - loading_bar_texture.getSize().x) / 2, (height - loading_bar_texture.getSize().y) / 2);
+
+    loading.setFont(font);
+    loading.setFillColor(gold);
+    loading.setOutlineColor(sf::Color::Black);
+    loading.setOutlineThickness(1);
+    loading.setString("Loading...");
+    loading.setCharacterSize(50);
+    loading.setPosition(loading_bar.getPosition().x + loading_offset_x,
+                        loading_bar.getPosition().y - loading_offset_y);
+}
+
+std::unique_ptr<sf::RenderWindow> Loading::draw(std::unique_ptr<sf::RenderWindow> window) {
+    window->clear();
+
+    window->draw(background);
+    window->draw(loading_bar);
+    window->draw(draw_bar());
+    window->draw(loading);
+
+    window->display();
+    return std::move(window);
+}
+
+sf::RectangleShape Loading::draw_bar() {
+    sf::RectangleShape rect(sf::Vector2f(loading_status, 4));
+    rect.setOutlineThickness(1);
+    rect.setOutlineColor(sf::Color::Black);
+    rect.setFillColor(sf::Color::Red);
+    rect.setPosition(loading_bar.getPosition().x + bar_offset_x,
+                     loading_bar.getPosition().y + bar_offset_y);
+    loading_status += 140;
+    return rect;
 }

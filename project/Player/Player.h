@@ -25,7 +25,7 @@ class Player {
     bool is_all_idle();
     
     ~Player() = default;
- protected:
+ protected:std::unique_ptr<sf::RenderWindow> draw(std::unique_ptr<sf::RenderWindow> window);
     sf::Color color_trace = sf::Color(20, 240, 45, 100);
     sf::Color hover_color = sf::Color(32, 30, 52, 70);
     sf::Color color = sf::Color(12, 30, 52, 120);
@@ -35,7 +35,7 @@ class Player {
 
 class Human : public Player {
  public:
-    Human(class Map field, Current_player player);
+    Human(class Map field, Current_player player, std::vector<int> characters);
     sf::Vector2i pos_pressed;
     sf::Vector2i pos_released;
     bool make_turn(class Map& btl_fld, sf::RenderWindow& window) override;
@@ -43,7 +43,7 @@ class Human : public Player {
 
 class Bot : public Player {
  public:   
-    Bot(class Map field, Current_player player);
+    Bot(class Map field, Current_player player, std::vector<int> characters);
     bool make_turn(class Map& btl_fld, sf::RenderWindow& window) override;
 };
 
