@@ -12,8 +12,8 @@ Game::Game() {
             "Mixed_map.tmx",
             "Mixed_map_v2.tmx"};
 
-    //window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 750), "One More Thing");
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    //window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 750), "One More Thing");
     status = MAIN_MENU;
     process_event();
     //run_game(maps[map_id]);
