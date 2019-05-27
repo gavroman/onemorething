@@ -90,6 +90,7 @@ class Choice_menu {
     Choice_menu(float width, float height);
 
     void process_mouse(sf::Vector2i position);
+    int selected_item = DEFAULT_SELECT;
 
     void move_left();
     void move_right();
@@ -106,6 +107,8 @@ class Choice_menu {
 
     std::unique_ptr<sf::RenderWindow> draw(std::unique_ptr<sf::RenderWindow> window);
  private:
+    std::vector<sf::Sprite*> objects;
+
     std::vector<sf::Text> char_names;
 
     bool characters[8] = {true, true, true, true, true, true, true, true};
@@ -164,6 +167,7 @@ class Choice_menu {
     sf::Font font;
 
     sf::Color gold;
+    sf::Color gray;
 
     const int choose_button_offset_x = 32;
     const int choose_button_offset_y = 220;
@@ -229,6 +233,7 @@ class Pause_menu {
  public:
     Pause_menu(float width, float height);
     void process(sf::RenderWindow* window, sf::Sprite& screenshot);
+    void process_mouse(sf::Vector2i position);
 
 private:
     int selected_item = DEFAULT_SELECT;

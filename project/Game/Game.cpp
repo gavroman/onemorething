@@ -253,6 +253,69 @@ void Game::show_choice_menu() {
                     break;
                 }
 
+                case sf::Event::MouseMoved: {
+                    menu.process_mouse(sf::Mouse::getPosition());
+                    break;
+                }
+
+                case sf::Event::MouseButtonReleased: {
+                    switch (menu.selected_item) {
+                        case 0: {
+                            menu.selected_icon = 0;
+                            continue;
+                        }
+                        case 1: {
+                            menu.selected_icon = 1;
+                            continue;
+                        }
+                        case 2: {
+                            menu.selected_icon = 2;
+                            continue;
+                        }
+                        case 3: {
+                            menu.selected_icon = 3;
+                            continue;
+                        }
+                        case 4: {
+                            menu.selected_icon = 4;
+                            continue;
+                        }
+                        case 5: {
+                            menu.move_left();
+                            continue;
+                        }
+                        case 6: {
+                            menu.move_right();
+                            continue;
+                        }
+                        case 7: {
+                            menu.insert();
+                            continue;
+                        }
+                        case 8: {
+                            menu.delete_char();
+                            continue;
+                        }
+                        case 9: {
+                            status = MAIN_MENU;
+                            return;
+                        }
+                        case 10: {
+                            if (menu.is_playable()) {
+                                status = RUN_GAME;
+                                characters.assign(menu.selected_chars, menu.selected_chars + 5);
+                                for (auto it : characters) {
+                                    std::cout << it << std::endl;
+                                }
+                                return;
+                            }
+                        }
+                        default: {
+                            continue;
+                        }
+                    }
+                }
+
                 case sf::Event::Closed: {
                     window->close();
                     break;
@@ -387,6 +450,8 @@ Choice_menu::Choice_menu(float width, float height) {
     gold.r = 212;
     gold.g = 175;
     gold.b = 55;
+
+    gray = sf::Color(150, 150, 150);
 
     menu_name.setFont(font);
     menu_name.setFillColor(gold);
@@ -525,6 +590,16 @@ Choice_menu::Choice_menu(float width, float height) {
     chars_preview.setTexture(chars_preview_texture);
     chars_preview.setTextureRect(sf::IntRect(0, 0, chars_preview_width, chars_preview_height));
     chars_preview.setPosition(menu.getPosition().x + chars_preview_offset_x, menu.getPosition().y + chars_preview_offset_y);
+
+    for (auto& it : frame) {
+        objects.emplace_back(&it);
+    }
+    objects.emplace_back(&left_button);
+    objects.emplace_back(&right_button);
+    objects.emplace_back(&plus_button);
+    objects.emplace_back(&minus_button);
+    objects.emplace_back(&close_button);
+    objects.emplace_back(&play_button);
 }
 
 std::unique_ptr<sf::RenderWindow> Choice_menu::draw(std::unique_ptr<sf::RenderWindow> window) {
@@ -534,7 +609,10 @@ std::unique_ptr<sf::RenderWindow> Choice_menu::draw(std::unique_ptr<sf::RenderWi
     window->draw(close_button);
 
     for (auto it : selected_chars) {
-        play_button.setColor(sf::Color::Red);
+        play_button.setColor(sf::Color(170, 50, 50));
+        if (selected_item == 10) {
+            play_button.setColor(sf::Color::Red);
+        }
         if (it == -1) {
             play_button.setColor(sf::Color::White);
             break;
@@ -578,7 +656,9 @@ std::unique_ptr<sf::RenderWindow> Choice_menu::draw(std::unique_ptr<sf::RenderWi
         if (!characters[selected_char]) {
             plus_button.setColor(sf::Color(255, 255, 255, 100));
         } else {
-            plus_button.setColor(sf::Color::White);
+            if (selected_item != 7) { // Костыль
+                plus_button.setColor(sf::Color::White);
+            }
         }
         window->draw(plus_button);
 
@@ -586,7 +666,9 @@ std::unique_ptr<sf::RenderWindow> Choice_menu::draw(std::unique_ptr<sf::RenderWi
         if (selected_chars[selected_icon] != selected_char) {
             minus_button.setColor(sf::Color(255, 255, 255, 100));
         } else {
-            minus_button.setColor(sf::Color::White);
+            if (selected_item != 8) { // Костыль
+                minus_button.setColor(sf::Color::White);
+            }
         }
         window->draw(minus_button);
     }
@@ -709,19 +791,24 @@ void Choice_menu::change_pos(int icon_num) {
                      menu.getPosition().y + selected_offset_y + icon_num * (frame_texture.getSize().y - frame_offset));
 }
 
-/*void Choice_menu::process_mouse(sf::Vector2i position) {
-    for (int i = 0; i < button.size(); i++) {
-        if (position.x >= button[i].getPosition().x &&
-        position.x <= button[i].getPosition().x + button_texture.getSize().x &&
-        position.y >= button[i].getPosition().y &&
-        position.y <= button[i].getPosition().y + button_texture.getSize().y) {
+void Choice_menu::process_mouse(sf::Vector2i position) {
+    for (auto& it : objects) {
+        it->setColor(sf::Color::White);
+    }
+
+    for (int i = 0; i < objects.size(); i++) {
+        if (position.x >= objects[i]->getPosition().x &&
+        position.x <= objects[i]->getPosition().x + objects[i]->getTexture()->getSize().x &&
+        position.y >= objects[i]->getPosition().y &&
+        position.y <= objects[i]->getPosition().y + objects[i]->getTexture()->getSize().y) {
             selected_item = i;
+            objects[i]->setColor(gray);
             break;
         } else {
             selected_item = DEFAULT_SELECT;
         }
     }
-}*/
+}
 
 Loading::Loading(float width, float height) {
     font.loadFromFile("../source/menu/Enchanted_Land.otf");
@@ -860,10 +947,36 @@ void Pause_menu::process(sf::RenderWindow *window, sf::Sprite& screenshot) {
                     }
                     break;
                 }
+
                 case sf::Event::Closed: {
                     window->close();
                     break;
                 }
+
+                case sf::Event::MouseMoved: {
+                    process_mouse(sf::Mouse::getPosition());
+                    break;
+                }
+
+                case sf::Event::MouseButtonReleased: {
+                    switch (selected_item) {
+                        case 0: {
+                            return;
+                        }
+                        case 1: {
+                            ah_shit_here_we_go_again = true;
+                            return;
+                        }
+                        case 2: {
+                            window->close();
+                            break;
+                        }
+                        default: {
+                            continue;
+                        }
+                    }
+                }
+
                 default: {
                     continue;
                 }
@@ -879,6 +992,13 @@ void Pause_menu::process(sf::RenderWindow *window, sf::Sprite& screenshot) {
         }
         window->draw(menu_name);
 
+        for (int i = 0; i < menu_button.size(); i++) {
+            if (i == selected_item) {
+                menu_button[i].setFillColor(gold);
+            } else {
+                menu_button[i].setFillColor(sf::Color::White);
+            }
+        }
         for (const auto& it : menu_button) {
             window->draw(it);
         }
@@ -889,10 +1009,8 @@ void Pause_menu::process(sf::RenderWindow *window, sf::Sprite& screenshot) {
 
 void Pause_menu::move_up() {
         if (selected_item <= 0 || selected_item > menu_button.size() - 1) {
-            menu_button[0].setFillColor(sf::Color::White);
             selected_item = menu_button.size() - 1;
         } else {
-            menu_button[selected_item].setFillColor(sf::Color::White);
             selected_item--;
         }
         menu_button[selected_item].setFillColor(gold);
@@ -900,11 +1018,23 @@ void Pause_menu::move_up() {
 
 void Pause_menu::move_down() {
     if (selected_item >= menu_button.size() - 1) {
-            menu_button[menu_button.size() - 1].setFillColor(sf::Color::White); // Хз почему не работает через end
             selected_item = 0;
         } else {
-            menu_button[selected_item].setFillColor(sf::Color::White);
             selected_item++;
         }
-        menu_button[selected_item].setFillColor(gold);
+    menu_button[selected_item].setFillColor(gold);
+}
+
+void Pause_menu::process_mouse(sf::Vector2i position) {
+    for (int i = 0; i < button.size(); i++) {
+        if (position.x >= button[i].getPosition().x &&
+            position.x <= button[i].getPosition().x + button_texture.getSize().x &&
+            position.y >= button[i].getPosition().y &&
+            position.y <= button[i].getPosition().y + button_texture.getSize().y) {
+            selected_item = i;
+            break;
+        } else {
+            selected_item = DEFAULT_SELECT;
+        }
     }
+}
