@@ -1,3 +1,5 @@
+#include <random>
+
 #include "Player.h"
 
 std::shared_ptr<Character> Player::get_char(const int index) {
@@ -172,15 +174,21 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                         sf::Texture screenshot;
                         screenshot.loadFromImage(window.capture());
                         sf::Sprite screenshot_s(screenshot);
-                        screenshot_s.setColor(sf::Color(255, 255, 255, 100));
+                        screenshot_s.setColor(sf::Color(255, 255, 255, 150));
 
                         for (int i = 0; i < 10; i++) {
-                            screenshot_s.move(rand() % 10, rand() % 10);
+                            std::mt19937 rand1(time(nullptr) + 20),
+                                         rand2(time(nullptr) + 40),
+                                         rand3(time(nullptr) + 60),
+                                         rand4(time(nullptr) + 80);
+                            screenshot_s.move(rand1() % 10, rand2() % 10);
                             window.draw(screenshot_s);
                             screenshot_s.setPosition(0, 0);
-                            screenshot_s.move(-rand() % 10, -rand() % 10);
+
+                            screenshot_s.move(- (rand3() % 10), - (rand4() % 10));
                             window.draw(screenshot_s);
                             screenshot_s.setPosition(0, 0);
+
                             window.draw(screenshot_s);
                         }
 

@@ -33,8 +33,7 @@ class Game {
     void process_event();
     void show_main_menu();
     void show_choice_menu();
-    void run_game(const std::string xml_file_path);
-    void pause_game();
+    void run_game(const std::string& xml_file_path);
 
     ~Game() = default;
 
@@ -58,6 +57,9 @@ class Menu {
     int selected_item = DEFAULT_SELECT;
 
     std::unique_ptr<sf::RenderWindow> draw(std::unique_ptr<sf::RenderWindow> window);
+
+    void process_mouse(sf::Vector2i position);
+
  private:
     sf::Texture background_texture;
     sf::Texture main_menu_texture;
@@ -86,6 +88,8 @@ class Menu {
 class Choice_menu {
  public:
     Choice_menu(float width, float height);
+
+    void process_mouse(sf::Vector2i position);
 
     void move_left();
     void move_right();
