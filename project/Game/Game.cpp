@@ -12,8 +12,8 @@ Game::Game() {
             "Mixed_map.tmx",
             "Mixed_map_v2.tmx"};
 
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
-    //window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 750), "One More Thing");
+    //window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 750), "One More Thing");
     status = MAIN_MENU;
     process_event();
     //run_game(maps[map_id]);
@@ -242,7 +242,7 @@ void Game::show_choice_menu() {
                                 }
                                 return;
                             }
-                            continue;
+                            break;
                         }
                         case sf::Keyboard::Escape: {
                             status = MAIN_MENU;
@@ -261,7 +261,6 @@ void Game::show_choice_menu() {
                 }
 
                 case sf::Event::MouseButtonReleased: {
-                    menu.process_mouse(sf::Mouse::getPosition());
                     switch (menu.selected_item) {
                         case 0: {
                             menu.selected_icon = 0;
@@ -312,6 +311,7 @@ void Game::show_choice_menu() {
                                 }
                                 return;
                             }
+                            break;
                         }
                         default: {
                             continue;
@@ -778,7 +778,7 @@ void Choice_menu::delete_char() {
 }
 
 bool Choice_menu::is_playable() {
-    return play_button.getColor() == sf::Color::Red;
+    return play_button.getColor() == sf::Color::Red || play_button.getColor() == sf::Color(170, 50, 50);
 }
 
 sf::RectangleShape Choice_menu::draw_stat(int size, sf::Color bar_color, int index) {
