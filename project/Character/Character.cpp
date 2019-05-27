@@ -94,8 +94,8 @@ Archer::Archer(const int id, const int current_player) {
     map_offset_x = 6;
     map_offset_y = 40;
     hp = 250;
-    damage_min = 50;
-    damage_max = 60;
+    damage_min = 15;
+    damage_max = 20;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -211,8 +211,8 @@ Wizard::Wizard(const int id, const int current_player) {
     map_offset_x = 10;
     map_offset_y = 40;
     hp = 250;
-    damage_min = 50;
-    damage_max = 60;
+    damage_min = 18;
+    damage_max = 27;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -328,8 +328,8 @@ Healer::Healer(const int id, const int current_player) {
     active = false;
     status = IDLE;
     hp = 250;
-    damage_min = 50;
-    damage_max = 51;
+    damage_min = 30;
+    damage_max = 35;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
