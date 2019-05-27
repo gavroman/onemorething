@@ -70,6 +70,16 @@ std::vector<int> Player::can_attack_chars(std::vector<int> enemy_chars, std::vec
     return can_attack_enemy;
 }
 
+void Player::check_hp(class Map& field) {
+    for (int i = 0; i < chars.size(); i++) {
+        if (chars[i]->get_hp() <= 0) {
+            field.update_cell(nullptr, chars[i]->get_current_cell());
+            chars.erase(chars.begin() + i);
+          //  field.update_cell(nullptr, chars[i]->get_current_cell());
+        }
+    }
+}
+
 Human::Human(class Map field) {
     chars.push_back(std::make_shared<Scout>(416, PLAYER1));
     std::cout << "1 character's textures loaded" << std::endl;
@@ -95,6 +105,7 @@ Human::Human(class Map field) {
 }
 
 bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
+    check_hp(btl_fld);
     sf::Event event;
     while (window.pollEvent(event)) {
         switch(event.type) {
@@ -157,7 +168,7 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                                 btl_fld.add_highlight_cells(route, color_trace, color_trace);
                                 chars[active_char_index]->move(route, btl_fld);
                                 btl_fld.update_cell(chars[active_char_index], route[0]);
-                                chars[active_char_index]->do_damage(cell_id);
+                                chars[active_char_index]->do_damage(btl_fld.get_character_from_id(cell_id));
                                 chars[active_char_index]->set_active(false);
                                 return true; //окончание хода
                             }
@@ -215,6 +226,7 @@ Bot::Bot(class Map field) {
 
 bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
     //TODO (9rik): Ярик ебашь
+    check_hp(btl_fld);
     btl_fld.drop_highlight_cells();
     sf::Event event;
     while (window.pollEvent(event)) {
@@ -227,6 +239,7 @@ bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
     }
 
     std::vector<int> enemy_chars = get_enemy_chars(btl_fld);
+
 
     int char_index = rand() % get_chars_size();
     int cell_char = chars[char_index]->get_current_cell();

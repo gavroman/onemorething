@@ -18,6 +18,7 @@ class Player {
     //virtual bool move_character(std::vector<int> id, std::shared_ptr<Character> character); // обновляет состояние клетки и передвигает персонажа, здесь же строится путь, если недостижимо, то возвращает false
     //virtual void attack_with_character(std::shared_ptr<Character> my_char, std::shared_ptr<Character> target_char);
     std::shared_ptr<Character> get_char(const int index);
+    void check_hp(class Map& btl_fld);
     int get_chars_size();
     int get_active_char_index();
     int get_char_index_from_cell(int cell_id);

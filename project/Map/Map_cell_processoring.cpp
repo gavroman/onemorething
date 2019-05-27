@@ -190,6 +190,10 @@ sf::Vector2f Map::get_cell_pos(const int id) {
 }
 
 void Map::update_cell(std::shared_ptr<Character> pers, int id) {
+    if (!pers) {
+        map[id]->character = nullptr;
+        return;
+    }
     int old_id = pers->get_current_cell();
     map[id]->character = pers;
     map[id]->character->update_id(id);
@@ -209,6 +213,10 @@ std::vector<sf::Vector2f> Map::discrete_positions(const int id1, const int id2, 
         positions.emplace_back(sf::Vector2f(pos_x, pos_y));
     }
     return positions;
+}
+
+std::shared_ptr<Character> Map::get_character_from_id(const int id) {
+    return map[id]->character;
 }
 
 /*

@@ -18,7 +18,7 @@ class Character {
     //virtual unsigned int apply_damage(std::shared_ptr <Cell> cell) = 0; // Вызывает move_character из Player, если получает false, то возвращает false
     //virtual void get_damage(unsigned int damage) = 0;
     //void move(int id); // Передвигает на одну! клетку
-    virtual void do_damage(const int cell_id);
+    virtual bool do_damage(std::shared_ptr<Character> character);
 
     void set_move_area(std::vector<std::vector<int>>& area);
     void set_route(std::vector<int>& way);
@@ -35,6 +35,7 @@ class Character {
     void move(std::vector<int> way, class Map field);
     void draw(sf::RenderWindow& window, class Map field);
     void animate();
+    int get_hp();
 
  protected:
     Status status;

@@ -20,9 +20,17 @@ Character::Character() {
     texture_x = 0;
     texture_y = 0;
 }
-void Character::do_damage(const int cell_id) {
-    std::cout << "dayou uron po" << cell_id << std::endl;
-    return;
+bool Character::do_damage(std::shared_ptr<Character> character) {
+    character->hp -= (rand () % (damage_max - damage_min)) + damage_min;
+    std::cout << character->hp << std::endl;
+    if (character->hp <= 0) {
+        return true;
+    }
+    return false;
+}
+
+int Character::get_hp() {
+    return hp;
 }
 
 Scout::Scout(const int id, const int current_player) {
@@ -44,6 +52,9 @@ Scout::Scout(const int id, const int current_player) {
     cell_id = id;
     map_offset_x = 6;
     map_offset_y = 35;
+    hp = 400;
+    damage_min = 50;
+    damage_max = 100;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -78,6 +89,9 @@ Archer::Archer(const int id, const int current_player) {
     cell_id = id;
     map_offset_x = 6;
     map_offset_y = 40;
+    hp = 400;
+    damage_min = 50;
+    damage_max = 100;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -120,6 +134,9 @@ Swordman::Swordman(const int id, const int current_player) {
 
     move_range = 5;
     cell_id = id;
+    hp = 400;
+    damage_min = 50;
+    damage_max = 100;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -152,6 +169,9 @@ Tank::Tank(const int id, const int current_player) {
     cell_id = id;
     map_offset_x = 5;
     map_offset_y = 40;
+    hp = 400;
+    damage_min = 50;
+    damage_max = 100;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -186,6 +206,9 @@ Wizard::Wizard(const int id, const int current_player) {
     cell_id = id;
     map_offset_x = 10;
     map_offset_y = 40;
+    hp = 400;
+    damage_min = 50;
+    damage_max = 100;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -216,10 +239,13 @@ Berserker::Berserker(const int id, const int current_player) {
     std::string class_name = "berserker/";
     std::string path = SOURCE + class_name + PLAYER;
 
-    move_range = 6;
+    move_range = 20;
     cell_id = id;
     map_offset_x = 4;
     map_offset_y = 45;
+    hp = 400;
+    damage_min = 50;
+    damage_max = 2000;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -256,6 +282,9 @@ Knight::Knight(const int id, const int current_player) {
 
     move_range = 4;
     cell_id = id;
+    hp = 400;
+    damage_min = 50;
+    damage_max = 100;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -294,6 +323,9 @@ Healer::Healer(const int id, const int current_player) {
     map_offset_y = 35;
     active = false;
     status = IDLE;
+    hp = 400;
+    damage_min = 50;
+    damage_max = 100;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -310,3 +342,5 @@ Healer::Healer(const int id, const int current_player) {
 
     // TODO: Баг с мерцанием (PLAYER1, PLAYER2), трэш в walk (PLAYER1, PLAYER2), сильное смещение в attack по y (PLAYER1, PLAYER2)
 }
+
+
