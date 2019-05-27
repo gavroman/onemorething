@@ -157,6 +157,7 @@ void Game::show_main_menu() {
                 }
 
                 case sf::Event::MouseButtonReleased: {
+                    menu.process_mouse(sf::Mouse::getPosition());
                     switch (menu.selected_item) {
                         case 0: {
                             status = START_MENU;
@@ -241,6 +242,7 @@ void Game::show_choice_menu() {
                                 }
                                 return;
                             }
+                            continue;
                         }
                         case sf::Keyboard::Escape: {
                             status = MAIN_MENU;
@@ -259,6 +261,7 @@ void Game::show_choice_menu() {
                 }
 
                 case sf::Event::MouseButtonReleased: {
+                    menu.process_mouse(sf::Mouse::getPosition());
                     switch (menu.selected_item) {
                         case 0: {
                             menu.selected_icon = 0;
@@ -959,6 +962,7 @@ void Pause_menu::process(sf::RenderWindow *window, sf::Sprite& screenshot) {
                 }
 
                 case sf::Event::MouseButtonReleased: {
+                    process_mouse(sf::Mouse::getPosition());
                     switch (selected_item) {
                         case 0: {
                             return;
