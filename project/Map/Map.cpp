@@ -145,3 +145,13 @@ void Map::draw(sf::RenderWindow& window) {
         window.draw(highlight_cell(it->id, it->fill_color, it->border_color));
     }    
 }
+
+std::vector<int> Map::get_chars() {
+    std::vector<int> chars;
+    for (int i = 0; i < map_size_width * map_size_height; i++) {
+        if (map[i]->character) {
+            chars.push_back(i);
+        }
+    }
+    return chars;
+}

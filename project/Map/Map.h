@@ -54,6 +54,7 @@ class Map {
     bool is_empty(const int id);
     bool is_passable(const int id);
     bool is_in_area(const std::vector<std::vector<int>> area, const int id);
+    std::vector<int> area_in_area(const std::vector<std::vector<int>> area, const std::vector<int> mini_area);
 
     void set_active_char(const int id, bool active);
     void update_cell(std::shared_ptr<Character> character, int id);
@@ -61,10 +62,15 @@ class Map {
     sf::Vector2f get_cell_pos(const int id);
     std::vector<sf::Vector2f> discrete_positions(const int id1, const int id2, const int step);
 
+    std::vector<int> search_neighbors(const int id);         // Заполняет вектор соседей
+    std::vector<int> get_chars();
+
+    std::shared_ptr<Character> get_character_from_id(const int id);
+
  private:
     std::vector<std::vector<int>> adj_matrix;
     
-    std::vector<int> search_neighbors(const int id);         // Заполняет вектор соседей
+
     sf::Vector2f calculate_position(const int id);           // Вычисляет смещения для отрисовки
 
     sf::Vector2f get_cell_center(const int id);              // Вычисляет центр клетки

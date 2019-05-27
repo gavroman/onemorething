@@ -99,6 +99,18 @@ bool Map::is_in_area(const std::vector<std::vector<int>> area, const int id) {
                      id) != area[area.size() - 1].end();
 }
 
+std::vector<int> Map::area_in_area(const std::vector<std::vector<int>> area, const std::vector<int> mini_area) {
+    std::vector<int> area_in_area;
+    for (int i = 0; i < mini_area.size(); i++) {
+        if  (std::find(area[area.size() - 1].begin(), area[area.size() - 1].end(),
+                      mini_area[i]) != area[area.size() - 1].end()) {
+            area_in_area.push_back(mini_area[i]);
+        }
+    }
+    return area_in_area;
+}
+
+
 void Map::get_adj_matrix() {
     std::vector<std::vector<int>> matrix;
     for (int id = 0; id < map_size_width * map_size_height; id++) {

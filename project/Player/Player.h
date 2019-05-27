@@ -23,12 +23,14 @@ class Player {
     int get_char_index_from_cell(int cell_id);
     void deactivate_all_chars();
     bool is_all_idle();
-    
+    std::vector<int> get_enemy_chars(class Map& btl_fld);
+    std::vector<int> can_attack_chars(std::vector<int> enemy_chars, std::vector<int> cells, class Map& btl_fld);
     ~Player() = default;
  protected:
     sf::Color color_trace = sf::Color(20, 240, 45, 100);
     sf::Color hover_color = sf::Color(32, 30, 52, 70);
     sf::Color color = sf::Color(12, 30, 52, 120);
+    sf::Color color_enemy = sf::Color::Red;
     std::vector<std::shared_ptr<Character>> chars;
     std::vector<std::shared_ptr<Cell>> assigned_cells; // Клетки, доступные игроку
 };

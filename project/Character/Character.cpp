@@ -20,6 +20,10 @@ Character::Character() {
     texture_x = 0;
     texture_y = 0;
 }
+void Character::do_damage(const int cell_id) {
+    std::cout << "dayou uron po" << cell_id << std::endl;
+    return;
+}
 
 Scout::Scout(const int id, const int current_player) {
     std::string PLAYER;

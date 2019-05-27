@@ -41,6 +41,35 @@ bool Player::is_all_idle() {
     return true;
 }
 
+std::vector<int> Player::get_enemy_chars(class Map& field) {
+    std::vector<int> my_chars;
+    for (int i = 0; i < get_chars_size(); i++) {
+        my_chars.push_back(chars[i]->get_current_cell());
+    }
+    std::vector<int> all_chars = field.get_chars();
+    std::vector<int> enemy_chars;
+
+    for (int i = 0; i < all_chars.size(); i++) {
+        if (std::find(my_chars.begin(), my_chars.end(), all_chars[i]) == my_chars.end()) {
+            enemy_chars.push_back(all_chars[i]);
+        }
+    }
+    return enemy_chars;
+}
+
+std::vector<int> Player::can_attack_chars(std::vector<int> enemy_chars, std::vector<int> cells, class Map& field) {
+    std::vector<int> can_attack_enemy;
+    for (int i = 0; i < enemy_chars.size(); i++) {
+        std::vector<int> enemy_neighbors = field.search_neighbors(enemy_chars[i]);
+        for (int j = 0; j < enemy_neighbors.size(); j++) {
+            if (std::find(cells.begin(), cells.end(), enemy_neighbors[j]) != cells.end()) {
+                can_attack_enemy.push_back(enemy_chars[i]);
+            }
+        }
+    }
+    return can_attack_enemy;
+}
+
 Human::Human(class Map field) {
     chars.push_back(std::make_shared<Scout>(416, PLAYER1));
     std::cout << "1 character's textures loaded" << std::endl;
@@ -103,15 +132,36 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                         //отрисовка зоны
                         std::vector<std::vector<int>> move_area = btl_fld.find_move_area(cell_id, chars[char_index]->get_mv_range());
                         chars[char_index]->set_move_area(move_area);
+                        std::vector<int> attack_enemy = can_attack_chars(get_enemy_chars(btl_fld),
+                                move_area[chars[char_index]->get_mv_range()], btl_fld);
                         deactivate_all_chars();
                         chars[char_index]->set_active(true);
                         btl_fld.drop_highlight_cells();
                         btl_fld.add_highlight_cells(move_area[chars[char_index]->get_mv_range()], color, color);
+                        if (attack_enemy.size() != 0) {
+                            btl_fld.add_highlight_cells(attack_enemy, color_enemy, color_enemy);
+                        }
                         btl_fld.add_highlight_cells({move_area[0][0]}, color_trace, color_trace);   
                     } else {
                         int active_char_index = get_active_char_index();
+
                         if (active_char_index != -1) {
                             std::vector<std::vector<int>> move_area = chars[active_char_index]->get_move_area();
+                            std::vector<int> attack_enemy = can_attack_chars(get_enemy_chars(btl_fld),
+                                                                             move_area[chars[active_char_index]->get_mv_range()], btl_fld);
+                            std::vector<int> neighbors_attack;
+                            if (btl_fld.is_in_area({attack_enemy}, cell_id)) {
+                                std::vector<int> neighbors_attack = btl_fld.area_in_area(move_area, btl_fld.search_neighbors(cell_id));
+                                std::vector<int> route = btl_fld.find_route(neighbors_attack[0], move_area);
+                                btl_fld.drop_highlight_cells();
+                                btl_fld.add_highlight_cells(route, color_trace, color_trace);
+                                chars[active_char_index]->move(route, btl_fld);
+                                btl_fld.update_cell(chars[active_char_index], route[0]);
+                                chars[active_char_index]->do_damage(cell_id);
+                                chars[active_char_index]->set_active(false);
+                                return true; //окончание хода
+                            }
+
                             if (btl_fld.is_in_area(move_area, cell_id)) {
                                 std::vector<int> route = btl_fld.find_route(cell_id, move_area);
                                 btl_fld.drop_highlight_cells();
@@ -119,6 +169,9 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                                 chars[active_char_index]->move(route, btl_fld);
                                 btl_fld.update_cell(chars[active_char_index], route[0]);
                                 chars[active_char_index]->set_active(false);
+                                //std::vector<int> neigbors = btl_fld.seearch_neighbors(route[0]);
+
+
                                 return true; //окончание хода
                             } else {
                                 btl_fld.drop_highlight_cells();
@@ -136,8 +189,6 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
         }
     return false;
 }
-
-
 
 Bot::Bot(class Map field) {
     chars.push_back(std::make_shared<Scout>(31, PLAYER2));
@@ -174,6 +225,9 @@ bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
             }
         }    
     }
+
+    std::vector<int> enemy_chars = get_enemy_chars(btl_fld);
+
     int char_index = rand() % get_chars_size();
     int cell_char = chars[char_index]->get_current_cell();
     std::vector<std::vector<int>> move_area = btl_fld.find_move_area(cell_char, chars[char_index]->get_mv_range());
@@ -182,5 +236,5 @@ bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
     btl_fld.add_highlight_cells(route, color_trace, color_trace);
     chars[char_index]->move(route, btl_fld);
     btl_fld.update_cell(chars[char_index], move_cell);
-    return true; 
+    return true;
 }
