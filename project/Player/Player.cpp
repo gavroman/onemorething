@@ -163,6 +163,10 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                             std::vector<int> neighbors_attack;
                             if (btl_fld.is_in_area({attack_enemy}, cell_id)) {
                                 std::vector<int> neighbors_attack = btl_fld.area_in_area(move_area, btl_fld.search_neighbors(cell_id));
+                                if (btl_fld.is_in_area({neighbors_attack}, chars[active_char_index]->get_current_cell())) {
+                                    chars[active_char_index]->do_damage(btl_fld.get_character_from_id(cell_id));
+                                    return true;
+                                }
                                 std::vector<int> route = btl_fld.find_route(neighbors_attack[0], move_area);
                                 btl_fld.drop_highlight_cells();
                                 btl_fld.add_highlight_cells(route, color_trace, color_trace);
@@ -238,23 +242,36 @@ bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
         }    
     }
 
-    //std::vector<int> enemy_chars = get_enemy_chars(btl_fld);
-    for (int i = 0; i < chars.size(); i++) { // ищем перса который может ударить
+    int max_damage = -1;
+    std::shared_ptr<Character> max_character = nullptr;
+    int enemy_cell = -1;
+
+    for (int i = 0; i < chars.size(); i++) { // ищем перса который может ударить с max_атакой
         int cell_char = chars[i]->get_current_cell();
         std::vector<std::vector<int>> move_area = btl_fld.find_move_area(cell_char, chars[i]->get_mv_range());
         std::vector<int> attack_enemy = can_attack_chars(get_enemy_chars(btl_fld),
                                                          move_area[chars[i]->get_mv_range()], btl_fld);
-        if (attack_enemy.size()) { //если найден перс с возмодностью ударить - ударяем
-            std::cout << "nice poshel" << std::endl;
-            std::vector<int> neighbors_attack = btl_fld.area_in_area(move_area, btl_fld.search_neighbors(attack_enemy[0])); //находим клетку с которой ударим
-            std::vector<int> route = btl_fld.find_route(neighbors_attack[0], move_area); // строим путь к клетке
-            btl_fld.add_highlight_cells(route, color_trace, color_trace);
-            chars[i]->move(route, btl_fld);
-            btl_fld.update_cell(chars[i], neighbors_attack[0]);
-            chars[i]->do_damage(btl_fld.get_character_from_id(attack_enemy[0])); // ударяем
-            return true;
+        if (attack_enemy.size() and chars[i]->get_max_damage() > max_damage) {
+            max_damage = chars[i]->get_max_damage();
+            max_character = chars[i];
+            enemy_cell = attack_enemy[0];
         }
 
+    }
+
+    if (max_character) {
+        std::vector<std::vector<int>> move_area = btl_fld.find_move_area(max_character->get_current_cell(), max_character->get_mv_range());
+        std::vector<int> neighbors_attack = btl_fld.area_in_area(move_area, btl_fld.search_neighbors(enemy_cell));
+        if (btl_fld.is_in_area({neighbors_attack}, max_character->get_current_cell())) {
+            max_character->do_damage(btl_fld.get_character_from_id(enemy_cell));
+            return true;
+        }
+        std::vector<int> route = btl_fld.find_route(neighbors_attack[0], move_area); // строим путь к клетке
+        btl_fld.add_highlight_cells(route, color_trace, color_trace);
+        max_character->move(route, btl_fld);
+        btl_fld.update_cell(max_character, neighbors_attack[0]);
+        max_character->do_damage(btl_fld.get_character_from_id(enemy_cell));
+        return true;
     }
 
     int char_index = rand() % get_chars_size();

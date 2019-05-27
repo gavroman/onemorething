@@ -36,6 +36,7 @@ class Character {
     void draw(sf::RenderWindow& window, class Map field);
     void animate();
     int get_hp();
+    int get_max_damage();
 
  protected:
     Status status;

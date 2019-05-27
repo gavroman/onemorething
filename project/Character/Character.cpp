@@ -33,6 +33,10 @@ int Character::get_hp() {
     return hp;
 }
 
+int Character::get_max_damage() {
+    return damage_max;
+}
+
 Scout::Scout(const int id, const int current_player) {
     std::string PLAYER;
     switch (current_player) {
@@ -52,9 +56,9 @@ Scout::Scout(const int id, const int current_player) {
     cell_id = id;
     map_offset_x = 6;
     map_offset_y = 35;
-    hp = 400;
+    hp = 300;
     damage_min = 50;
-    damage_max = 100;
+    damage_max = 55;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -89,9 +93,9 @@ Archer::Archer(const int id, const int current_player) {
     cell_id = id;
     map_offset_x = 6;
     map_offset_y = 40;
-    hp = 400;
+    hp = 250;
     damage_min = 50;
-    damage_max = 100;
+    damage_max = 60;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -134,9 +138,9 @@ Swordman::Swordman(const int id, const int current_player) {
 
     move_range = 5;
     cell_id = id;
-    hp = 400;
-    damage_min = 50;
-    damage_max = 100;
+    hp = 500;
+    damage_min = 70;
+    damage_max = 130;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -169,9 +173,9 @@ Tank::Tank(const int id, const int current_player) {
     cell_id = id;
     map_offset_x = 5;
     map_offset_y = 40;
-    hp = 400;
-    damage_min = 50;
-    damage_max = 100;
+    hp = 800;
+    damage_min = 60;
+    damage_max = 80;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -206,9 +210,9 @@ Wizard::Wizard(const int id, const int current_player) {
     cell_id = id;
     map_offset_x = 10;
     map_offset_y = 40;
-    hp = 400;
+    hp = 250;
     damage_min = 50;
-    damage_max = 100;
+    damage_max = 60;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -244,8 +248,8 @@ Berserker::Berserker(const int id, const int current_player) {
     map_offset_x = 4;
     map_offset_y = 45;
     hp = 400;
-    damage_min = 50;
-    damage_max = 100;
+    damage_min = 130;
+    damage_max = 200;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -282,8 +286,8 @@ Knight::Knight(const int id, const int current_player) {
 
     move_range = 4;
     cell_id = id;
-    hp = 400;
-    damage_min = 50;
+    hp = 600;
+    damage_min = 80;
     damage_max = 100;
 
     idle_texture.loadFromFile(path + "/idle.png");
@@ -323,9 +327,9 @@ Healer::Healer(const int id, const int current_player) {
     map_offset_y = 35;
     active = false;
     status = IDLE;
-    hp = 400;
+    hp = 250;
     damage_min = 50;
-    damage_max = 100;
+    damage_max = 51;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
