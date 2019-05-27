@@ -239,13 +239,13 @@ Berserker::Berserker(const int id, const int current_player) {
     std::string class_name = "berserker/";
     std::string path = SOURCE + class_name + PLAYER;
 
-    move_range = 20;
+    move_range = 6;
     cell_id = id;
     map_offset_x = 4;
     map_offset_y = 45;
     hp = 400;
     damage_min = 50;
-    damage_max = 2000;
+    damage_max = 100;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");

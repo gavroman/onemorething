@@ -238,8 +238,24 @@ bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
         }    
     }
 
-    std::vector<int> enemy_chars = get_enemy_chars(btl_fld);
+    //std::vector<int> enemy_chars = get_enemy_chars(btl_fld);
+    for (int i = 0; i < chars.size(); i++) { // ищем перса который может ударить
+        int cell_char = chars[i]->get_current_cell();
+        std::vector<std::vector<int>> move_area = btl_fld.find_move_area(cell_char, chars[i]->get_mv_range());
+        std::vector<int> attack_enemy = can_attack_chars(get_enemy_chars(btl_fld),
+                                                         move_area[chars[i]->get_mv_range()], btl_fld);
+        if (attack_enemy.size()) { //если найден перс с возмодностью ударить - ударяем
+            std::cout << "nice poshel" << std::endl;
+            std::vector<int> neighbors_attack = btl_fld.area_in_area(move_area, btl_fld.search_neighbors(attack_enemy[0])); //находим клетку с которой ударим
+            std::vector<int> route = btl_fld.find_route(neighbors_attack[0], move_area); // строим путь к клетке
+            btl_fld.add_highlight_cells(route, color_trace, color_trace);
+            chars[i]->move(route, btl_fld);
+            btl_fld.update_cell(chars[i], neighbors_attack[0]);
+            chars[i]->do_damage(btl_fld.get_character_from_id(attack_enemy[0])); // ударяем
+            return true;
+        }
 
+    }
 
     int char_index = rand() % get_chars_size();
     int cell_char = chars[char_index]->get_current_cell();
