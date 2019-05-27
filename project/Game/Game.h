@@ -6,6 +6,7 @@
 #define ONEMORETHING_GAME_H
 
 #define NUM_OF_MAIN_MENU_BUTTONS 2
+#define NUM_OF_PAUSE_MENU_BUTTONS 3
 #define DEFAULT_SELECT 100
 
 #include <SFML/Graphics.hpp>
@@ -209,11 +210,51 @@ class Choice_menu {
 class Map_menu {
  public:
     Map_menu(float width, float height);
+    std::unique_ptr<sf::RenderWindow> draw(std::unique_ptr<sf::RenderWindow> window);
+
+ private:
+    sf::Texture background_texture;
+    sf::Texture menu_texture;
+    sf::Texture map_texture;
+
+    sf::Sprite background;
+    sf::Sprite menu;
 };
 
 class Pause_menu {
  public:
     Pause_menu(float width, float height);
+    void process(sf::RenderWindow* window, sf::Sprite& screenshot);
+
+private:
+    int selected_item = DEFAULT_SELECT;
+
+    void move_up();
+    void move_down();
+
+    sf::Font font;
+
+    sf::Color gold;
+
+    sf::Texture menu_texture;
+    sf::Texture button_texture;
+    std::vector<sf::Sprite> button;
+
+
+    // TODO:: ПЕРЕПОЛНЕНИЕ СТЕКА?
+
+
+    sf::Text menu_name;
+    std::vector<sf::Text> menu_button;
+
+    sf::Sprite menu;
+
+    const int offset = 12; // 29 справа 17 слева
+    const int button_offset = 70;
+    const int button_offset_y = 205;
+
+    const int text_offset_x = 15;
+    const int text_offset_y = 23;
 };
 
 class Loading {

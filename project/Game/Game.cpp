@@ -3,7 +3,7 @@
 //
 #include "Game.h"
 
-extern std::vector<std::unique_ptr<Player>> players;
+bool go_again = false;
 
 Game::Game() {
     maps = {"Dark_map.tmx",
@@ -42,6 +42,7 @@ void Game::process_event() {
 }
 
 void Game::run_game(const std::string xml_file_path) {
+    std::vector<std::unique_ptr<Player>> players;
     Loading loading_screen(window->getSize().x, window->getSize().y);
     window = loading_screen.draw(std::move(window));
     Map btl_fld("../source/game_map/" + xml_file_path);
@@ -71,6 +72,12 @@ void Game::run_game(const std::string xml_file_path) {
             btl_fld.get_adj_matrix();
             curr_plr = (curr_plr == PLAYER1) ? PLAYER2 : PLAYER1;
             std::cout << "Current player = " << curr_plr << std::endl;
+        }
+
+        if (go_again) {
+            status = MAIN_MENU;
+            go_again = false;
+            return;
         }
 
     std::vector<sf::Sprite> icons;
@@ -247,10 +254,8 @@ Menu::Menu(float width, float height) {
     button.emplace_back(sf::Sprite(button_texture));
     button.emplace_back(sf::Sprite(button_texture));
 
-    button[0].setTexture(button_texture);
     button[0].setPosition(main_menu.getPosition().x + (main_menu_texture.getSize().x - button_texture.getSize().x) / 2 - offset,
                        main_menu.getPosition().y + main_menu_texture.getSize().y / (NUM_OF_MAIN_MENU_BUTTONS + 1) + button_offset);
-    button[1].setTexture(button_texture);
     button[1].setPosition(main_menu.getPosition().x + (main_menu_texture.getSize().x - button_texture.getSize().x) / 2 - offset,
                          main_menu.getPosition().y + main_menu_texture.getSize().y / (NUM_OF_MAIN_MENU_BUTTONS + 1) + button_offset * 1.6);
 
@@ -394,7 +399,7 @@ Choice_menu::Choice_menu(float width, float height) {
     ribbon.setScale(0.7, 0.7);
 
     char_names.emplace_back(sf::Text("Scout", font));
-    char_names.emplace_back(sf::Text("Archer", font));
+    char_names.emplace_back(sf::Text(" Archer", font));
     char_names.emplace_back(sf::Text("Swordmaster", font));
     char_names.emplace_back(sf::Text("Guardian", font));
     char_names.emplace_back(sf::Text("Wizard", font));
@@ -701,3 +706,134 @@ sf::RectangleShape Loading::draw_bar() {
     loading_status += 140;
     return rect;
 }
+
+Pause_menu::Pause_menu(float width, float height) {
+    font.loadFromFile("../source/menu/Enchanted_Land.otf");
+
+    gold.r = 212;
+    gold.g = 175;
+    gold.b = 55;
+
+    menu_name.setFont(font);
+    menu_name.setFillColor(sf::Color::Black);
+    menu_name.setOutlineColor(gold);
+    menu_name.setOutlineThickness(3);
+    menu_name.setCharacterSize(60);
+    menu_name.setString("Pause");
+    menu_name.setPosition(width / 2 - 58, 205);
+
+    menu_texture.loadFromFile("../source/menu/Main.png");
+    menu_texture.setSmooth(true);
+    menu.setTexture(menu_texture);
+    menu.setPosition((width - menu_texture.getSize().x) / 2 + offset, (height - menu_texture.getSize().y) / 2);
+
+    button_texture.loadFromFile("../source/menu/Button.png");
+    button_texture.setSmooth(true);
+    menu_button.emplace_back(sf::Text("Resume", font));
+    menu_button.emplace_back(sf::Text("Main menu", font));
+    menu_button.emplace_back(sf::Text(" Quit", font));
+    for (int i = 0; i < NUM_OF_PAUSE_MENU_BUTTONS; i++) {
+        button.emplace_back(sf::Sprite(button_texture));
+        button[i].setPosition(menu.getPosition().x + (menu_texture.getSize().x - button_texture.getSize().x) / 2 - offset,
+                              menu.getPosition().y + menu_texture.getSize().y / (NUM_OF_PAUSE_MENU_BUTTONS + 1) + button_offset_y + button_offset * i);
+        menu_button[i].setFillColor(sf::Color::White);
+        menu_button[i].setOutlineColor(sf::Color::Black);
+        menu_button[i].setOutlineThickness(1);
+        menu_button[i].setOrigin(menu_button[i].findCharacterPos(menu_button[i].getString().getSize() / 2).x, 0);
+        menu_button[i].setPosition(button[i].getPosition().x + button_texture.getSize().x / 2 - offset + text_offset_x,
+                                   button[i].getPosition().y + button_texture.getSize().y / 2 - text_offset_y);
+    }
+}
+
+void Pause_menu::process(sf::RenderWindow *window, sf::Sprite& screenshot) {
+    while (window->isOpen()) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            switch (event.type) {
+                case sf::Event::KeyReleased: {
+                    switch (event.key.code) {
+                        case sf::Keyboard::Up: {
+                            move_up();
+                            break;
+                        }
+                        case sf::Keyboard::Down: {
+                            move_down();
+                            break;
+                        }
+                        case sf::Keyboard::W: {
+                            move_up();
+                            break;
+                        }
+                        case sf::Keyboard::S: {
+                            move_down();
+                            break;
+                        }
+                        case sf::Keyboard::Return: {
+                            switch (selected_item) {
+                                case 0: {
+                                    return;
+                                }
+                                case 1: {
+                                    go_again = true;
+                                    return;
+                                }
+                                case 2: {
+                                    window->close();
+                                    break;
+                                }
+                                default: {
+                                    continue;
+                                }
+                            }
+                        }
+                        case sf::Keyboard::Escape: {
+                            return;
+                        }
+                    }
+                    break;
+                }
+                case sf::Event::Closed: {
+                    window->close();
+                    break;
+                }
+            }
+        }
+        window->clear();
+
+        window->draw(screenshot);
+
+        window->draw(menu);
+        for (const auto& it : button) {
+            window->draw(it);
+        }
+        window->draw(menu_name);
+
+        for (const auto& it : menu_button) {
+            window->draw(it);
+        }
+
+        window->display();
+    }
+}
+
+void Pause_menu::move_up() {
+        if (selected_item <= 0 || selected_item > menu_button.size() - 1) {
+            menu_button[0].setFillColor(sf::Color::White);
+            selected_item = menu_button.size() - 1;
+        } else {
+            menu_button[selected_item].setFillColor(sf::Color::White);
+            selected_item--;
+        }
+        menu_button[selected_item].setFillColor(gold);
+    }
+
+void Pause_menu::move_down() {
+    if (selected_item >= menu_button.size() - 1) {
+            menu_button[menu_button.size() - 1].setFillColor(sf::Color::White); // Хз почему не работает через end
+            selected_item = 0;
+        } else {
+            menu_button[selected_item].setFillColor(sf::Color::White);
+            selected_item++;
+        }
+        menu_button[selected_item].setFillColor(gold);
+    }

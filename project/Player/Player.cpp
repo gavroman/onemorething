@@ -166,6 +166,34 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                 break;
             }
 
+            case sf::Event::KeyReleased: {
+                switch (event.key.code) {
+                    case sf::Keyboard::Escape: {
+                        sf::Texture screenshot;
+                        screenshot.loadFromImage(window.capture());
+                        sf::Sprite screenshot_s(screenshot);
+                        screenshot_s.setColor(sf::Color(255, 255, 255, 100));
+
+                        for (int i = 0; i < 10; i++) {
+                            screenshot_s.move(rand() % 10, rand() % 10);
+                            window.draw(screenshot_s);
+                            screenshot_s.setPosition(0, 0);
+                            screenshot_s.move(-rand() % 10, -rand() % 10);
+                            window.draw(screenshot_s);
+                            screenshot_s.setPosition(0, 0);
+                            window.draw(screenshot_s);
+                        }
+
+                        screenshot.loadFromImage(window.capture());
+                        screenshot_s.setTexture(screenshot);
+
+                        Pause_menu pause(window.getSize().x, window.getSize().y);
+                        pause.process(&window, screenshot_s);
+                        break;
+                    }
+                }
+            }
+
             default: 
                 return false;
             }
