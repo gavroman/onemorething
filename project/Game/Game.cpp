@@ -14,9 +14,10 @@ Game::Game() {
 
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
     //window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 750), "One More Thing");
-    status = MAIN_MENU;
-    //process_event();
-    run_game(maps[2]);
+    //status = MAIN_MENU;
+    status = RUN_GAME;   std::vector<int> characters = {0, 1, 2, 3, 4, 5, 6, 7};
+    process_event();
+    //run_game(maps[2]);
 }
 
 void Game::process_event() {
@@ -50,8 +51,7 @@ void Game::run_game(const std::string& xml_file_path) {
     Map btl_fld("../source/game_map/" + xml_file_path);
 
     window = loading_screen.draw(std::move(window));
-    //players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, characters)); //создание игроков
-    players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, std::vector<int>({0, 1, 2, 3, 4, 5, 6, 7})));
+    players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, characters)); //создание игроков
     window = loading_screen.draw(std::move(window));
     players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({0, 1, 2, 3, 4})));
     //window = loading_screen.draw(std::move(window));
@@ -88,12 +88,10 @@ void Game::run_game(const std::string& xml_file_path) {
             players[PLAYER1]->get_char(i)->draw(*window, btl_fld);
             players[PLAYER1]->get_char(i)->animate();
         }
-
         for (int i = 0; i != players[PLAYER2]->get_chars_size(); i++) {
             players[PLAYER2]->get_char(i)->draw(*window, btl_fld);
             players[PLAYER2]->get_char(i)->animate();
-        }
-
+        } 
         window->display();
         //std::this_thread::sleep_for(std::chrono::milliseconds(160)); // установлен лимит кадров средсвами SFML
     }
@@ -930,6 +928,7 @@ void Pause_menu::process(sf::RenderWindow *window, sf::Sprite& screenshot) {
                                 }
                                 case 1: {
                                     ah_shit_here_we_go_again = true;
+                                    std::cout << "ZALUPA" << std::endl;
                                     return;
                                 }
                                 case 2: {
