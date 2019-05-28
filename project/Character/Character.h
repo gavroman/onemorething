@@ -16,7 +16,7 @@ class Character {
  public:
     Character();
     //virtual unsigned int apply_damage(std::shared_ptr <Cell> cell) = 0; // Вызывает move_character из Player, если получает false, то возвращает false
-    //virtual void get_damage(unsigned int damage) = 0;
+    //virtual void get_std::unique_ptr<sf::RenderWindow> draw(std::unique_ptr<sf::RenderWindow> window);damage(unsigned int damage) = 0;
     //void move(int id); // Передвигает на одну! клетку
     virtual void do_damage(std::shared_ptr<Character> character);
     void set_attack_target(std::shared_ptr<Character> character);
