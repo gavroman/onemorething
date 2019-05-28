@@ -10,6 +10,8 @@
 #define DEFAULT_SELECT 100
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
 #include <chrono>
 #include <thread>
 

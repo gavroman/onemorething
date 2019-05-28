@@ -14,13 +14,16 @@ Game::Game() {
 
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
     //window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 750), "One More Thing");
-    //status = MAIN_MENU;
-    status = RUN_GAME;   std::vector<int> characters = {0, 1, 2, 3, 4, 5, 6, 7};
+    status = MAIN_MENU;
+       status = RUN_GAME;                       //  откоментить для дебага 
+       characters = {0, 1, 2, 3, 4, 5, 6, 7};   //
     process_event();
-    //run_game(maps[2]);
 }
 
 void Game::process_event() {
+    sf::Music music;//создаем объект музыки
+    music.openFromFile("../source/main_theme.ogg");//загружаем файл
+    music.play();//воспроизводим музыку
     while (window->isOpen()) {
         switch (status) {
             case MAIN_MENU: {
