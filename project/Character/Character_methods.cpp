@@ -6,6 +6,10 @@
 
 /* В этом файле содержатся методы персонажей */
 
+bool Character::get_range() {
+    return range;
+}
+
 void Character::set_attack_target(std::shared_ptr<Character> character) {
     attack_target = character;
 }

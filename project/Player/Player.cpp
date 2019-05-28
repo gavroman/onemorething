@@ -181,8 +181,14 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                         //отрисовка зоны
                         std::vector<std::vector<int>> move_area = btl_fld.find_move_area(cell_id, chars[char_index]->get_mv_range());
                         chars[char_index]->set_move_area(move_area);
-                        std::vector<int> attack_enemy = can_attack_chars(get_enemy_chars(btl_fld),
-                                move_area[chars[char_index]->get_mv_range()], btl_fld);
+                        std::vector<int> attack_enemy;
+                        if (chars[char_index]->get_range()) {
+                            attack_enemy = get_enemy_chars(btl_fld);
+                        } else {
+                            attack_enemy = can_attack_chars(get_enemy_chars(btl_fld),
+                                                            move_area[chars[char_index]->get_mv_range()],
+                                                            btl_fld);
+                        }
                         deactivate_all_chars();
                         chars[char_index]->set_active(true);
                         btl_fld.drop_highlight_cells();
@@ -196,11 +202,22 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
 
                         if (active_char_index != -1) {
                             std::vector<std::vector<int>> move_area = chars[active_char_index]->get_move_area();
-                            std::vector<int> attack_enemy = can_attack_chars(get_enemy_chars(btl_fld),
-                                                                             move_area[chars[active_char_index]->get_mv_range()], btl_fld);
+                            std::vector<int> attack_enemy;
+                            if (chars[active_char_index]->get_range()) {
+                                attack_enemy = get_enemy_chars(btl_fld);
+                            } else {
+                                attack_enemy = can_attack_chars(get_enemy_chars(btl_fld),
+                                                                                 move_area[chars[active_char_index]->get_mv_range()],
+                                                                                 btl_fld);
+                            }
                             std::vector<int> neighbors_attack;
                             if (btl_fld.is_in_area({attack_enemy}, cell_id)) {
-                                std::vector<int> neighbors_attack = btl_fld.area_in_area(move_area, btl_fld.search_neighbors(cell_id));
+                                std::vector<int> neighbors_attack;
+                                if (chars[active_char_index]->get_range()) {
+                                    neighbors_attack = {chars[active_char_index]->get_current_cell()};
+                                } else {
+                                    neighbors_attack = btl_fld.area_in_area(move_area, btl_fld.search_neighbors(cell_id));
+                                }
                                 if (btl_fld.is_in_area({neighbors_attack}, chars[active_char_index]->get_current_cell())) {
                                     chars[active_char_index]->do_damage(btl_fld.get_character_from_id(cell_id));
                                     return true;
@@ -351,8 +368,16 @@ bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
     for (int i = 0; i < chars.size(); i++) { // ищем перса который может ударить с max_атакой
         int cell_char = chars[i]->get_current_cell();
         std::vector<std::vector<int>> move_area = btl_fld.find_move_area(cell_char, chars[i]->get_mv_range());
-        std::vector<int> attack_enemy = can_attack_chars(get_enemy_chars(btl_fld),
-                                                         move_area[chars[i]->get_mv_range()], btl_fld);
+        std::vector<int> attack_enemy;
+        if (chars[i]->get_range()) {
+            attack_enemy = get_enemy_chars(btl_fld);
+        } else {
+            attack_enemy = can_attack_chars(get_enemy_chars(btl_fld),
+                                            move_area[chars[i]->get_mv_range()],
+                                            btl_fld);
+        }
+        //std::vector<int> attack_enemy = can_attack_chars(get_enemy_chars(btl_fld),
+         //                                                move_area[chars[i]->get_mv_range()], btl_fld);
         if (attack_enemy.size() and chars[i]->get_max_damage() > max_damage) {
             max_damage = chars[i]->get_max_damage();
             max_character = chars[i];
@@ -361,7 +386,13 @@ bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
     }
     if (max_character) {
         std::vector<std::vector<int>> move_area = btl_fld.find_move_area(max_character->get_current_cell(), max_character->get_mv_range());
-        std::vector<int> neighbors_attack = btl_fld.area_in_area(move_area, btl_fld.search_neighbors(enemy_cell));
+        std::vector<int> neighbors_attack;
+        if (max_character->get_range()) {
+            neighbors_attack = {max_character->get_current_cell()};
+        } else {
+            neighbors_attack = btl_fld.area_in_area(move_area, btl_fld.search_neighbors(enemy_cell));
+        }
+       // std::vector<int> neighbors_attack = btl_fld.area_in_area(move_area, btl_fld.search_neighbors(enemy_cell));
         if (btl_fld.is_in_area({neighbors_attack}, max_character->get_current_cell())) {
             max_character->do_damage(btl_fld.get_character_from_id(enemy_cell));
             return true;

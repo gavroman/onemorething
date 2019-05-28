@@ -38,6 +38,7 @@ class Character {
     void animate();
     int get_hp();
     int get_max_damage();
+    bool get_range();
 
  protected:
     Status status;
@@ -53,6 +54,7 @@ class Character {
     int damage_min;
     int damage_max;
     int move_range;
+    bool range = false;
 
     sf::Sprite sprite;
     sf::Texture idle_texture;

@@ -74,6 +74,7 @@ Archer::Archer(const int id, const int current_player) {
     std::string path = SOURCE + class_name + PLAYER;
 
     move_range = 3;
+    range = true;
     cell_id = id;
     map_offset_x = 6;
     map_offset_y = 40;
@@ -191,6 +192,7 @@ Wizard::Wizard(const int id, const int current_player) {
     std::string path = SOURCE + class_name + PLAYER;
 
     move_range = 3;
+    range = true;
     cell_id = id;
     map_offset_x = 10;
     map_offset_y = 40;
