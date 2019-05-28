@@ -242,7 +242,7 @@ void Game::show_choice_menu() {
                                 }
                                 return;
                             }
-                            break;
+                            continue;
                         }
                         case sf::Keyboard::Escape: {
                             status = MAIN_MENU;
