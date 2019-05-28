@@ -148,9 +148,9 @@ void Map::draw(sf::RenderWindow& window) {
 
 std::vector<int> Map::get_chars() {
     std::vector<int> chars;
-    for (int i = 0; i < map_size_width * map_size_height; i++) {
-        if (map[i]->character) {
-            chars.push_back(i);
+    for (auto& it : map) {
+        if (it->character) {
+            chars.push_back(it->id);
         }
     }
     return chars;

@@ -75,7 +75,6 @@ void Player::check_hp(class Map& field) {
         if (chars[i]->get_hp() <= 0) {
             field.update_cell(nullptr, chars[i]->get_current_cell());
             chars.erase(chars.begin() + i);
-          //  field.update_cell(nullptr, chars[i]->get_current_cell());
         }
     }
 }
@@ -172,7 +171,7 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                                 btl_fld.add_highlight_cells(route, color_trace, color_trace);
                                 chars[active_char_index]->move(route, btl_fld);
                                 btl_fld.update_cell(chars[active_char_index], route[0]);
-                                chars[active_char_index]->do_damage(btl_fld.get_character_from_id(cell_id));
+                                chars[active_char_index]->set_attack_target(btl_fld.get_character_from_id(cell_id));
                                 chars[active_char_index]->set_active(false);
                                 return true; //окончание хода
                             }
@@ -184,9 +183,6 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                                 chars[active_char_index]->move(route, btl_fld);
                                 btl_fld.update_cell(chars[active_char_index], route[0]);
                                 chars[active_char_index]->set_active(false);
-                                //std::vector<int> neigbors = btl_fld.seearch_neighbors(route[0]);
-
-
                                 return true; //окончание хода
                             } else {
                                 btl_fld.drop_highlight_cells();
@@ -229,7 +225,6 @@ Bot::Bot(class Map field) {
 }
 
 bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
-    //TODO (9rik): Ярик ебашь
     check_hp(btl_fld);
     btl_fld.drop_highlight_cells();
     sf::Event event;
@@ -270,7 +265,7 @@ bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
         btl_fld.add_highlight_cells(route, color_trace, color_trace);
         max_character->move(route, btl_fld);
         btl_fld.update_cell(max_character, neighbors_attack[0]);
-        max_character->do_damage(btl_fld.get_character_from_id(enemy_cell));
+        max_character->set_attack_target(btl_fld.get_character_from_id(enemy_cell));
         return true;
     }
 

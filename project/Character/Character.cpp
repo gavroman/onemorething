@@ -20,22 +20,6 @@ Character::Character() {
     texture_x = 0;
     texture_y = 0;
 }
-bool Character::do_damage(std::shared_ptr<Character> character) {
-    character->hp -= (rand () % (damage_max - damage_min)) + damage_min;
-    std::cout << character->hp << std::endl;
-    if (character->hp <= 0) {
-        return true;
-    }
-    return false;
-}
-
-int Character::get_hp() {
-    return hp;
-}
-
-int Character::get_max_damage() {
-    return damage_max;
-}
 
 Scout::Scout(const int id, const int current_player) {
     std::string PLAYER;
