@@ -81,6 +81,16 @@ void Player::check_hp(class Map& field) {
     }
 }
 
+std::vector<int> Player::get_my_chars(std::shared_ptr<Character> healer) {
+    std::vector<int> my_chars;
+    for (int i = 0; i < chars.size(); i++) {
+        if (chars[i] != healer) {
+            my_chars.push_back(chars[i]->get_current_cell());
+        }
+    }
+    return my_chars;
+}
+
 
 Human::Human(class Map field, Current_player player, std::vector<int> characters) {
     std::vector<int> poses = {};
@@ -177,7 +187,26 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                     sf::Vector2f pos(pos_pressed.x, pos_pressed.y);
                     int cell_id = btl_fld.get_cell_id_from_pos(sf::Vector2f(pos_pressed));
                     int char_index = get_char_index_from_cell(cell_id);
-                    if (char_index != -1) {
+               /*     if (get_active_char_index() != -1) {
+                        if (chars[get_active_char_index()]->get_heal()) {
+                            std::vector<int> my_chars;
+
+                            if (chars[active_char_index]->get_heal()) {
+                                my_chars = can_attack_chars(get_my_chars(chars[active_char_index]),
+                                                            move_area[chars[active_char_index]->get_mv_range()], btl_fld);
+
+                            }
+
+                            if (btl_fld.is_in_area({my_chars}, cell_id)) {
+                                std::cout << "zalupa" << std::endl;
+                                chars[active_char_index]->do_heal(btl_fld.get_character_from_id(cell_id));
+                                chars[active_char_index]->set_active(false);
+                                return true;
+                            }
+                        }
+                    }*/
+
+                    if (char_index != -1 and !status_heal) {
                         //отрисовка зоны
                         std::vector<std::vector<int>> move_area = btl_fld.find_move_area(cell_id, chars[char_index]->get_mv_range());
                         chars[char_index]->set_move_area(move_area);
@@ -193,6 +222,13 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                         chars[char_index]->set_active(true);
                         btl_fld.drop_highlight_cells();
                         btl_fld.add_highlight_cells(move_area[chars[char_index]->get_mv_range()], color, color);
+                        if (chars[char_index]->get_heal()) {
+                            std::vector<int> my_chars = can_attack_chars(get_my_chars(chars[char_index]),
+                                                                         move_area[chars[char_index]->get_mv_range()],
+                                                                         btl_fld);
+                            btl_fld.add_highlight_cells(my_chars, color_my, color_my);
+                            status_heal = true;
+                        }
                         if (attack_enemy.size() != 0) {
                             btl_fld.add_highlight_cells(attack_enemy, color_enemy, color_enemy);
                         }
@@ -210,7 +246,24 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                                                                                  move_area[chars[active_char_index]->get_mv_range()],
                                                                                  btl_fld);
                             }
+
                             std::vector<int> neighbors_attack;
+                            std::vector<int> my_chars;
+
+                            if (chars[active_char_index]->get_heal()) {
+                                my_chars = can_attack_chars(get_my_chars(chars[active_char_index]),
+                                        move_area[chars[active_char_index]->get_mv_range()], btl_fld);
+                                status_heal = false;
+
+                            }
+
+                            if (btl_fld.is_in_area({my_chars}, cell_id)) {
+                                std::cout << "zalupa" << std::endl;
+                                chars[active_char_index]->do_heal(btl_fld.get_character_from_id(cell_id));
+
+                                chars[active_char_index]->set_active(false);
+                                return true;
+                            }
                             if (btl_fld.is_in_area({attack_enemy}, cell_id)) {
                                 std::vector<int> neighbors_attack;
                                 if (chars[active_char_index]->get_range()) {
@@ -220,6 +273,7 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                                 }
                                 if (btl_fld.is_in_area({neighbors_attack}, chars[active_char_index]->get_current_cell())) {
                                     chars[active_char_index]->do_damage(btl_fld.get_character_from_id(cell_id));
+                                    chars[active_char_index]->set_active(false);
                                     return true;
                                 }
                                 std::vector<int> route = btl_fld.find_route(neighbors_attack[0], move_area);

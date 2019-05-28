@@ -24,6 +24,8 @@ class Player {
     int get_char_index_from_cell(int cell_id);
     void deactivate_all_chars();
     bool is_all_idle();
+    bool status_heal = false;
+    std::vector<int> get_my_chars(std::shared_ptr<Character> healer);
     std::vector<int> get_enemy_chars(class Map& btl_fld);
     std::vector<int> can_attack_chars(std::vector<int> enemy_chars, std::vector<int> cells, class Map& btl_fld);
     ~Player() = default;
@@ -32,6 +34,7 @@ class Player {
     sf::Color hover_color = sf::Color(32, 30, 52, 70);
     sf::Color color = sf::Color(12, 30, 52, 120);
     sf::Color color_enemy = sf::Color::Red;
+    sf::Color color_my = sf::Color::Green;
     std::vector<std::shared_ptr<Character>> chars;
     std::vector<std::shared_ptr<Cell>> assigned_cells; // Клетки, доступные игроку
 };

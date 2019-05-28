@@ -6,6 +6,10 @@
 
 /* В этом файле содержатся методы персонажей */
 
+int Character::get_heal() {
+    return heal;
+}
+
 bool Character::get_range() {
     return range;
 }
@@ -22,6 +26,15 @@ void Character::do_damage(std::shared_ptr<Character> character) {
     status = ATTACK;
     character->status = HURT;   
     //}
+}
+
+void Character::do_heal(std::shared_ptr<Character> character) {
+    if (character->max_hp - character->hp < heal) {
+        character->hp = character->max_hp;
+    } else {
+        character->hp += heal;
+    }
+    status = HEAL;
 }
 
 int Character::get_hp() {
@@ -137,6 +150,25 @@ void Character::animate() {
             texture_width = die_texture.getSize().x / sprites_amount;
             texture_height = die_texture.getSize().y;
             sprite.setTextureRect(sf::Rect(texture_x * (sprites_amount - 1), texture_y, texture_width, texture_height));
+            break;
+        }
+
+        case HEAL: {
+            sprite.setTexture(heal_texture);
+            texture_width = heal_texture.getSize().x / sprites_amount;
+            texture_height = heal_texture.getSize().y;
+            sprite.setTextureRect(sf::Rect(texture_x, texture_y, texture_width, texture_height));
+            if (texture_x >= texture_width * (sprites_amount - 1)) {
+                texture_x = 0;
+            } else {
+                texture_x += texture_width;
+            }
+            if (current_animate_index == sprites_amount) {
+                current_animate_index = 0;
+                status = IDLE;
+            } else {
+                current_animate_index++;
+            }
             break;
         }
     }

@@ -10,7 +10,7 @@
 #include "Map.h"
 #include "Player.h"
 
-enum Status {IDLE, WALK, ATTACK, HURT, DYING, DEAD };
+enum Status {IDLE, WALK, ATTACK, HURT, DYING, DEAD, HEAL};
 
 class Character {
  public:
@@ -19,6 +19,7 @@ class Character {
     //virtual void get_std::unique_ptr<sf::RenderWindow> draw(std::unique_ptr<sf::RenderWindow> window);damage(unsigned int damage) = 0;
     //void move(int id); // Передвигает на одну! клетку
     virtual void do_damage(std::shared_ptr<Character> character);
+    virtual void do_heal(std::shared_ptr<Character> character);
     void set_attack_target(std::shared_ptr<Character> character);
 
     void set_move_area(std::vector<std::vector<int>>& area);
@@ -39,6 +40,7 @@ class Character {
     int get_hp();
     int get_max_damage();
     bool get_range();
+    int get_heal();
 
  protected:
     Status status;
@@ -51,10 +53,12 @@ class Character {
     std::shared_ptr<Character> attack_target = nullptr;
 
     int hp;
+    int max_hp;
     int damage_min;
     int damage_max;
     int move_range;
     bool range = false;
+    int heal = 0;
 
     sf::Sprite sprite;
     sf::Texture idle_texture;
@@ -62,6 +66,7 @@ class Character {
     sf::Texture hurt_texture;
     sf::Texture attack_texture;
     sf::Texture die_texture;
+    sf::Texture heal_texture;
 
     int texture_x;
     int texture_y;
@@ -127,8 +132,6 @@ class Knight : public Melee {
 class Healer : public Melee, public Range {
  public:
     Healer(const int id, const int current_player);
- private:
-    sf::Texture heal_texture;
 };
 
 #endif //ONEMORETHING_CHARACTER_H
