@@ -38,6 +38,7 @@ class Character {
     void draw(sf::RenderWindow& window, class Map field);
     void animate();
     int get_hp();
+    int get_max_hp();
     int get_max_damage();
     bool get_range();
     int get_heal();

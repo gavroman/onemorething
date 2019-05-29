@@ -20,9 +20,6 @@ void Character::set_attack_target(std::shared_ptr<Character> character) {
 
 void Character::do_damage(std::shared_ptr<Character> character) {
     character->hp -= (rand () % (damage_max - damage_min)) + damage_min;
-    std::cout << character->hp << std::endl;
-    //std::cout << "ZALUPA "<< current_animate_index << std::endl;
-    //if (status == IDLE) {
     status = ATTACK;
     character->status = HURT;   
     //}
@@ -39,6 +36,10 @@ void Character::do_heal(std::shared_ptr<Character> character) {
 
 int Character::get_hp() {
     return hp;
+}
+
+int Character::get_max_hp() {
+    return max_hp;
 }
 
 int Character::get_max_damage() {

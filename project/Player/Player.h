@@ -24,7 +24,9 @@ class Player {
     int get_char_index_from_cell(int cell_id);
     void deactivate_all_chars();
     bool is_all_idle();
+    std::shared_ptr<Character> get_hiller();
     bool status_heal = false;
+    int find_nearest_cell(std::vector<std::vector<int>>  move_area, int enemy_cell, class Map& btl_fld);
     std::vector<int> get_my_chars(std::shared_ptr<Character> healer);
     std::vector<int> get_enemy_chars(class Map& btl_fld);
     std::vector<int> can_attack_chars(std::vector<int> enemy_chars, std::vector<int> cells, class Map& btl_fld);

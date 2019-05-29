@@ -12,8 +12,8 @@ Game::Game() {
             "Mixed_map.tmx",
             "Mixed_map_v2.tmx"};
 
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
-    //window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 750), "One More Thing");
+   // window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 750), "One More Thing");
     status = MAIN_MENU;
     //process_event();
     run_game(maps[2]);
@@ -51,9 +51,9 @@ void Game::run_game(const std::string& xml_file_path) {
 
     window = loading_screen.draw(std::move(window));
     //players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, characters)); //создание игроков
-    players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, std::vector<int>({0, 1, 2, 3, 4, 5, 6, 7})));
+    players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, std::vector<int>({0, 1, 2, 7, 4, 5, 6, 3})));
     window = loading_screen.draw(std::move(window));
-    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({0, 1, 2, 3, 4})));
+    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({0, 1, 2, 7, 4, 5, 6, 3})));
     //window = loading_screen.draw(std::move(window));
     btl_fld.get_adj_matrix();
 

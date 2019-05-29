@@ -2,6 +2,7 @@
 
 #include "Player.h"
 
+
 std::shared_ptr<Character> Player::get_char(const int index) {
 	return chars[index];
 }
@@ -66,6 +67,7 @@ std::vector<int> Player::can_attack_chars(std::vector<int> enemy_chars, std::vec
         for (int j = 0; j < enemy_neighbors.size(); j++) {
             if (std::find(cells.begin(), cells.end(), enemy_neighbors[j]) != cells.end()) {
                 can_attack_enemy.push_back(enemy_chars[i]);
+                break;
             }
         }
     }
@@ -89,6 +91,35 @@ std::vector<int> Player::get_my_chars(std::shared_ptr<Character> healer) {
         }
     }
     return my_chars;
+
+}
+
+std::shared_ptr<Character> Player::get_hiller() {
+    for (int i = 0; i < chars.size(); i++) {
+        if (chars[i]->get_heal()) {
+            return chars[i];
+        }
+    }
+    return nullptr;
+}
+
+
+int Player::find_nearest_cell(std::vector<std::vector<int>>  move_area, int enemy_cell, class Map& field) {
+    int cell = move_area[0][0];
+    float x1 = field.get_cell_pos(enemy_cell).x;
+    float y1 = field.get_cell_pos(enemy_cell).y;
+    for (int i = 0; i < move_area.size(); i++) {
+        for (int j = 0; j < move_area[i].size(); j++) {
+            float x2 = field.get_cell_pos(move_area[i][j]).x;
+            float y2 = field.get_cell_pos(move_area[i][j]).y;
+            float xcell = field.get_cell_pos(cell).x;
+            float ycell = field.get_cell_pos(cell).y;
+            if ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) < (x1 - xcell) * (x1 - xcell) + (y1 - ycell) * (y1 - ycell)) {
+                cell = move_area[i][j];
+            }
+        }
+    }
+    return cell;
 }
 
 
@@ -187,26 +218,8 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                     sf::Vector2f pos(pos_pressed.x, pos_pressed.y);
                     int cell_id = btl_fld.get_cell_id_from_pos(sf::Vector2f(pos_pressed));
                     int char_index = get_char_index_from_cell(cell_id);
-               /*     if (get_active_char_index() != -1) {
-                        if (chars[get_active_char_index()]->get_heal()) {
-                            std::vector<int> my_chars;
 
-                            if (chars[active_char_index]->get_heal()) {
-                                my_chars = can_attack_chars(get_my_chars(chars[active_char_index]),
-                                                            move_area[chars[active_char_index]->get_mv_range()], btl_fld);
-
-                            }
-
-                            if (btl_fld.is_in_area({my_chars}, cell_id)) {
-                                std::cout << "zalupa" << std::endl;
-                                chars[active_char_index]->do_heal(btl_fld.get_character_from_id(cell_id));
-                                chars[active_char_index]->set_active(false);
-                                return true;
-                            }
-                        }
-                    }*/
-
-                    if (char_index != -1 and !status_heal) {
+                    if ((char_index != -1 and !status_heal) or (status_heal and cell_id == get_hiller()->get_current_cell())) {
                         //отрисовка зоны
                         std::vector<std::vector<int>> move_area = btl_fld.find_move_area(cell_id, chars[char_index]->get_mv_range());
                         chars[char_index]->set_move_area(move_area);
@@ -235,7 +248,6 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                         btl_fld.add_highlight_cells({move_area[0][0]}, color_trace, color_trace);   
                     } else {
                         int active_char_index = get_active_char_index();
-
                         if (active_char_index != -1) {
                             std::vector<std::vector<int>> move_area = chars[active_char_index]->get_move_area();
                             std::vector<int> attack_enemy;
@@ -258,9 +270,7 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                             }
 
                             if (btl_fld.is_in_area({my_chars}, cell_id)) {
-                                std::cout << "zalupa" << std::endl;
                                 chars[active_char_index]->do_heal(btl_fld.get_character_from_id(cell_id));
-
                                 chars[active_char_index]->set_active(false);
                                 return true;
                             }
@@ -415,7 +425,7 @@ bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
             }
         }    
     }
-    int max_damage = -1;
+    int max_damage = 0;
     std::shared_ptr<Character> max_character = nullptr;
     int enemy_cell = -1;
 
@@ -438,6 +448,28 @@ bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
             enemy_cell = attack_enemy[0];
         }
     }
+
+    std::shared_ptr<Character> healer = get_hiller();
+    if (healer) {
+        std::vector<std::vector<int>> move_area = btl_fld.find_move_area(healer->get_current_cell(), healer->get_mv_range());
+        std::vector<int> my_chars = can_attack_chars(get_my_chars(healer), move_area[healer->get_mv_range()], btl_fld);
+        int max_heal_index = -1;
+        int max_heal = 0;
+        for (int i = 0; i < my_chars.size(); i++) {
+            if (chars[get_char_index_from_cell(my_chars[i])]->get_max_hp() - chars[get_char_index_from_cell(my_chars[i])]->get_hp() > max_heal) {
+                max_heal = chars[get_char_index_from_cell(my_chars[i])]->get_max_hp() - chars[get_char_index_from_cell(my_chars[i])]->get_hp();
+                max_heal_index = my_chars[i];
+            }
+        }
+        if (max_heal > healer->get_heal()) {
+            max_heal = healer->get_heal();
+        }
+        if (max_heal > max_damage) {
+            healer->do_heal(chars[get_char_index_from_cell(max_heal_index)]);
+            return true;
+        }
+    }
+
     if (max_character) {
         std::vector<std::vector<int>> move_area = btl_fld.find_move_area(max_character->get_current_cell(), max_character->get_mv_range());
         std::vector<int> neighbors_attack;
@@ -446,7 +478,6 @@ bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
         } else {
             neighbors_attack = btl_fld.area_in_area(move_area, btl_fld.search_neighbors(enemy_cell));
         }
-       // std::vector<int> neighbors_attack = btl_fld.area_in_area(move_area, btl_fld.search_neighbors(enemy_cell));
         if (btl_fld.is_in_area({neighbors_attack}, max_character->get_current_cell())) {
             max_character->do_damage(btl_fld.get_character_from_id(enemy_cell));
             return true;
@@ -458,13 +489,23 @@ bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
         max_character->set_attack_target(btl_fld.get_character_from_id(enemy_cell));
         return true;
     }
-    int char_index = rand() % get_chars_size();
-    int cell_char = chars[char_index]->get_current_cell();
-    std::vector<std::vector<int>> move_area = btl_fld.find_move_area(cell_char, chars[char_index]->get_mv_range());
-    int move_cell = move_area[move_area.size() - 1][rand() % move_area[move_area.size() - 1].size()];
+    std::vector<int> enemy_chars = get_enemy_chars(btl_fld);
+    std::shared_ptr<Character> max_hirnyi = chars[0];
+    for (int i = 1; i < chars.size(); i++) {
+        if (max_hirnyi->get_hp() < chars[i]->get_hp()) {
+            max_hirnyi = chars[i];
+        }
+    }
+
+    int cell_char = max_hirnyi->get_current_cell();
+    std::vector<std::vector<int>> move_area = btl_fld.find_move_area(cell_char, max_hirnyi->get_mv_range());
+    int enemy_cell_char = find_nearest_cell({enemy_chars}, cell_char, btl_fld);
+    std::cout << enemy_cell_char << std::endl;
+    int move_cell = find_nearest_cell(move_area, enemy_cell_char, btl_fld);
+    std::cout << move_cell << std::endl;
     std::vector<int> route = btl_fld.find_route(move_cell, move_area);
     btl_fld.add_highlight_cells(route, color_trace, color_trace);
-    chars[char_index]->move(route, btl_fld);
-    btl_fld.update_cell(chars[char_index], move_cell);
+    max_hirnyi->move(route, btl_fld);
+    btl_fld.update_cell(max_hirnyi, move_cell);
     return true;
 }

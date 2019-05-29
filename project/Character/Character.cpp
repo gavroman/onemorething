@@ -324,7 +324,7 @@ Healer::Healer(const int id, const int current_player) {
     max_hp = hp;
     damage_min = 30;
     damage_max = 35;
-    heal = 100;
+    heal = 125;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
