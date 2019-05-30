@@ -74,12 +74,18 @@ std::vector<int> Player::can_attack_chars(std::vector<int> enemy_chars, std::vec
     return can_attack_enemy;
 }
 
-void Player::check_hp(class Map& field) {
+bool Player::check_hp(class Map& field) {
     for (int i = 0; i < chars.size(); i++) {
         if (chars[i]->get_hp() <= 0) {
             field.update_cell(nullptr, chars[i]->get_current_cell());
             chars.erase(chars.begin() + i);
+            break;
         }
+    }
+    if (chars.size()) {
+        return false;
+    } else {
+        return true;
     }
 }
 
@@ -184,7 +190,9 @@ Human::Human(class Map field, Current_player player, std::vector<int> characters
 }
 
 bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
-    check_hp(btl_fld);
+    if (check_hp(btl_fld)) {
+        return true;
+    }
     sf::Event event;
     while (window.pollEvent(event)) {
         switch(event.type) {
@@ -414,7 +422,9 @@ Bot::Bot(class Map field, Current_player player, std::vector<int> characters) {
 }
 
 bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
-    check_hp(btl_fld);
+    if (check_hp(btl_fld)) {
+        return true;
+    }
     btl_fld.drop_highlight_cells();
     sf::Event event;
     while (window.pollEvent(event)) {
