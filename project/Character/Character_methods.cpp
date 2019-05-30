@@ -12,12 +12,17 @@ void Character::set_attack_target(std::shared_ptr<Character> character) {
 
 void Character::do_damage(std::shared_ptr<Character> character) {
     character->hp -= (rand () % (damage_max - damage_min)) + damage_min;
-    std::cout << character->hp << std::endl;
-    //std::cout << "ZALUPA "<< current_animate_index << std::endl;
-    //if (status == IDLE) {
+    if (sprite.getPosition().x > character->sprite.getPosition().x and !inverse) {
+        inverse = true;
+        sprite.setOrigin(texture_width, 0);
+        sprite.setScale(-scale, scale);
+    } else if (sprite.getPosition().x < character->sprite.getPosition().x and inverse) {
+        inverse = false;
+        sprite.setOrigin(0, 0);
+        sprite.setScale(scale, scale);
+    }
     status = ATTACK;
-    character->status = HURT;   
-    //}
+    character->status = HURT;
 }
 
 int Character::get_hp() {
@@ -26,6 +31,10 @@ int Character::get_hp() {
 
 int Character::get_max_damage() {
     return damage_max;
+}
+
+bool Character::get_inverse() {
+    return inverse;
 }
 
 void Character::animate() {

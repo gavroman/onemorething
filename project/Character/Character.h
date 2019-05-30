@@ -29,6 +29,7 @@ class Character {
 
     int get_current_cell();
     int get_mv_range();
+    bool get_inverse();
     std::vector<std::vector<int>> get_move_area();
     int get_status();
 
@@ -42,8 +43,8 @@ class Character {
  protected:
     Status status;
     int cell_id;
-    bool active;
-    bool inverse;
+    bool active = false;
+    bool inverse = false;
     std::vector<std::vector<int>> move_area;
     std::vector<int> route;
     bool need_attack = false;
