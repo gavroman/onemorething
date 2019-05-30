@@ -51,9 +51,9 @@ void Game::run_game(const std::string& xml_file_path) {
 
     window = loading_screen.draw(std::move(window));
     //players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, characters)); //создание игроков
-    players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, std::vector<int>({0/*, 1, 2, 7, 4, 5, 6, 3*/})));
+    players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, std::vector<int>({0, 1, 2, 7, 4, 5, 6, 3})));
     window = loading_screen.draw(std::move(window));
-    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({0/*, 1, 2, 7, 4, 5, 6, 3*/})));
+    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({0, 1, 2, 7, 4, 5, 6, 3})));
     //window = loading_screen.draw(std::move(window));
     btl_fld.get_adj_matrix();
 
@@ -74,7 +74,6 @@ void Game::run_game(const std::string& xml_file_path) {
         }
         if (made_turn and players[curr_plr]->is_all_idle()) {
             made_turn = false;
-            btl_fld.get_adj_matrix();
             curr_plr = (curr_plr == PLAYER1) ? PLAYER2 : PLAYER1;
 
         }

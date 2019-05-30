@@ -82,6 +82,7 @@ bool Player::check_hp(class Map& field) {
             break;
         }
     }
+    field.get_adj_matrix();
     if (chars.size()) {
         return false;
     } else {
@@ -294,7 +295,8 @@ bool Human::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
                                     chars[active_char_index]->set_active(false);
                                     return true;
                                 }
-                                std::vector<int> route = btl_fld.find_route(neighbors_attack[0], move_area);
+                                int move_cell = find_nearest_cell({neighbors_attack}, chars[active_char_index]->get_current_cell(), btl_fld);
+                                std::vector<int> route = btl_fld.find_route(move_cell, move_area);
                                 btl_fld.drop_highlight_cells();
                                 btl_fld.add_highlight_cells(route, color_trace, color_trace);
                                 chars[active_char_index]->move(route, btl_fld);
@@ -492,10 +494,11 @@ bool Bot::make_turn(class Map& btl_fld, sf::RenderWindow& window) {
             max_character->do_damage(btl_fld.get_character_from_id(enemy_cell));
             return true;
         }
-        std::vector<int> route = btl_fld.find_route(neighbors_attack[0], move_area); // строим путь к клетке
+        int move_cell = find_nearest_cell({neighbors_attack}, max_character->get_current_cell(), btl_fld);
+        std::vector<int> route = btl_fld.find_route(move_cell, move_area); // строим путь к клетке
         btl_fld.add_highlight_cells(route, color_trace, color_trace);
         max_character->move(route, btl_fld);
-        btl_fld.update_cell(max_character, neighbors_attack[0]);
+        btl_fld.update_cell(max_character, move_cell);
         max_character->set_attack_target(btl_fld.get_character_from_id(enemy_cell));
         return true;
     }
