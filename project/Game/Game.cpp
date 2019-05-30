@@ -88,11 +88,11 @@ void Game::run_game(const std::string& xml_file_path) {
     std::vector<sf::Sprite> icons;
         btl_fld.draw(*window);
         for (int i = 0; i != players[PLAYER1]->get_chars_size(); i++) {
-            players[PLAYER1]->get_char(i)->draw(*window, btl_fld);
+            //players[PLAYER1]->get_char(i)->draw(*window, btl_fld);
             players[PLAYER1]->get_char(i)->animate();
         }
         for (int i = 0; i != players[PLAYER2]->get_chars_size(); i++) {
-            players[PLAYER2]->get_char(i)->draw(*window, btl_fld);
+            //players[PLAYER2]->get_char(i)->draw(*window, btl_fld);
             players[PLAYER2]->get_char(i)->animate();
         } 
         window->display();

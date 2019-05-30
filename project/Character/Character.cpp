@@ -97,11 +97,16 @@ Archer::Archer(const int id, const int current_player) {
 
     move_range = 3;
     cell_id = id;
-    idle_walk_offset_x = 6;
+    idle_walk_offset_x = 10;
     idle_walk_offset_y = 40;
+    attack_offset_x = 0;
+    attack_offset_y = 0;
+    hurt_offset_x = 6;
+    hurt_offset_y = 3;
     hp = 250;
     damage_min = 15;
     damage_max = 20;
+    reverse_offset = 70;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -110,11 +115,17 @@ Archer::Archer(const int id, const int current_player) {
     die_texture.loadFromFile(path + "/die.png");
 
     sprites_amount = 5;
-    scale = 0.09;
+    scale = 1;
 
     sprite.setScale(sf::Vector2f(scale, scale));
+    sprite.setOrigin(idle_walk_offset_x, idle_walk_offset_y);
 
     // TODO: Баг с мерцанием (у PLAYER2), смещение по оси y у idle (PLAYER2), смещение по оси x у idle (PLAYER1), какой-то трэш при walk (попадают части текстур, схлопывается текстурка PLAYER1)
+
+    if (inverse) {
+        sprite.setScale(-scale, scale);
+        sprite.setOrigin(reverse_offset, idle_walk_offset_y);
+    }
 }
 
 Swordman::Swordman(const int id, const int current_player) {

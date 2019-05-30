@@ -17,6 +17,16 @@ void Character::do_damage(std::shared_ptr<Character> character) {
     //if (status == IDLE) {
     status = ATTACK;
     texture_x = 0;
+
+   /* if ((get_current_cell() % 2 == 1 && (character->get_current_cell() == get_current_cell() + 1 || character->get_current_cell() % 2 == 1)) ||
+        (get_current_cell() % 2 == 0 && (character->get_current_cell() == get_current_cell() + 1 || character->get_current_cell() % 2 == 0))) {
+        inverse = false;
+
+    } else if ((get_current_cell() % 2 == 1 && character->get_current_cell() % 2 == 0) ||
+              (get_current_cell() % 2 == 0 && character->get_current_cell() % 2 == 1)) {
+        inverse = true;
+    }*/
+
     if (inverse) {
         sprite.setScale(-scale, scale);
         sprite.setOrigin(reverse_offset + attack_offset_x, idle_walk_offset_y + attack_offset_y);
