@@ -16,7 +16,26 @@ void Character::do_damage(std::shared_ptr<Character> character) {
     //std::cout << "ZALUPA "<< current_animate_index << std::endl;
     //if (status == IDLE) {
     status = ATTACK;
-    character->status = HURT;   
+    texture_x = 0;
+    if (inverse) {
+        sprite.setScale(-scale, scale);
+        sprite.setOrigin(reverse_offset + attack_offset_x, idle_walk_offset_y + attack_offset_y);
+    } else {
+        sprite.setScale(scale, scale);
+        sprite.setOrigin(idle_walk_offset_x + attack_offset_x, idle_walk_offset_y + attack_offset_y);
+    }
+
+    character->status = HURT;
+
+    if (character->inverse) {
+        character->sprite.setScale(-scale, scale);
+        character->sprite.setOrigin(reverse_offset + hurt_offset_x, idle_walk_offset_y + hurt_offset_y);
+    } else {
+        character->sprite.setScale(scale, scale);
+        character->sprite.setOrigin(idle_walk_offset_x + hurt_offset_x, idle_walk_offset_y + hurt_offset_y);
+    }
+
+    character->texture_x = 0;
     //}
 }
 
@@ -60,6 +79,7 @@ void Character::animate() {
                     attack_target = nullptr;
                 } else {
                     status = IDLE;
+                    texture_x = 0;
                 }  
                 current_animate_index = 0; 
             }
@@ -67,11 +87,12 @@ void Character::animate() {
                 if (animate_positions[current_animate_index].x - animate_positions[current_animate_index - 1].x < 0) {
                     inverse = true;
                     sprite.setScale(-scale, scale);
-                    sprite.setOrigin(texture_width, 0);
+                    sprite.setOrigin(reverse_offset, idle_walk_offset_y);
+                    //std::cout << texture_width << std::endl << idle_walk_offset_x << std::endl;
                 } else {
                     inverse = false;
                     sprite.setScale(scale, scale);
-                    sprite.setOrigin(0, 0);
+                    sprite.setOrigin(idle_walk_offset_x, idle_walk_offset_y);
                 }
             }
             break;
@@ -90,6 +111,14 @@ void Character::animate() {
             if (current_animate_index == sprites_amount) {
                 current_animate_index = 0;
                 status = IDLE;
+                texture_x = 0;
+                if (inverse) {
+                    sprite.setScale(-scale, scale);
+                    sprite.setOrigin(reverse_offset, idle_walk_offset_y);
+                } else {
+                    sprite.setScale(scale, scale);
+                    sprite.setOrigin(idle_walk_offset_x, idle_walk_offset_y);
+                }
             } else {
                 current_animate_index++;
             }    
@@ -109,6 +138,14 @@ void Character::animate() {
             if (current_animate_index == sprites_amount) {
                 current_animate_index = 0;
                 status = IDLE;
+                texture_x = 0;
+                if (inverse) {
+                    sprite.setScale(-scale, scale);
+                    sprite.setOrigin(reverse_offset, idle_walk_offset_y);
+                } else {
+                    sprite.setScale(scale, scale);
+                    sprite.setOrigin(idle_walk_offset_x, idle_walk_offset_y);
+                }
             } else {
                 current_animate_index++;
             }
@@ -140,13 +177,14 @@ void Character::animate() {
 
 void Character::move(std::vector<int> way, class Map field) {
     status = WALK;
+    texture_x = 0;
     std::reverse(way.begin(), way.end());
     std::vector<sf::Vector2f> positions;
     for (int i = 0; i != way.size() - 1 ; i++) {
         std::vector<sf::Vector2f> discr_poses = field.discrete_positions(way[i], way[i+1], animation_steps);
         for (auto& discr_pos : discr_poses) {
-            discr_pos.x -= map_offset_x;
-            discr_pos.y -= map_offset_y;
+            discr_pos.x /*-= idle_walk_offset_x*/;
+            discr_pos.y /*-= idle_walk_offset_y*/;
             positions.emplace_back(discr_pos);
         }
     }
@@ -157,7 +195,7 @@ void Character::move(std::vector<int> way, class Map field) {
 void Character::draw(sf::RenderWindow& window, class Map field) {
     if (status != WALK) {
         sf::Vector2f pos = field.get_cell_pos(cell_id);
-        sprite.setPosition(pos.x - map_offset_x, pos.y - map_offset_y);
+        sprite.setPosition(pos.x /*- idle_walk_offset_x*/, pos.y /*- idle_walk_offset_y*/);
     }
     window.draw(sprite);
 }

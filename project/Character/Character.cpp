@@ -9,7 +9,6 @@
 
 Character::Character() {
     status = IDLE;
-    inverse = true;
 
     idle_texture.setSmooth(true);
     walk_texture.setSmooth(true);
@@ -26,23 +25,38 @@ Scout::Scout(const int id, const int current_player) {
     switch (current_player) {
         case PLAYER1: {
             PLAYER = "PLAYER1";
+            inverse = false;
+
+            attack_offset_x = 4;
+            attack_offset_y = 5;
+            hurt_offset_x = 8;
+            hurt_offset_y = 3;
+
             break;
         }
         case PLAYER2: {
             PLAYER = "PLAYER2";
+            inverse = true;
+
+            attack_offset_x = 1;
+            attack_offset_y = 2;
+            hurt_offset_x = 8;
+            hurt_offset_y = 4;
+
             break;
         }
     }
     std::string class_name = "scout/";
     std::string path = SOURCE + class_name + PLAYER;
 
-    move_range = 8;
+    move_range = 30; //8
     cell_id = id;
-    map_offset_x = 6;
-    map_offset_y = 35;
-    hp = 300;
-    damage_min = 50;
-    damage_max = 55;
+    idle_walk_offset_x = 6;
+    idle_walk_offset_y = 30;
+    hp = 3000; //300
+    damage_min = 50; //50
+    damage_max = 55; //55
+    reverse_offset = 63;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -51,11 +65,17 @@ Scout::Scout(const int id, const int current_player) {
     die_texture.loadFromFile(path + "/die.png");
 
     sprites_amount = 5;
-    scale = 0.11;
+    scale = 1;
 
     sprite.setScale(sf::Vector2f(scale, scale));
+    sprite.setOrigin(idle_walk_offset_x, idle_walk_offset_y);
 
     // TODO: Баг с мерцанием (у PLAYER1), попадает часть плаща в attack у PLAYER2
+
+    if (inverse) {
+        sprite.setScale(-scale, scale);
+        sprite.setOrigin(reverse_offset, idle_walk_offset_y);
+    }
 }
 
 Archer::Archer(const int id, const int current_player) {
@@ -63,10 +83,12 @@ Archer::Archer(const int id, const int current_player) {
     switch (current_player) {
         case PLAYER1: {
             PLAYER = "PLAYER1";
+            inverse = false;
             break;
         }
         case PLAYER2: {
             PLAYER = "PLAYER2";
+            inverse = true;
             break;
         }
     }
@@ -75,8 +97,8 @@ Archer::Archer(const int id, const int current_player) {
 
     move_range = 3;
     cell_id = id;
-    map_offset_x = 6;
-    map_offset_y = 40;
+    idle_walk_offset_x = 6;
+    idle_walk_offset_y = 40;
     hp = 250;
     damage_min = 15;
     damage_max = 20;
@@ -101,19 +123,23 @@ Swordman::Swordman(const int id, const int current_player) {
         case PLAYER1: {
             PLAYER = "PLAYER1";
 
-            map_offset_x = 6;
-            map_offset_y = 40;
+            idle_walk_offset_x = 6;
+            idle_walk_offset_y = 40;
 
             scale = 0.085;
+
+            inverse = false;
             break;
         }
         case PLAYER2: {
             PLAYER = "PLAYER2";
 
-            map_offset_x = 5;
-            map_offset_y = 38;
+            idle_walk_offset_x = 5;
+            idle_walk_offset_y = 38;
 
             scale = 0.21;
+
+            inverse = true;
             break;
         }
     }
@@ -143,10 +169,12 @@ Tank::Tank(const int id, const int current_player) {
     switch (current_player) {
         case PLAYER1: {
             PLAYER = "PLAYER1";
+            inverse = false;
             break;
         }
         case PLAYER2: {
             PLAYER = "PLAYER2";
+            inverse = true;
             break;
         }
     }
@@ -155,8 +183,8 @@ Tank::Tank(const int id, const int current_player) {
 
     move_range = 3;
     cell_id = id;
-    map_offset_x = 5;
-    map_offset_y = 40;
+    idle_walk_offset_x = 30;
+    idle_walk_offset_y = 440;
     hp = 800;
     damage_min = 60;
     damage_max = 80;
@@ -171,6 +199,7 @@ Tank::Tank(const int id, const int current_player) {
     scale = 0.09;
 
     sprite.setScale(sf::Vector2f(scale, scale));
+    sprite.setOrigin(idle_walk_offset_x, idle_walk_offset_y);
 
     // TODO: Баг с мерцанием (PLAYER1, PLAYER2), опять трэш в walk (попадают части текстуры, неверная центровка при повороте для PLAYER1 и PLAYER2), сильное смещение при attack и die (PLAYER1, PLAYER2)
 }
@@ -180,10 +209,12 @@ Wizard::Wizard(const int id, const int current_player) {
     switch (current_player) {
         case PLAYER1: {
             PLAYER = "PLAYER1";
+            inverse = false;
             break;
         }
         case PLAYER2: {
             PLAYER = "PLAYER2";
+            inverse = true;
             break;
         }
     }
@@ -192,8 +223,8 @@ Wizard::Wizard(const int id, const int current_player) {
 
     move_range = 3;
     cell_id = id;
-    map_offset_x = 10;
-    map_offset_y = 40;
+    idle_walk_offset_x = 10;
+    idle_walk_offset_y = 40;
     hp = 250;
     damage_min = 18;
     damage_max = 27;
@@ -217,10 +248,12 @@ Berserker::Berserker(const int id, const int current_player) {
     switch (current_player) {
         case PLAYER1: {
             PLAYER = "PLAYER1";
+            inverse = false;
             break;
         }
         case PLAYER2: {
             PLAYER = "PLAYER2";
+            inverse = true;
             break;
         }
     }
@@ -229,8 +262,8 @@ Berserker::Berserker(const int id, const int current_player) {
 
     move_range = 6;
     cell_id = id;
-    map_offset_x = 4;
-    map_offset_y = 45;
+    idle_walk_offset_x = 4;
+    idle_walk_offset_y = 45;
     hp = 400;
     damage_min = 130;
     damage_max = 200;
@@ -254,14 +287,16 @@ Knight::Knight(const int id, const int current_player) {
     switch (current_player) {
         case PLAYER1: {
             PLAYER = "PLAYER1";
-            map_offset_x = 10;
-            map_offset_y = 38;
+            idle_walk_offset_x = 10;
+            idle_walk_offset_y = 38;
+            inverse = false;
             break;
         }
         case PLAYER2: {
             PLAYER = "PLAYER2";
-            map_offset_x = 5;
-            map_offset_y = 50;
+            idle_walk_offset_x = 5;
+            idle_walk_offset_y = 50;
+            inverse = true;
             break;
         }
     }
@@ -293,10 +328,12 @@ Healer::Healer(const int id, const int current_player) {
     switch (current_player) {
         case PLAYER1: {
             PLAYER = "PLAYER1";
+            inverse = false;
             break;
         }
         case PLAYER2: {
             PLAYER = "PLAYER2";
+            inverse = true;
             break;
         }
     }
@@ -307,8 +344,8 @@ Healer::Healer(const int id, const int current_player) {
 
     move_range = 4;
     cell_id = id;
-    map_offset_x = 4;
-    map_offset_y = 35;
+    idle_walk_offset_x = 4;
+    idle_walk_offset_y = 35;
     active = false;
     status = IDLE;
     hp = 250;
