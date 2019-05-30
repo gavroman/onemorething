@@ -18,7 +18,26 @@ void Character::do_damage(std::shared_ptr<Character> character) {
     status = ATTACK;
     texture_x = 0;
 
-   /* if ((get_current_cell() % 2 == 1 && (character->get_current_cell() == get_current_cell() + 1 || character->get_current_cell() % 2 == 1)) ||
+    if ((get_current_cell() / 32) % 2 == 1) {
+        if ((get_current_cell() % 2 == 1 && (character->get_current_cell() == get_current_cell() + 1 || character->get_current_cell() % 2 == 1))
+            || (get_current_cell() % 2 == 0 && (character->get_current_cell() == get_current_cell() + 1 || character->get_current_cell() % 2 == 0))) {
+            inverse = false;
+        } else if ((get_current_cell() % 2 == 1 && character->get_current_cell() % 2 == 0) || (get_current_cell() % 2 == 0 && character->get_current_cell() % 2 == 1)) {
+            inverse = true;
+        }
+    } else if ((get_current_cell() / 32) % 2 == 0) {
+        if ((get_current_cell() % 2 == 1 && (character->get_current_cell() == get_current_cell() - 1 || character->get_current_cell() % 2 == 1))
+            || (get_current_cell() % 2 == 0 && (character->get_current_cell() == get_current_cell() - 1 || character->get_current_cell() % 2 == 0))) {
+            inverse = true;
+        } else if ((get_current_cell() % 2 == 1 && character->get_current_cell() % 2 == 0) || (get_current_cell() % 2 == 0 && character->get_current_cell() % 2 == 1)) {
+            inverse = false;
+        }
+    }
+
+    /*if ((get_current_cell() % 2 == 1 && (character->get_current_cell() == get_current_cell() + 1 || character->get_current_cell() % 2 == 1)) || (get_current_cell() % 2 == 0 && (character->get_current_cell() == get_current_cell() + 1 || character->get_current_cell() % 2 == 0))) inverse = false;
+    else if ((get_current_cell() % 2 == 1 && character->get_current_cell() % 2 == 0) || (get_current_cell() % 2 == 0 && character->get_current_cell() % 2 == 1)) inverse = true;
+*/
+    /*if ((get_current_cell() % 2 == 1 && (character->get_current_cell() == get_current_cell() + 1 || character->get_current_cell() % 2 == 1)) ||
         (get_current_cell() % 2 == 0 && (character->get_current_cell() == get_current_cell() + 1 || character->get_current_cell() % 2 == 0))) {
         inverse = false;
 
@@ -39,10 +58,10 @@ void Character::do_damage(std::shared_ptr<Character> character) {
 
     if (character->inverse) {
         character->sprite.setScale(-scale, scale);
-        character->sprite.setOrigin(reverse_offset + hurt_offset_x, idle_walk_offset_y + hurt_offset_y);
+        character->sprite.setOrigin(character->reverse_offset + character->hurt_offset_x, character->idle_walk_offset_y + character->hurt_offset_y);
     } else {
         character->sprite.setScale(scale, scale);
-        character->sprite.setOrigin(idle_walk_offset_x + hurt_offset_x, idle_walk_offset_y + hurt_offset_y);
+        character->sprite.setOrigin(character->idle_walk_offset_x + character->hurt_offset_x, character->idle_walk_offset_y + character->hurt_offset_y);
     }
 
     character->texture_x = 0;

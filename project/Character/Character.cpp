@@ -62,7 +62,7 @@ Scout::Scout(const int id, const int current_player) {
     walk_texture.loadFromFile(path + "/walk.png");
     hurt_texture.loadFromFile(path + "/hurt.png");
     attack_texture.loadFromFile(path + "/attack.png");
-    die_texture.loadFromFile(path + "/die.png");
+    //die_texture.loadFromFile(path + "/die.png");
 
     sprites_amount = 5;
     scale = 1;
@@ -112,7 +112,7 @@ Archer::Archer(const int id, const int current_player) {
     walk_texture.loadFromFile(path + "/walk.png");
     hurt_texture.loadFromFile(path + "/hurt.png");
     attack_texture.loadFromFile(path + "/attack.png");
-    die_texture.loadFromFile(path + "/die.png");
+    //die_texture.loadFromFile(path + "/die.png");
 
     sprites_amount = 5;
     scale = 1;
@@ -167,7 +167,7 @@ Swordman::Swordman(const int id, const int current_player) {
     walk_texture.loadFromFile(path + "/walk.png");
     hurt_texture.loadFromFile(path + "/hurt.png");
     attack_texture.loadFromFile(path + "/attack.png");
-    die_texture.loadFromFile(path + "/die.png");
+    //die_texture.loadFromFile(path + "/die.png");
 
     sprites_amount = 5;
     sprite.setScale(sf::Vector2f(scale, scale));
@@ -181,11 +181,19 @@ Tank::Tank(const int id, const int current_player) {
         case PLAYER1: {
             PLAYER = "PLAYER1";
             inverse = false;
+            idle_walk_offset_y = 40;
+            hurt_offset_y = 8;
+            attack_offset_x = 10;
+            attack_offset_y = 12;
             break;
         }
         case PLAYER2: {
             PLAYER = "PLAYER2";
             inverse = true;
+            idle_walk_offset_y = 45;
+            hurt_offset_y = 2;
+            attack_offset_x = 0;
+            attack_offset_y = 17;
             break;
         }
     }
@@ -194,25 +202,32 @@ Tank::Tank(const int id, const int current_player) {
 
     move_range = 3;
     cell_id = id;
-    idle_walk_offset_x = 30;
-    idle_walk_offset_y = 440;
+    idle_walk_offset_x = 5;
     hp = 800;
     damage_min = 60;
     damage_max = 80;
+    reverse_offset = 63;
+    hurt_offset_x = 20;
+
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
     hurt_texture.loadFromFile(path + "/hurt.png");
     attack_texture.loadFromFile(path + "/attack.png");
-    die_texture.loadFromFile(path + "/die.png");
+    //die_texture.loadFromFile(path + "/die.png");
 
     sprites_amount = 7;
-    scale = 0.09;
+    scale = 1;
 
     sprite.setScale(sf::Vector2f(scale, scale));
     sprite.setOrigin(idle_walk_offset_x, idle_walk_offset_y);
 
     // TODO: Баг с мерцанием (PLAYER1, PLAYER2), опять трэш в walk (попадают части текстуры, неверная центровка при повороте для PLAYER1 и PLAYER2), сильное смещение при attack и die (PLAYER1, PLAYER2)
+
+    if (inverse) {
+        sprite.setScale(-scale, scale);
+        sprite.setOrigin(reverse_offset, idle_walk_offset_y);
+    }
 }
 
 Wizard::Wizard(const int id, const int current_player) {
@@ -239,19 +254,30 @@ Wizard::Wizard(const int id, const int current_player) {
     hp = 250;
     damage_min = 18;
     damage_max = 27;
+    reverse_offset = 68;
+    hurt_offset_x = 13;
+    hurt_offset_y = 5;
+    attack_offset_x = 5;
+    attack_offset_y = 4;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
     hurt_texture.loadFromFile(path + "/hurt.png");
     attack_texture.loadFromFile(path + "/attack.png");
-    die_texture.loadFromFile(path + "/die.png");
+    //die_texture.loadFromFile(path + "/die.png");
 
     sprites_amount = 5;
-    scale = 0.22;
+    scale = 1;
 
     sprite.setScale(sf::Vector2f(scale, scale));
+    sprite.setOrigin(idle_walk_offset_x, idle_walk_offset_y);
 
     // TODO: Баг с мерцанием (PLAYER1, PLAYER2), трэш в walk (PLAYER1)
+
+    if (inverse) {
+        sprite.setScale(-scale, scale);
+        sprite.setOrigin(reverse_offset, idle_walk_offset_y);
+    }
 }
 
 Berserker::Berserker(const int id, const int current_player) {
@@ -283,7 +309,7 @@ Berserker::Berserker(const int id, const int current_player) {
     walk_texture.loadFromFile(path + "/walk.png");
     hurt_texture.loadFromFile(path + "/hurt.png");
     attack_texture.loadFromFile(path + "/attack.png");
-    die_texture.loadFromFile(path + "/die.png");
+    //die_texture.loadFromFile(path + "/die.png");
 
     sprites_amount = 5;
     scale = 0.09;
@@ -324,7 +350,7 @@ Knight::Knight(const int id, const int current_player) {
     walk_texture.loadFromFile(path + "/walk.png");
     hurt_texture.loadFromFile(path + "/hurt.png");
     attack_texture.loadFromFile(path + "/attack.png");
-    die_texture.loadFromFile(path + "/die.png");
+    //die_texture.loadFromFile(path + "/die.png");
 
     sprites_amount = 5;
     scale = 0.09;
@@ -367,7 +393,7 @@ Healer::Healer(const int id, const int current_player) {
     walk_texture.loadFromFile(path + "/walk.png");
     hurt_texture.loadFromFile(path + "/hurt.png");
     attack_texture.loadFromFile(path + "/attack.png");
-    die_texture.loadFromFile(path + "/die.png");
+    //die_texture.loadFromFile(path + "/die.png");
     heal_texture.loadFromFile(path + "/heal.png");
     heal_texture.setSmooth(true);
 

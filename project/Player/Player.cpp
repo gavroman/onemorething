@@ -91,7 +91,7 @@ Human::Human(class Map field, Current_player player, std::vector<int> characters
     }
     int pos_index = 0;
 
-    std::vector<int> characters = {1, 1, 1, 1, 1};
+    std::vector<int> characters = {4, 4, 4, 4, 4};
 
     for (const auto& it : characters) {
         switch (it) {
