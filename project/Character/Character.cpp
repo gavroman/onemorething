@@ -41,6 +41,7 @@ Scout::Scout(const int id, const int current_player) {
     map_offset_x = 6;
     map_offset_y = 35;
     hp = 300;
+    max_hp = hp;
     damage_min = 50;
     damage_max = 55;
 
@@ -74,10 +75,12 @@ Archer::Archer(const int id, const int current_player) {
     std::string path = SOURCE + class_name + PLAYER;
 
     move_range = 3;
+    range = true;
     cell_id = id;
     map_offset_x = 6;
     map_offset_y = 40;
     hp = 250;
+    max_hp = hp;
     damage_min = 15;
     damage_max = 20;
 
@@ -123,6 +126,7 @@ Swordman::Swordman(const int id, const int current_player) {
     move_range = 5;
     cell_id = id;
     hp = 500;
+    max_hp = hp;
     damage_min = 70;
     damage_max = 130;
 
@@ -158,6 +162,7 @@ Tank::Tank(const int id, const int current_player) {
     map_offset_x = 5;
     map_offset_y = 40;
     hp = 800;
+    max_hp = hp;
     damage_min = 60;
     damage_max = 80;
 
@@ -191,10 +196,12 @@ Wizard::Wizard(const int id, const int current_player) {
     std::string path = SOURCE + class_name + PLAYER;
 
     move_range = 3;
+    range = true;
     cell_id = id;
     map_offset_x = 10;
     map_offset_y = 40;
     hp = 250;
+    max_hp = hp;
     damage_min = 18;
     damage_max = 27;
 
@@ -232,6 +239,7 @@ Berserker::Berserker(const int id, const int current_player) {
     map_offset_x = 4;
     map_offset_y = 45;
     hp = 400;
+    max_hp = hp;
     damage_min = 130;
     damage_max = 200;
 
@@ -271,6 +279,7 @@ Knight::Knight(const int id, const int current_player) {
     move_range = 4;
     cell_id = id;
     hp = 600;
+    max_hp = hp;
     damage_min = 80;
     damage_max = 100;
 
@@ -309,11 +318,13 @@ Healer::Healer(const int id, const int current_player) {
     cell_id = id;
     map_offset_x = 4;
     map_offset_y = 35;
-    active = false;
-    status = IDLE;
+   // active = false;
+    //status = IDLE;
     hp = 250;
+    max_hp = hp;
     damage_min = 30;
     damage_max = 35;
+    heal = 125;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");

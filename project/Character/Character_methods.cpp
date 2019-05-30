@@ -6,6 +6,14 @@
 
 /* В этом файле содержатся методы персонажей */
 
+int Character::get_heal() {
+    return heal;
+}
+
+bool Character::get_range() {
+    return range;
+}
+
 void Character::set_attack_target(std::shared_ptr<Character> character) {
     attack_target = character;
 }
@@ -25,8 +33,21 @@ void Character::do_damage(std::shared_ptr<Character> character) {
     character->status = HURT;
 }
 
+void Character::do_heal(std::shared_ptr<Character> character) {
+    if (character->max_hp - character->hp < heal) {
+        character->hp = character->max_hp;
+    } else {
+        character->hp += heal;
+    }
+    status = HEAL;
+}
+
 int Character::get_hp() {
     return hp;
+}
+
+int Character::get_max_hp() {
+    return max_hp;
 }
 
 int Character::get_max_damage() {
@@ -144,6 +165,25 @@ void Character::animate() {
             sprite.setTextureRect(sf::Rect(texture_x * (sprites_amount - 1), texture_y, texture_width, texture_height));
             break;
         }
+
+        case HEAL: {
+            sprite.setTexture(heal_texture);
+            texture_width = heal_texture.getSize().x / sprites_amount;
+            texture_height = heal_texture.getSize().y;
+            sprite.setTextureRect(sf::Rect(texture_x, texture_y, texture_width, texture_height));
+            if (texture_x >= texture_width * (sprites_amount - 1)) {
+                texture_x = 0;
+            } else {
+                texture_x += texture_width;
+            }
+            if (current_animate_index == sprites_amount) {
+                current_animate_index = 0;
+                status = IDLE;
+            } else {
+                current_animate_index++;
+            }
+            break;
+        }
     }
 }
 
@@ -169,6 +209,12 @@ void Character::draw(sf::RenderWindow& window, class Map field) {
         sprite.setPosition(pos.x - map_offset_x, pos.y - map_offset_y);
     }
     window.draw(sprite);
+    sf::Font font;
+    font.loadFromFile("../source/menu/Enchanted_Land.otf");
+    sf::Text hp_text(std::to_string(hp), font, 30);
+    hp_text.setFillColor(sf::Color::Red);
+    hp_text.setPosition(sprite.getPosition().x, sprite.getPosition().y - 20);
+    window.draw(hp_text);
 }
 
 int Character::get_current_cell() {

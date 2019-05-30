@@ -12,7 +12,7 @@ Game::Game() {
             "Mixed_map.tmx",
             "Mixed_map_v2.tmx"};
 
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
     //window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 750), "One More Thing");
     status = MAIN_MENU;
        status = RUN_GAME;                       //  откоментить для дебага 
@@ -21,9 +21,10 @@ Game::Game() {
 }
 
 void Game::process_event() {
-    sf::Music music;//создаем объект музыки
-    music.openFromFile("../source/main_theme.ogg");//загружаем файл
-    music.play();//воспроизводим музыку
+    sf::Music music;
+    music.openFromFile("../source/main_theme.ogg");
+    music.play();
+    music.setLoop(true);
     while (window->isOpen()) {
         switch (status) {
             case MAIN_MENU: {
@@ -56,7 +57,7 @@ void Game::run_game(const std::string& xml_file_path) {
     window = loading_screen.draw(std::move(window));
     players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, characters)); //создание игроков
     window = loading_screen.draw(std::move(window));
-    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({0, 1, 2, 3, 4})));
+    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({0, 1, 2, 7, 4})));
     //window = loading_screen.draw(std::move(window));
     btl_fld.get_adj_matrix();
 
@@ -71,12 +72,13 @@ void Game::run_game(const std::string& xml_file_path) {
         }*/
         if (!made_turn) {
             made_turn = players[curr_plr]->make_turn(btl_fld, *window);
+            if (!players[curr_plr]->get_chars_size()) {
+                ah_shit_here_we_go_again = true;
+            }
         }
         if (made_turn and players[curr_plr]->is_all_idle()) {
             made_turn = false;
-            btl_fld.get_adj_matrix();
             curr_plr = (curr_plr == PLAYER1) ? PLAYER2 : PLAYER1;
-            std::cout << "Current player = " << curr_plr << std::endl;
         }
 
         if (ah_shit_here_we_go_again) {
