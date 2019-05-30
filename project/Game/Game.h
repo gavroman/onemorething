@@ -47,6 +47,8 @@ class Game {
     std::unique_ptr<sf::RenderWindow> window;
 
     std::vector<std::string> maps;
+    sf::Music main_theme;
+    sf::Music sound_track;
 };
 
 class Menu {

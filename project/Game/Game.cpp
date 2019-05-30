@@ -6,6 +6,11 @@
 bool ah_shit_here_we_go_again = false;
 
 Game::Game() {
+    main_theme.openFromFile("../source/sounds/main_theme.ogg");
+    sound_track.openFromFile("../source/sounds/soundtrack.ogg");
+    main_theme.setLoop(true);
+    sound_track.setLoop(true);
+    
     maps = {"Dark_map.tmx",
             "Grass_map.tmx",
             "Snow_map.tmx",
@@ -15,19 +20,19 @@ Game::Game() {
      window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
     //window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 750), "One More Thing");
     status = MAIN_MENU;
-       status = RUN_GAME;                       //  откоментить для дебага 
-       characters = {0, 1, 2, 3, 4, 5, 6, 7};   //
+       //status = RUN_GAME;                       //  откоментить для дебага 
+       //characters = {0, 1, 2, 3, 4, 5, 6, 7};   //
     process_event();
 }
 
 void Game::process_event() {
-    sf::Music music;
-    music.openFromFile("../source/main_theme.ogg");
-    music.play();
-    music.setLoop(true);
     while (window->isOpen()) {
         switch (status) {
             case MAIN_MENU: {
+                if (main_theme.getStatus() !=  sf::SoundSource::Status::Playing) {
+                    sound_track.stop();
+                    main_theme.play();
+                }
                 show_main_menu();
                 break;
             }
@@ -87,7 +92,11 @@ void Game::run_game(const std::string& xml_file_path) {
             return;
         }
 
-    std::vector<sf::Sprite> icons;
+        if (sound_track.getStatus() !=  sf::SoundSource::Status::Playing) {
+            main_theme.stop();
+            sound_track.play();
+        }
+        
         btl_fld.draw(*window);
         for (int i = 0; i != players[PLAYER1]->get_chars_size(); i++) {
             players[PLAYER1]->get_char(i)->draw(*window, btl_fld);
