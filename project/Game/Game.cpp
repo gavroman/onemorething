@@ -20,7 +20,8 @@ Game::Game() {
             "Grass_map.tmx",
             "Snow_map.tmx",
             "Mixed_map.tmx",
-            "Mixed_map_v2.tmx"};
+            "Mixed_map_v2.tmx",
+            "TP_map.tmx"};
 
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
     //window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 750), "One More Thing");
@@ -56,7 +57,7 @@ void Game::process_event() {
                     multiplayer_2 = true;
                     break;
                 }
-                run_game(maps[2]);
+                run_game(maps[5]);
                 break;
             }
         }
