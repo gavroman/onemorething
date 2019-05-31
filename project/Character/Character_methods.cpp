@@ -20,7 +20,7 @@ void Character::set_attack_target(std::shared_ptr<Character> character) {
 
 void Character::do_damage(std::shared_ptr<Character> character) {
     character->hp -= (rand () % (damage_max - damage_min)) + damage_min;
-    if (sprite.getPosition().x > character->sprite.getPosition().x and !inverse) {
+    /*if (sprite.getPosition().x > character->sprite.getPosition().x and !inverse) {
         inverse = true;
         sprite.setOrigin(texture_width, 0);
         sprite.setScale(-scale, scale);
@@ -28,7 +28,7 @@ void Character::do_damage(std::shared_ptr<Character> character) {
         inverse = false;
         sprite.setOrigin(0, 0);
         sprite.setScale(scale, scale);
-    }
+    }*/
     status = ATTACK;
     texture_x = 0;
 
