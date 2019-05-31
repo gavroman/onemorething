@@ -5,6 +5,8 @@
 #include "Map.h"
 #include "tinyxml2.h"
 
+#include <queue>
+
 /* В этом файле содержится все, что касается самой карты.
  * Само создание, отрисовка и т.п. */
 
@@ -138,12 +140,28 @@ std::vector<int> Map::search_neighbors(const int id) {
 void Map::draw(sf::RenderWindow& window) {
     window.clear();
 
+    std::queue<std::shared_ptr<Character>> characters;
+
     for (const auto& it : map) {
         window.draw((*it).sprite);
+        if (it->character) {
+            characters.push(it->character);
+        }
     }
     for (const auto& it : highlighted_cells) {
         window.draw(highlight_cell(it->id, it->fill_color, it->border_color));
-    }    
+    }
+
+    std::shared_ptr<Character> it = characters.front();
+    int size = characters.size();
+
+    for (int i = 0; i < size; i++) {
+        it->draw(window, *this);
+        characters.pop();
+        if (!characters.empty()) {
+            it = characters.front();
+        }
+    }
 }
 
 std::vector<int> Map::get_chars() {

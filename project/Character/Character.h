@@ -76,8 +76,13 @@ class Character {
     int texture_width;
     int sprites_amount;
     float scale;
-    float map_offset_x;
-    float map_offset_y;
+    float idle_walk_offset_x;
+    float idle_walk_offset_y;
+    float hurt_offset_x;
+    float hurt_offset_y;
+    float attack_offset_x;
+    float attack_offset_y;
+    float reverse_offset;
 
  private:
     int animation_steps = 4;

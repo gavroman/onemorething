@@ -135,9 +135,11 @@ Human::Human(class Map field, Current_player player, std::vector<int> characters
     if(player == PLAYER1) {
         poses = {416, 384, 352, 320, 288, 256, 224, 192};
     } else {
-        poses = {31, 63, 95, 127, 159, 191, 223, 255};
+        poses = {31, 63, 95, 127, 159, 191, 223, 255}; //31
     }
     int pos_index = 0;
+
+    //std::vector<int> characters = {2, 2, 2, 2, 2};
 
     for (const auto& it : characters) {
         switch (it) {
