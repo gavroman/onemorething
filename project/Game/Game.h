@@ -25,7 +25,7 @@ struct Stats {
     int spd;
 };
 
-enum Game_status {MAIN_MENU = 0, START_MENU = 1, MAP_MENU = 2, RUN_GAME = 3};
+enum Game_status {MAIN_MENU = 0, START_MENU = 1, MAP_MENU = 2, RUN_GAME = 4};
 
 class Game {
  public:
@@ -35,6 +35,7 @@ class Game {
     void process_event();
     void show_main_menu();
     void show_choice_menu();
+    void show_mp_menu();
     void run_game(const std::string& xml_file_path);
 
     ~Game() = default;
@@ -43,6 +44,7 @@ class Game {
     Game_status status;
 
     std::vector<int> characters;
+    std::vector<int> characters_2;
 
     std::unique_ptr<sf::RenderWindow> window;
 
@@ -84,6 +86,42 @@ class Menu {
     const int button_offset = 150;
 
     const int text_offset_x = 5;
+    const int text_offset_y = 23;
+};
+
+class Multiplayer_menu {
+public:
+    Multiplayer_menu(float width, float height);
+
+    void move_up();
+    void move_down();
+
+    int selected_item = DEFAULT_SELECT;
+
+    std::unique_ptr<sf::RenderWindow> draw(std::unique_ptr<sf::RenderWindow> window);
+
+    void process_mouse(sf::Vector2i position);
+
+private:
+    sf::Texture background_texture;
+    sf::Texture main_menu_texture;
+    sf::Texture button_texture;
+
+    sf::Sprite background;
+    sf::Sprite main_menu;
+    std::vector<sf::Sprite> button;
+
+    sf::Font font;
+
+    sf::Color gold;
+
+    sf::Text game_name;
+    std::vector<sf::Text> menu_button;
+
+    const int offset = 12; // 29 справа 17 слева
+    const int button_offset = 150;
+
+    const int text_offset_x = 40;
     const int text_offset_y = 23;
 };
 

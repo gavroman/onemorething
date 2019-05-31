@@ -4,6 +4,8 @@
 #include "Game.h"
 
 bool ah_shit_here_we_go_again = false;
+bool multiplayer = false;
+bool multiplayer_2 = false;
 
 Game::Game() {
     main_theme.openFromFile("../source/sounds/main_theme.ogg");
@@ -17,7 +19,7 @@ Game::Game() {
             "Mixed_map.tmx",
             "Mixed_map_v2.tmx"};
 
-     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
     //window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 750), "One More Thing");
     status = MAIN_MENU;
        //status = RUN_GAME;                       //  откоментить для дебага 
@@ -41,13 +43,109 @@ void Game::process_event() {
                 break;
             }
             case MAP_MENU: {
+                show_mp_menu();
                 break;
             }
             case RUN_GAME: {
+                if(multiplayer) {
+                    status = START_MENU;
+                    multiplayer = false;
+                    multiplayer_2 = true;
+                    break;
+                }
                 run_game(maps[2]);
                 break;
             }
         }
+    }
+}
+
+void Game::show_mp_menu() {
+    Multiplayer_menu menu(window->getSize().x, window->getSize().y);
+    window->setFramerateLimit(12);
+    while (window->isOpen()) {
+        sf::Event event = sf::Event();
+        while (window->pollEvent(event)) {
+            switch (event.type) {
+                case sf::Event::KeyReleased: {
+                    switch (event.key.code) {
+                        case sf::Keyboard::Up: {
+                            menu.move_up();
+                            break;
+                        }
+                        case sf::Keyboard::Down: {
+                            menu.move_down();
+                            break;
+                        }
+                        case sf::Keyboard::W: {
+                            menu.move_up();
+                            break;
+                        }
+                        case sf::Keyboard::S: {
+                            menu.move_down();
+                            break;
+                        }
+                        case sf::Keyboard::Return: {
+                            switch (menu.selected_item) {
+                                case 0: {
+                                    status = START_MENU;
+                                    multiplayer = false;
+                                    return;
+                                }
+                                case 1: {
+                                    status = START_MENU;
+                                    multiplayer = true;
+                                    return;
+                                }
+                                default: {
+                                    continue;
+                                }
+                            }
+                        }
+                        default: {
+                            continue;
+                        }
+                    }
+                    break;
+                }
+
+                case sf::Event::Closed: {
+                    window->close();
+                    break;
+                }
+
+                case sf::Event::MouseMoved: {
+                    menu.process_mouse(sf::Mouse::getPosition());
+                    break;
+                }
+
+                case sf::Event::MouseButtonReleased: {
+                    menu.process_mouse(sf::Mouse::getPosition());
+                    switch (menu.selected_item) {
+                        case 0: {
+                            status = START_MENU;
+                            multiplayer = false;
+                            return;
+                        }
+                        case 1: {
+                            status = START_MENU;
+                            multiplayer = true;
+                            return;
+                        }
+                        default: {
+                            continue;
+                        }
+                    }
+                }
+
+                default: {
+                    continue;
+                }
+            }
+        }
+        window->clear();
+        window = menu.draw(std::move(window));
+        window->display();
     }
 }
 
@@ -59,10 +157,20 @@ void Game::run_game(const std::string& xml_file_path) {
     window = loading_screen.draw(std::move(window));
     Map btl_fld("../source/game_map/" + xml_file_path);
 
-    window = loading_screen.draw(std::move(window));
-    players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, characters)); //создание игроков
-    window = loading_screen.draw(std::move(window));
-    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({0, 1, 2, 7, 4})));
+
+    if (multiplayer_2) {
+        window = loading_screen.draw(std::move(window));
+        players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, characters_2)); //создание игроков
+        window = loading_screen.draw(std::move(window));
+        players.push_back(std::make_unique<Human>(btl_fld, PLAYER2, characters));
+        multiplayer_2 = false;
+    } else {
+        window = loading_screen.draw(std::move(window));
+        players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, characters)); //создание игроков
+        window = loading_screen.draw(std::move(window));
+        players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({0, 1, 2, 7, 4})));
+    }
+
     //window = loading_screen.draw(std::move(window));
     btl_fld.get_adj_matrix();
 
@@ -139,7 +247,7 @@ void Game::show_main_menu() {
                         case sf::Keyboard::Return: {
                             switch (menu.selected_item) {
                                 case 0: {
-                                    status = START_MENU;
+                                    status = MAP_MENU;
                                     return;
                                 }
                                 case 1: {
@@ -172,7 +280,7 @@ void Game::show_main_menu() {
                     menu.process_mouse(sf::Mouse::getPosition());
                     switch (menu.selected_item) {
                         case 0: {
-                            status = START_MENU;
+                            status = MAP_MENU;
                             return;
                         }
                         case 1: {
@@ -251,6 +359,10 @@ void Game::show_choice_menu() {
                                 characters.assign(menu.selected_chars, menu.selected_chars + 5);
                                 for (auto it : characters) {
                                     std::cout << it << std::endl;
+                                }
+                                if (multiplayer) {
+                                    characters_2.assign(characters.begin(), characters.end());
+                                    characters.clear();
                                 }
                                 return;
                             }
@@ -458,6 +570,117 @@ void Menu::process_mouse(sf::Vector2i position) {
         }
     }
 }
+
+    Multiplayer_menu::Multiplayer_menu(float width, float height) {
+        font.loadFromFile("../source/menu/Enchanted_Land.otf");
+
+        gold.r = 212;
+        gold.g = 175;
+        gold.b = 55;
+
+        background_texture.loadFromFile("../source/menu/Background.png");
+        background_texture.setSmooth(true);
+        background.setTexture(background_texture);
+
+        main_menu_texture.loadFromFile("../source/menu/Main.png");
+        main_menu_texture.setSmooth(true);
+        main_menu.setTexture(main_menu_texture);
+        //main_menu.setScale(width / 1920, height / 1080);
+        main_menu.setPosition((width - main_menu_texture.getSize().x) / 2 + offset, (height - main_menu_texture.getSize().y) / 2);
+
+        button_texture.loadFromFile("../source/menu/Button.png");
+        button_texture.setSmooth(true);
+
+        button.emplace_back(sf::Sprite(button_texture));
+        button.emplace_back(sf::Sprite(button_texture));
+
+        button[0].setPosition(main_menu.getPosition().x + (main_menu_texture.getSize().x - button_texture.getSize().x) / 2.0 - offset,
+                              main_menu.getPosition().y + main_menu_texture.getSize().y / (NUM_OF_MAIN_MENU_BUTTONS + 1.0) + button_offset);
+        button[1].setPosition(main_menu.getPosition().x + (main_menu_texture.getSize().x - button_texture.getSize().x) / 2.0 - offset,
+                              main_menu.getPosition().y + main_menu_texture.getSize().y / (NUM_OF_MAIN_MENU_BUTTONS + 1.0) + button_offset * 1.6);
+
+        menu_button.emplace_back(sf::Text());
+        menu_button.emplace_back(sf::Text());
+
+        menu_button[0].setFont(font);
+        menu_button[0].setFillColor(sf::Color::White);
+        menu_button[0].setOutlineColor(sf::Color::Black);
+        menu_button[0].setOutlineThickness(1);
+        menu_button[0].setString("Player vs Bot");
+        menu_button[0].setPosition(button[0].getPosition().x + button_texture.getSize().x / 2.0 - offset - text_offset_x,
+                                   button[0].getPosition().y + button_texture.getSize().y / 2.0 - text_offset_y);
+
+        menu_button[1].setFont(font);
+        menu_button[1].setFillColor(sf::Color::White);
+        menu_button[1].setOutlineColor(sf::Color::Black);
+        menu_button[1].setOutlineThickness(1);
+        menu_button[1].setString("Player vs Player");
+        menu_button[1].setPosition(button[0].getPosition().x + button_texture.getSize().x / 2.0 - offset - 53,
+                                   button[1].getPosition().y + button_texture.getSize().y / 2.0 - text_offset_y);
+
+        game_name.setFont(font);
+        game_name.setFillColor(sf::Color::Black);
+        game_name.setOutlineColor(gold);
+        game_name.setOutlineThickness(3);
+        game_name.setCharacterSize(60);
+        game_name.setString("One More Thing");
+        game_name.setPosition(width / 2 - 135, 200);
+
+    }
+
+    std::unique_ptr<sf::RenderWindow> Multiplayer_menu::draw(std::unique_ptr<sf::RenderWindow> window) {
+        window->draw(background);
+        window->draw(main_menu);
+
+        for (int i = 0; i < menu_button.size(); i++) {
+            if (i == selected_item) {
+                menu_button[i].setFillColor(gold);
+            } else {
+                menu_button[i].setFillColor(sf::Color::White);
+            }
+        }
+
+        for (const auto& it : button) {
+            window->draw(it);
+        }
+        window->draw(game_name);
+
+        for (const auto& it : menu_button) {
+            window->draw(it);
+        }
+
+        return std::move(window);
+    }
+
+    void Multiplayer_menu::move_up() {
+        if (selected_item <= 0 || selected_item > menu_button.size() - 1) {
+            selected_item = menu_button.size() - 1;
+        } else {
+            selected_item--;
+        }
+    }
+
+    void Multiplayer_menu::move_down() {
+        if (selected_item >= menu_button.size() - 1) {
+            selected_item = 0;
+        } else {
+            selected_item++;
+        }
+    }
+
+    void Multiplayer_menu::process_mouse(sf::Vector2i position) {
+        for (int i = 0; i < button.size(); i++) {
+            if (position.x >= button[i].getPosition().x &&
+                position.x <= button[i].getPosition().x + button_texture.getSize().x &&
+                position.y >= button[i].getPosition().y &&
+                position.y <= button[i].getPosition().y + button_texture.getSize().y) {
+                selected_item = i;
+                break;
+            } else {
+                selected_item = DEFAULT_SELECT;
+            }
+        }
+    }
 
 Choice_menu::Choice_menu(float width, float height) {
     font.loadFromFile("../source/menu/Enchanted_Land.otf");
