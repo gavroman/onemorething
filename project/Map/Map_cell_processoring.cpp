@@ -16,7 +16,6 @@ bool Map::compare_positions(const sf::Vector2f& pos1, const sf::Vector2f& pos2) 
 }
 
 int Map::get_cell_id_from_pos(const sf::Vector2f & pos) {
-
     std::vector<int> candidates_id;
     for (auto& cell : map) {
         sf::FloatRect coords = cell->sprite.getGlobalBounds();
@@ -53,7 +52,7 @@ sf::Vector2f Map::get_cell_center(const int id) {
 
 sf::CircleShape Map::highlight_cell(const int id, sf::Color color, sf::Color border_color) {
     sf::CircleShape hex_shape(71, 6);
-    hex_shape.setPosition(map[id]->x - 4.6, map[id]->y - 0.3);
+    hex_shape.setPosition(map[id]->x - 4, map[id]->y - 0.3);
     hex_shape.setScale(scale, scale);
     hex_shape.setFillColor(color);
     hex_shape.setOutlineThickness(2);
