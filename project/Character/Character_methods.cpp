@@ -20,19 +20,15 @@ void Character::set_attack_target(std::shared_ptr<Character> character) {
 
 void Character::do_damage(std::shared_ptr<Character> character) {
     character->hp -= (rand () % (damage_max - damage_min)) + damage_min;
-    /*if (sprite.getPosition().x > character->sprite.getPosition().x and !inverse) {
+    if (sprite.getPosition().x > character->sprite.getPosition().x and !inverse) {
         inverse = true;
-        sprite.setOrigin(texture_width, 0);
-        sprite.setScale(-scale, scale);
     } else if (sprite.getPosition().x < character->sprite.getPosition().x and inverse) {
         inverse = false;
-        sprite.setOrigin(0, 0);
-        sprite.setScale(scale, scale);
-    }*/
+    }
     status = ATTACK;
     texture_x = 0;
 
-    if ((get_current_cell() / 32) % 2 == 1) {
+    /*if ((get_current_cell() / 32) % 2 == 1) {
         if ((get_current_cell() % 2 == 1 && (character->get_current_cell() == get_current_cell() + 1 || character->get_current_cell() % 2 == 1))
             || (get_current_cell() % 2 == 0 && (character->get_current_cell() == get_current_cell() + 1 || character->get_current_cell() % 2 == 0))) {
             inverse = false;
@@ -46,7 +42,7 @@ void Character::do_damage(std::shared_ptr<Character> character) {
         } else if ((get_current_cell() % 2 == 1 && character->get_current_cell() % 2 == 0) || (get_current_cell() % 2 == 0 && character->get_current_cell() % 2 == 1)) {
             inverse = false;
         }
-    }
+    }*/
 
     /*if ((get_current_cell() % 2 == 1 && (character->get_current_cell() == get_current_cell() + 1 || character->get_current_cell() % 2 == 1)) || (get_current_cell() % 2 == 0 && (character->get_current_cell() == get_current_cell() + 1 || character->get_current_cell() % 2 == 0))) inverse = false;
     else if ((get_current_cell() % 2 == 1 && character->get_current_cell() % 2 == 0) || (get_current_cell() % 2 == 0 && character->get_current_cell() % 2 == 1)) inverse = true;
