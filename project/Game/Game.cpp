@@ -170,7 +170,7 @@ void Game::run_game(const std::string& xml_file_path) {
         window = loading_screen.draw(std::move(window));
         players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, characters)); //создание игроков
         window = loading_screen.draw(std::move(window));
-        players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({0, 1, 2, 7, 4})));
+        players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({0, 5, 2, 7, 4})));
     }
     //window = loading_screen.draw(std::move(window));
     btl_fld.get_adj_matrix();
@@ -187,7 +187,44 @@ void Game::run_game(const std::string& xml_file_path) {
         if (!made_turn) {
             made_turn = players[curr_plr]->make_turn(btl_fld, *window);
             if (!players[curr_plr]->get_chars_size()) {
-                ah_shit_here_we_go_again = true;
+                sf::Texture win_scroll;
+                win_scroll.loadFromFile("../source/menu/Win_scroll.png");
+                sf::Sprite win(win_scroll);
+
+                sf::Font font;
+                font.loadFromFile("../source/menu/Enchanted_Land.otf");
+                sf::Text win_text("Player1 wins!", font, 50);
+
+                if (curr_plr == PLAYER1) {
+                    win_text.setString("Player2 wins!");
+                    win_text.setOutlineColor(sf::Color::Red);
+                } else {
+                    win_text.setOutlineColor(sf::Color::Cyan);
+
+                }
+                win_text.setPosition(window->getSize().x / 2 - 93, window->getSize().y / 2 - 25);
+                win_text.setFillColor(sf::Color::Black);
+                win_text.setOutlineThickness(2);
+
+                window->draw(win);
+                window->draw(win_text);
+                window->display();
+                while (window->isOpen()) {
+                    sf::Event event;
+                    while (window->pollEvent(event)) {
+                        switch (event.type) {
+                            case sf::Event::Closed: {
+                                window->close();
+                                break;
+                            }
+
+                            case sf::Event::KeyReleased: {
+                                status = MAIN_MENU;
+                                return;
+                            }
+                        }
+                    }
+                }
             }
         }
         if (made_turn and players[curr_plr]->is_all_idle()) {
@@ -208,6 +245,7 @@ void Game::run_game(const std::string& xml_file_path) {
         window->clear();
         window->draw(background);
         btl_fld.draw(*window);
+
         for (int i = 0; i != players[PLAYER1]->get_chars_size(); i++) {
             //players[PLAYER1]->get_char(i)->draw(*window, btl_fld);
             players[PLAYER1]->get_char(i)->animate();
