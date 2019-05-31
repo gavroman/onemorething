@@ -10,9 +10,15 @@
 /* В этом файле содержится все, что касается самой карты.
  * Само создание, отрисовка и т.п. */
 
+sf::Texture bk;
+sf::Sprite bk_s;
+
 Map::Map(const std::string xml_file)
         : xml_file_path(std::move(xml_file)) {
     using namespace tinyxml2;
+    bk.loadFromFile("../source/game_map/Map_bk.jpg");
+    bk_s.setTexture(bk);
+    bk_s.setColor(sf::Color(150, 150, 150));
     XMLDocument doc;
     if (doc.LoadFile(xml_file_path.c_str())) {
         return;
@@ -140,6 +146,7 @@ std::vector<int> Map::search_neighbors(const int id) {
 void Map::draw(sf::RenderWindow& window) {
     window.clear();
 
+    window.draw(bk_s);
     std::queue<std::shared_ptr<Character>> characters;
 
     for (const auto& it : map) {

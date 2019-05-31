@@ -84,6 +84,7 @@ void Character::do_heal(std::shared_ptr<Character> character) {
         character->hp += heal;
     }
     status = HEAL;
+    texture_x = 0;
 }
 
 int Character::get_hp() {
@@ -240,6 +241,7 @@ void Character::animate() {
             }
             if (current_animate_index == sprites_amount) {
                 current_animate_index = 0;
+                texture_x = 0;
                 status = IDLE;
             } else {
                 current_animate_index++;
@@ -274,9 +276,11 @@ void Character::draw(sf::RenderWindow& window, class Map field) {
     window.draw(sprite);
     sf::Font font;
     font.loadFromFile("../source/menu/Enchanted_Land.otf");
-    sf::Text hp_text(std::to_string(hp), font, 30);
-    hp_text.setFillColor(sf::Color::Red);
-    hp_text.setPosition(sprite.getPosition().x, sprite.getPosition().y - 20);
+    sf::Text hp_text(std::to_string(hp), font, 25);
+    hp_text.setFillColor(sf::Color::White);
+    hp_text.setOutlineThickness(1);
+    hp_text.setOutlineColor(sf::Color::Red);
+    hp_text.setPosition(sprite.getPosition().x - 10, sprite.getPosition().y - 20);
     window.draw(hp_text);
 }
 
