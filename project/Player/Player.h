@@ -35,8 +35,8 @@ class Player {
     sf::Color color_trace = sf::Color(20, 240, 45, 100);
     sf::Color hover_color = sf::Color(32, 30, 52, 70);
     sf::Color color = sf::Color(12, 30, 52, 120);
-    sf::Color color_enemy = sf::Color::Red;
-    sf::Color color_my = sf::Color::Green;
+    sf::Color color_enemy = sf::Color(255, 10, 50, 160);
+    sf::Color color_my = sf::Color(0, 255, 140, 160);
     std::vector<std::shared_ptr<Character>> chars;
     std::vector<std::shared_ptr<Cell>> assigned_cells; // Клетки, доступные игроку
 };
