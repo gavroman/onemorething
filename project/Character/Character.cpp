@@ -55,6 +55,7 @@ Scout::Scout(const int id, const int current_player) {
     idle_walk_offset_x = 6;
     idle_walk_offset_y = 30;
     hp = 300; //300
+    max_hp = hp;
     damage_min = 50; //50
     damage_max = 55; //55
     reverse_offset = 63;

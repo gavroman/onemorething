@@ -62,7 +62,7 @@ void Game::run_game(const std::string& xml_file_path) {
     window = loading_screen.draw(std::move(window));
     players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, characters)); //создание игроков
     window = loading_screen.draw(std::move(window));
-    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({0, 1, 2, 7, 4})));
+    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({4, 1, 2, 7, 0})));
     //window = loading_screen.draw(std::move(window));
     btl_fld.get_adj_matrix();
 
