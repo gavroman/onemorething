@@ -276,7 +276,7 @@ void Character::draw(sf::RenderWindow& window, class Map field) {
     font.loadFromFile("../source/menu/Enchanted_Land.otf");
     sf::Text hp_text(std::to_string(hp), font, 30);
     hp_text.setFillColor(sf::Color::Red);
-    hp_text.setPosition(sprite.getPosition().x, sprite.getPosition().y - 20);
+    hp_text.setPosition(sprite.getPosition().x, sprite.getPosition().y - 60);
     window.draw(hp_text);
 }
 

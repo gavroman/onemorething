@@ -10,6 +10,9 @@ Game::Game() {
     sound_track.openFromFile("../source/sounds/soundtrack.ogg");
     main_theme.setLoop(true);
     sound_track.setLoop(true);
+    background_texture.loadFromFile("../source/menu/Background.png");
+    background_texture.setSmooth(true);
+    background.setTexture(background_texture);
     
     maps = {"Dark_map.tmx",
             "Grass_map.tmx",
@@ -17,7 +20,7 @@ Game::Game() {
             "Mixed_map.tmx",
             "Mixed_map_v2.tmx"};
 
-     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "One More Thing", sf::Style::Fullscreen);
     //window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 750), "One More Thing");
     status = MAIN_MENU;
        //status = RUN_GAME;                       //  откоментить для дебага 
@@ -62,7 +65,7 @@ void Game::run_game(const std::string& xml_file_path) {
     window = loading_screen.draw(std::move(window));
     players.push_back(std::make_unique<Human>(btl_fld, PLAYER1, characters)); //создание игроков
     window = loading_screen.draw(std::move(window));
-    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({4, 1, 2, 7, 0})));
+    players.push_back(std::make_unique<Bot>(btl_fld, PLAYER2, std::vector<int>({0, 1, 2, 3, 7, 4, 5, 6})));
     //window = loading_screen.draw(std::move(window));
     btl_fld.get_adj_matrix();
 
@@ -96,7 +99,8 @@ void Game::run_game(const std::string& xml_file_path) {
             main_theme.stop();
             sound_track.play();
         }
-        
+        window->clear();
+        window->draw(background);
         btl_fld.draw(*window);
         for (int i = 0; i != players[PLAYER1]->get_chars_size(); i++) {
             //players[PLAYER1]->get_char(i)->draw(*window, btl_fld);

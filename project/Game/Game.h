@@ -41,12 +41,12 @@ class Game {
 
  private:
     Game_status status;
-
     std::vector<int> characters;
-
     std::unique_ptr<sf::RenderWindow> window;
-
     std::vector<std::string> maps;
+    sf::Texture background_texture;
+    sf::Sprite background;
+
     sf::Music main_theme;
     sf::Music sound_track;
 };

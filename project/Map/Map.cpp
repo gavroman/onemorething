@@ -138,10 +138,7 @@ std::vector<int> Map::search_neighbors(const int id) {
 }
 
 void Map::draw(sf::RenderWindow& window) {
-    window.clear();
-
     std::queue<std::shared_ptr<Character>> characters;
-
     for (const auto& it : map) {
         window.draw((*it).sprite);
         if (it->character) {
