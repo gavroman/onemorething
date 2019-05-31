@@ -49,7 +49,7 @@ Scout::Scout(const int id, const int current_player) {
     std::string class_name = "scout/";
     std::string path = SOURCE + class_name + PLAYER;
 
-    move_range = 8; //8
+    move_range = 10; //8
     cell_id = id;
 
     idle_walk_offset_x = 6;
@@ -97,7 +97,7 @@ Archer::Archer(const int id, const int current_player) {
     std::string class_name = "archer/";
     std::string path = SOURCE + class_name + PLAYER;
 
-    move_range = 3;
+    move_range = 5;
     range = true;
     cell_id = id;
     idle_walk_offset_x = 10;
@@ -106,10 +106,10 @@ Archer::Archer(const int id, const int current_player) {
     attack_offset_y = 0;
     hurt_offset_x = 6;
     hurt_offset_y = 3;
-    hp = 250;
+    hp = 80;
     max_hp = hp;
-    damage_min = 15;
-    damage_max = 20;
+    damage_min = 25;
+    damage_max = 27;
     reverse_offset = 70;
 
     idle_texture.loadFromFile(path + "/idle.png");
@@ -167,7 +167,7 @@ Swordman::Swordman(const int id, const int current_player) {
     std::string class_name = "swordman/";
     std::string path = SOURCE + class_name + PLAYER;
 
-    move_range = 5;
+    move_range = 7;
     cell_id = id;
     hp = 500;
     max_hp = hp;
@@ -220,7 +220,7 @@ Tank::Tank(const int id, const int current_player) {
     std::string class_name = "tank/";
     std::string path = SOURCE + class_name + PLAYER;
 
-    move_range = 3;
+    move_range = 5;
     cell_id = id;
     idle_walk_offset_x = 5;
     hp = 800;
@@ -268,15 +268,15 @@ Wizard::Wizard(const int id, const int current_player) {
     std::string class_name = "wizard/";
     std::string path = SOURCE + class_name + PLAYER;
 
-    move_range = 3;
+    move_range = 5;
     range = true;
     cell_id = id;
     idle_walk_offset_x = 10;
     idle_walk_offset_y = 40;
-    hp = 250;
+    hp = 80;
     max_hp = hp;
-    damage_min = 18;
-    damage_max = 27;
+    damage_min = 23;
+    damage_max = 30;
     reverse_offset = 68;
     hurt_offset_x = 13;
     hurt_offset_y = 5;
@@ -322,7 +322,7 @@ Berserker::Berserker(const int id, const int current_player) {
     std::string class_name = "berserker/";
     std::string path = SOURCE + class_name + PLAYER;
 
-    move_range = 6;
+    move_range = 8;
     cell_id = id;
     idle_walk_offset_x = 4;
     idle_walk_offset_y = 40;
@@ -380,7 +380,7 @@ Knight::Knight(const int id, const int current_player) {
     std::string class_name = "knight/";
     std::string path = SOURCE + class_name + PLAYER;
 
-    move_range = 4;
+    move_range = 6;
     cell_id = id;
     hp = 600;
     max_hp = hp;
@@ -429,14 +429,14 @@ Healer::Healer(const int id, const int current_player) {
 
     std::string path = SOURCE + class_name + PLAYER;
 
-    move_range = 4;
+    move_range = 6;
     cell_id = id;
     idle_walk_offset_x = 4;
     idle_walk_offset_y = 35;
     active = false;
     status = IDLE;
 
-    hp = 250;
+    hp = 70;
     max_hp = hp;
     damage_min = 30;
     damage_max = 35;
