@@ -49,11 +49,11 @@ Scout::Scout(const int id, const int current_player) {
     std::string class_name = "scout/";
     std::string path = SOURCE + class_name + PLAYER;
 
-    move_range = 30; //8
+    move_range = 8; //8
     cell_id = id;
     idle_walk_offset_x = 6;
     idle_walk_offset_y = 30;
-    hp = 3000; //300
+    hp = 300; //300
     damage_min = 50; //50
     damage_max = 55; //55
     reverse_offset = 63;
@@ -137,9 +137,12 @@ Swordman::Swordman(const int id, const int current_player) {
             idle_walk_offset_x = 6;
             idle_walk_offset_y = 40;
 
-            scale = 0.085;
+            scale = 1;
 
             inverse = false;
+
+            attack_offset_x = 5;
+            attack_offset_y = 4;
             break;
         }
         case PLAYER2: {
@@ -148,9 +151,12 @@ Swordman::Swordman(const int id, const int current_player) {
             idle_walk_offset_x = 5;
             idle_walk_offset_y = 38;
 
-            scale = 0.21;
+            scale = 1;
 
             inverse = true;
+
+            attack_offset_x = 8;
+            attack_offset_y = 6;
             break;
         }
     }
@@ -162,6 +168,9 @@ Swordman::Swordman(const int id, const int current_player) {
     hp = 500;
     damage_min = 70;
     damage_max = 130;
+    reverse_offset = 63;
+    hurt_offset_x = 10;
+    hurt_offset_y = 1;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -171,8 +180,14 @@ Swordman::Swordman(const int id, const int current_player) {
 
     sprites_amount = 5;
     sprite.setScale(sf::Vector2f(scale, scale));
+    sprite.setOrigin(idle_walk_offset_x, idle_walk_offset_y);
 
     //TODO: Баг с мерцанием (у PLAYER2), попадают части текстуры в walk (у PLAYER2)
+
+    if (inverse) {
+        sprite.setScale(-scale, scale);
+        sprite.setOrigin(reverse_offset, idle_walk_offset_y);
+    }
 }
 
 Tank::Tank(const int id, const int current_player) {
@@ -286,11 +301,13 @@ Berserker::Berserker(const int id, const int current_player) {
         case PLAYER1: {
             PLAYER = "PLAYER1";
             inverse = false;
+            attack_offset_y = 2;
             break;
         }
         case PLAYER2: {
             PLAYER = "PLAYER2";
             inverse = true;
+            attack_offset_y = 12;
             break;
         }
     }
@@ -300,10 +317,14 @@ Berserker::Berserker(const int id, const int current_player) {
     move_range = 6;
     cell_id = id;
     idle_walk_offset_x = 4;
-    idle_walk_offset_y = 45;
+    idle_walk_offset_y = 40;
     hp = 400;
     damage_min = 130;
     damage_max = 200;
+    reverse_offset = 68;
+    hurt_offset_x = 5;
+    hurt_offset_y = 1;
+    attack_offset_x = 5;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -312,11 +333,17 @@ Berserker::Berserker(const int id, const int current_player) {
     //die_texture.loadFromFile(path + "/die.png");
 
     sprites_amount = 5;
-    scale = 0.09;
+    scale = 1;
 
     sprite.setScale(sf::Vector2f(scale, scale));
+    sprite.setOrigin(idle_walk_offset_x, idle_walk_offset_y);
 
     // TODO: Баг с мерцанием (PLAYER1, PLAYER2), трэш в walk (залезает часть текстур для PLAYER2), смещение в walk (PLAYER2)
+
+    if (inverse) {
+        sprite.setScale(-scale, scale);
+        sprite.setOrigin(reverse_offset, idle_walk_offset_y);
+    }
 }
 
 Knight::Knight(const int id, const int current_player) {
@@ -327,13 +354,17 @@ Knight::Knight(const int id, const int current_player) {
             idle_walk_offset_x = 10;
             idle_walk_offset_y = 38;
             inverse = false;
+            attack_offset_x = 2;
+            attack_offset_y = 12;
             break;
         }
         case PLAYER2: {
             PLAYER = "PLAYER2";
             idle_walk_offset_x = 5;
-            idle_walk_offset_y = 50;
+            idle_walk_offset_y = 51;
             inverse = true;
+            attack_offset_x = 4;
+            attack_offset_y = 2;
             break;
         }
     }
@@ -345,6 +376,9 @@ Knight::Knight(const int id, const int current_player) {
     hp = 600;
     damage_min = 80;
     damage_max = 100;
+    reverse_offset = 70;
+    hurt_offset_x = 10;
+    hurt_offset_y = 1;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -353,11 +387,17 @@ Knight::Knight(const int id, const int current_player) {
     //die_texture.loadFromFile(path + "/die.png");
 
     sprites_amount = 5;
-    scale = 0.09;
+    scale = 1;
 
     sprite.setScale(sf::Vector2f(scale, scale));
+    sprite.setOrigin(idle_walk_offset_x, idle_walk_offset_y);
 
     // TODO: Баг с мерцанием (PLAYER1, PLAYER2), попадает часть текстур и смещение по x у hurt (PLAYER1), заметная разница в attack по y у die (PLAYER1)
+
+    if (inverse) {
+        sprite.setScale(-scale, scale);
+        sprite.setOrigin(reverse_offset, idle_walk_offset_y);
+    }
 }
 
 Healer::Healer(const int id, const int current_player) {
@@ -388,6 +428,11 @@ Healer::Healer(const int id, const int current_player) {
     hp = 250;
     damage_min = 30;
     damage_max = 35;
+    reverse_offset = 67;
+    hurt_offset_x = 7;
+    hurt_offset_y = 3;
+    attack_offset_y = 20;
+    attack_offset_x = 4;
 
     idle_texture.loadFromFile(path + "/idle.png");
     walk_texture.loadFromFile(path + "/walk.png");
@@ -398,11 +443,17 @@ Healer::Healer(const int id, const int current_player) {
     heal_texture.setSmooth(true);
 
     sprites_amount = 5;
-    scale = 0.11;
+    scale = 1;
 
     sprite.setScale(sf::Vector2f(scale, scale));
+    sprite.setOrigin(idle_walk_offset_x, idle_walk_offset_y);
 
     // TODO: Баг с мерцанием (PLAYER1, PLAYER2), трэш в walk (PLAYER1, PLAYER2), сильное смещение в attack по y (PLAYER1, PLAYER2)
+
+    if (inverse) {
+        sprite.setScale(-scale, scale);
+        sprite.setOrigin(reverse_offset, idle_walk_offset_y);
+    }
 }
 
 
