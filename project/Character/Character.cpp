@@ -109,7 +109,7 @@ Archer::Archer(const int id, const int current_player) {
     hp = 80;
     max_hp = hp;
     damage_min = 25;
-    damage_max = 1000;
+    damage_max = 50;
     reverse_offset = 70;
 
     idle_texture.loadFromFile(path + "/idle.png");
